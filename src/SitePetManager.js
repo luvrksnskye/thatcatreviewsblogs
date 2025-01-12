@@ -78,8 +78,7 @@ export class SitePetManager {
                 bottom: -50,
                 thoughts: [
                     "This spot is quite nice.",
-                    "...stretches...",
-                    "Hmm? What's over there?",
+                    "mhm.",
                     "Feeling relaxed~",
                     "I could sit here all day."
                 ]
