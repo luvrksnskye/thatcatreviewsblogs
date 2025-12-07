@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey there from Skye Journey! - Abby's Blog</title>
+    
+    <!-- Usar el CSS completo standalone -->
+    <link rel="stylesheet" href="/src/css/blog-post.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Blog Metadata -->
+    <meta name="blog-title" content="Hey there from Skye Journey!">
+    <meta name="blog-subtitle" content="the story behind this tiny website! ✧">
+    <meta name="blog-category" content="Updates">
+    <meta name="blog-date" content="2025-12-07T09:39:46.023Z">
+    <meta name="blog-author" content="Skye">
+</head>
+<body>
+    <!-- ========================================
+         STARFALL BACKGROUND (Managed by StarfallManager.js)
+    ======================================== -->
+    <div class="starfall-container">
+        <div class="starfield" id="starfield"></div>
+    </div>
+
+    <!-- ========================================
+         CLOUDS BACKGROUND (PNG Images)
+    ======================================== -->
+    <div class="clouds-container">
+        <img src="/src/assets/cloud_small_size.png" class="cloud cloud-small-top" alt="">
+        <img src="/src/assets/cloud_big_size.png" class="cloud cloud-big-left" alt="">
+        <img src="/src/assets/cloud_left_medium_size.png" class="cloud cloud-medium-right" alt="">
+        <img src="/src/assets/cloud_medium_size.png" class="cloud cloud-medium-right-2" alt="">
+    </div>
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+    <article class="blog-wrapper">
+        <!-- Back Button -->
+        <a href="/index.html" class="back-btn">
+            <span class="material-icons">arrow_back</span>
+            Go Back
+        </a>
+
+        <!-- Blog Card -->
+        <div class="blog-card">
+            <!-- Header -->
+            <header class="blog-header">
+                <!-- Floating Decorations -->
+                <span class="header-deco cloud">☁</span>
+                <span class="header-deco star">✦</span>
+                <span class="header-deco heart">♡</span>
+
+                <!-- Meta Info -->
+                <div class="blog-meta">
+                    <div class="date-badge">
+                        <span class="date-day">7</span>
+                        <span class="date-month">Dic</span>
+                        <span class="date-year">2025</span>
+                    </div>
+                    <span class="category-badge">
+                        <span class="material-icons">campaign</span>
+                        Updates
+                    </span>
+                    <span class="reading-time">
+                        <span class="material-icons">schedule</span>
+                        5 min de lectura
+                    </span>
+                </div>
+
+                <!-- Title -->
+                <h1 class="blog-title">Hey there from Skye Journey!</h1>
+                <p class="blog-subtitle">The story behind this tiny website! ✧</p>
+
+                <!-- Author -->
+                <div class="author-info">
+                    <div class="author-avatar">
+                        <span class="material-icons">code</span>
+                    </div>
+                    <div class="author-details">
+                        <span class="author-name">Skye Journey</span>
+                        <span class="author-label">Indie Web & Game Dev</span>
+                    </div>
+                </div>
+            </header>
+
+           <div class="blog-content"> <p>Hi everyone! ♡ I’m Skye, the developer and designer behind this website. I wanted to take a moment to share how I built this blog system and why I decided to do it this way. Plus, I thought it would be a nice way to leave my client with a template for all her future posts.</p>
+
+                <h2>The Idea</h2>
+
+<p>Everything started when Abby asked me for a blog that was easy to use. She wanted something simple… and well, huh, “simple” and I don’t always get along.</p>
+
+<div class="callout-box">
+    <p><strong>My solution was straightforward:</strong> just create an HTML file and let the system handle everything else. No databases, no admin panels, no headaches.</p>
+</div>
+
+<h2>How the Magic Works</h2>
+
+<p>The system is made of three main parts:</p>
+
+<ul>
+    <li><strong>The smart server</strong> — Keeps an eye on the blog folder and detects when you add or update posts</li>
+    <li><strong>The manifest generator</strong> — Reads each post’s meta tags and builds a JSON file with all the info</li>
+    <li><strong>The dynamic Status Tab</strong> — Automatically shows the latest posts on the homepage</li>
+</ul>
+
+<h2>The Details</h2>
+
+<p>I had a lot of fun adding small touches that make the site feel special:</p>
+
+<ul>
+    <li>The floating clouds in the background</li>
+    <li>The softly falling stars</li>
+    <li>The calming pastel colors</li>
+    <li>The smooth little animations everywhere</li>
+</ul>
+
+<h2>For the Tech-Curious</h2>
+
+<p>The tech stack is intentionally simple:</p>
+
+<ul>
+    <li><strong>HTML/CSS/JavaScript</strong> — Pure vanilla, no frameworks</li>
+    <li><strong>Node.js</strong> — Only for the dev server</li>
+    <li><strong>File System Watcher</strong> — To detect real-time changes</li>
+    <li><strong>CSS Variables</strong> — For the light/dark theme system</li>
+    <li><strong>ES6 Modules</strong> — To keep the code clean and organized</li>
+</ul>
+
+<p>No React, no Vue, no complicated build steps. Just clean code that anyone can read and tweak.</p>
+
+<p>For now, the system works exactly the way Abby needs it to—and that’s what matters most.</p>
+
+<h2>Thanks for Reading</h2>
+
+<p>I hope you enjoy exploring this little corner of the internet. If you have questions about how it was built or want a similar project of your own, you can find me here:</p>
+
+<p> <a href="https://luvrksnsnskyedev.space/" target="_blank">luvrksnsnskyedev.space</a></p>
+
+<p>See ya!</p>
+              </div>    
+
+            <!-- Footer -->
+            <footer class="blog-footer">
+                <div class="tags-section">
+                    <span class="tags-title">Tags</span>
+                    <div class="tags-list">
+                        <a href="#" class="tag">development</a>
+                        <a href="#" class="tag">design</a>
+                        <a href="#" class="tag">blog</a>
+                        <a href="#" class="tag">cute</a>
+                        <a href="#" class="tag">updates</a>
+                    </div>
+                </div>
+
+    <!-- ========================================
+         SCRIPTS (Optional - for StarfallManager)
+    ======================================== -->
+    <script type="module">
+        // Import StarfallManager if available
+        try {
+            const { StarfallManager } = await import('/src/StarfallManager.js');
+            const starfall = new StarfallManager();
+            starfall.init();
+        } catch (e) {
+            console.log('StarfallManager not loaded - using CSS fallback');
+        }
+    </script>
+</body>
+</html>

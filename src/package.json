@@ -1,0 +1,19 @@
+{
+  "name": "kawaii-blog",
+  "version": "1.1.0",
+  "description": "Cute blog with dynamic content management",
+  "main": "scripts/server.js",
+  "scripts": {
+    "start": "node scripts/server.js",
+    "generate": "node scripts/generate-manifest.js",
+    "watch":   "node scripts/generate-manifest.js --watch",
+    "new-post": "node scripts/new-post.js"
+  },
+  "keywords": [
+    "blog",
+    "kawaii",
+    "cute"
+  ],
+  "author": "Skye Journey",
+  "license": "MIT"
+}

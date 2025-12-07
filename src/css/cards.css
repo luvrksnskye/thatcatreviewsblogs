@@ -1,0 +1,470 @@
+/* =====================================================
+   CARDS STYLES
+   Schedule cards, blog posts, gallery items
+   ===================================================== */
+
+/* ========================================
+   SCHEDULE GRID
+======================================== */
+.schedule-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.grid-row {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.row-1 {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-md);
+}
+
+.row-2 {
+    width: 100%;
+}
+
+.row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-md);
+}
+
+/* ========================================
+   CARD BASE STYLES
+======================================== */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: transform var(--transition-bounce),
+                box-shadow var(--transition-normal);
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-hover);
+}
+
+.card-inner {
+    padding: var(--space-md);
+    height: 100%;
+    position: relative;
+}
+
+/* Card Entrance Animations */
+.card {
+    animation: cardSlideIn 0.5s var(--transition-bounce) both;
+}
+
+.row-1 .card:nth-child(1) { animation-delay: 0.3s; }
+.row-1 .card:nth-child(2) { animation-delay: 0.4s; }
+.row-2 .card { animation-delay: 0.5s; }
+.row-3 .card:nth-child(1) { animation-delay: 0.6s; }
+.row-3 .card:nth-child(2) { animation-delay: 0.7s; }
+.row-3 .card:nth-child(3) { animation-delay: 0.8s; }
+
+@keyframes cardSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ========================================
+   OFFLINE CARD STYLES
+======================================== */
+.card-offline {
+    background: linear-gradient(
+        135deg,
+        rgba(200, 180, 230, 0.7) 0%,
+        rgba(230, 200, 240, 0.6) 50%,
+        rgba(245, 220, 240, 0.5) 100%
+    );
+}
+
+.card-offline .card-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+}
+
+.card-offline.card-small .card-inner {
+    min-height: 150px;
+}
+
+.offline-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.offline-content {
+    text-align: left;
+}
+
+.offline-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-medium);
+    line-height: 1;
+    margin-bottom: var(--space-xs);
+}
+
+.offline-title.small {
+    font-size: 22px;
+}
+
+.offline-subtitle {
+    font-family: var(--font-main);
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.offline-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+/* ========================================
+   DAY CARD STYLES
+======================================== */
+.card-day {
+    background: var(--white);
+}
+
+.card-day .card-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    min-height: 160px;
+}
+
+.stream-title {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.3;
+}
+
+.stream-subtitle {
+    font-family: var(--font-main);
+    font-size: 12px;
+    color: var(--pink-dark);
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/* ========================================
+   THURSDAY WIDE CARD
+======================================== */
+.card-thursday {
+    background: var(--white);
+}
+
+.card-thursday .card-inner {
+    padding: 0;
+}
+
+.mini-offline-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: linear-gradient(
+        90deg,
+        rgba(200, 180, 230, 0.5) 0%,
+        rgba(230, 210, 245, 0.4) 100%
+    );
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    position: relative;
+}
+
+.mini-offline-text {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-medium);
+}
+
+.mini-offline-face {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.mini-offline-signal {
+    font-family: var(--font-main);
+    font-size: 11px;
+    color: var(--text-light);
+    margin-left: auto;
+}
+
+.thursday-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+}
+
+.thursday-info {
+    flex: 1;
+}
+
+.thursday-info .stream-title {
+    margin-bottom: var(--space-xs);
+}
+
+/* ========================================
+   BLOG POST CARDS
+======================================== */
+.blog-header {
+    margin-bottom: var(--space-xl);
+}
+
+.blog-posts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.blog-post {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: all var(--transition-bounce);
+    animation: fadeInUp 0.5s ease both;
+}
+
+.blog-post:nth-child(1) { animation-delay: 0.1s; }
+.blog-post:nth-child(2) { animation-delay: 0.2s; }
+.blog-post:nth-child(3) { animation-delay: 0.3s; }
+
+.blog-post:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.post-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--space-md);
+    background: linear-gradient(135deg, var(--purple-pale) 0%, var(--pink-pale) 100%);
+}
+
+.post-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--white);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+}
+
+.date-day {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1;
+}
+
+.date-month {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.post-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-xs);
+}
+
+.post-category {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--white);
+    color: var(--pink-hot);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: var(--radius-round);
+}
+
+.post-read-time {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+.post-read-time .material-icons {
+    font-size: 14px;
+}
+
+.post-content {
+    padding: var(--space-lg);
+}
+
+.post-title {
+    font-size: 18px;
+    color: var(--text-dark);
+    margin-bottom: var(--space-sm);
+}
+
+.post-excerpt {
+    font-size: 14px;
+    color: var(--text-medium);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+}
+
+.post-footer {
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--purple-pale);
+    background: var(--off-white);
+}
+
+/* ========================================
+   GALLERY GRID
+======================================== */
+.gallery-header {
+    margin-bottom: var(--space-lg);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+    transition: all var(--transition-bounce);
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+}
+
+.gallery-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--purple-pale) 0%, var(--pink-pale) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-placeholder .material-icons {
+    font-size: 48px;
+    color: var(--white);
+    opacity: 0.8;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(107, 91, 138, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-overlay .material-icons {
+    font-size: 32px;
+    color: var(--white);
+}
+
+/* Gallery filter animation */
+.gallery-item.hide {
+    animation: galleryHide 0.3s ease forwards;
+}
+
+.gallery-item.show {
+    animation: galleryShow 0.3s ease forwards;
+}
+
+@keyframes galleryHide {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.8); display: none; }
+}
+
+@keyframes galleryShow {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* ========================================
+   CARD CLICK RIPPLE
+======================================== */
+.card .ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,143,171,0.3) 0%, transparent 70%);
+    transform: scale(0);
+    animation: rippleExpand 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes rippleExpand {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+/* ========================================
+   CARD ACTIVE STATES
+======================================== */
+.card:active {
+    transform: translateY(-2px) scale(1.01);
+}
+
+.card.clicked {
+    animation: cardClick 0.2s ease;
+}
+
+@keyframes cardClick {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+}

@@ -1,0 +1,789 @@
+/* =====================================================
+   MUSIC PLAYER STYLES - MINIMALIST DESIGN
+   ===================================================== */
+
+/* ========================================
+   PLAYER CONTAINER
+======================================== */
+.music-player {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    width: 340px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px rgba(139, 124, 179, 0.2);
+    z-index: var(--z-sticky);
+    overflow: hidden;
+    transition: all var(--transition-bounce);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.music-player:hover {
+    box-shadow: 0 12px 40px rgba(139, 124, 179, 0.3);
+}
+
+/* ========================================
+   PLAYER HEADER - Compact
+======================================== */
+.player-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: linear-gradient(135deg, var(--purple-pale) 0%, var(--pink-pale) 100%);
+}
+
+.player-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-hot) 100%);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.player-info-mini {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.player-header .song-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.player-header .song-artist {
+    font-size: 11px;
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.mini-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-circle);
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-hot) 100%);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(139, 124, 179, 0.3);
+    transition: all var(--transition-bounce);
+}
+
+.mini-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(139, 124, 179, 0.4);
+}
+
+.mini-btn .material-icons {
+    font-size: 20px;
+}
+
+.mini-btn .pause-icon {
+    display: none;
+}
+
+.music-player.playing .mini-btn .play-icon {
+    display: none;
+}
+
+.music-player.playing .mini-btn .pause-icon {
+    display: block;
+}
+
+/* ========================================
+   PLAYER BODY
+======================================== */
+.player-body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* ========================================
+   PROGRESS BAR - Clean design
+======================================== */
+.player-progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.progress-bar {
+    position: relative;
+    height: 4px;
+    background: rgba(139, 124, 179, 0.2);
+    border-radius: var(--radius-round);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple-medium) 0%, var(--pink-hot) 100%);
+    border-radius: var(--radius-round);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.progress-bar:hover {
+    height: 6px;
+}
+
+.progress-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-light);
+    font-family: var(--font-display);
+}
+
+/* ========================================
+   PLAYER CONTROLS - Minimalist
+======================================== */
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+
+.control-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-circle);
+    background: transparent;
+    color: var(--text-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.control-btn:hover {
+    background: rgba(139, 124, 179, 0.15);
+    color: var(--purple-dark);
+    transform: scale(1.05);
+}
+
+.control-btn.active {
+    color: var(--pink-hot);
+    background: rgba(255, 107, 157, 0.1);
+}
+
+.control-btn .material-icons {
+    font-size: 20px;
+}
+
+/* ========================================
+   VOLUME CONTROL - Minimalist
+======================================== */
+.player-volume {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.volume-icon {
+    font-size: 18px;
+    color: var(--text-medium);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color var(--transition-fast);
+}
+
+.volume-icon:hover {
+    color: var(--purple-medium);
+}
+
+.volume-slider {
+    flex: 1;
+    position: relative;
+    height: 4px;
+    background: rgba(139, 124, 179, 0.2);
+    border-radius: var(--radius-round);
+    cursor: pointer;
+}
+
+.volume-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--purple-medium);
+    border-radius: var(--radius-round);
+    width: 70%;
+    transition: width 0.1s linear;
+}
+
+.volume-slider:hover {
+    height: 6px;
+}
+
+/* ========================================
+   PLAYLIST TOGGLE - Clean button
+======================================== */
+.playlist-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    background: rgba(139, 124, 179, 0.1);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dark);
+    transition: all var(--transition-bounce);
+    border: 1px solid rgba(139, 124, 179, 0.2);
+}
+
+.playlist-toggle:hover {
+    background: rgba(139, 124, 179, 0.2);
+    border-color: var(--purple-medium);
+}
+
+.playlist-toggle .material-icons {
+    font-size: 16px;
+}
+
+/* ========================================
+   PLAYLIST CONTAINER
+======================================== */
+.playlist-container {
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid rgba(139, 124, 179, 0.2);
+}
+
+.playlist-container.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    0% { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* ========================================
+   PLAYLIST ITEMS - Minimalist
+======================================== */
+.playlist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.playlist-item:hover {
+    background: rgba(139, 124, 179, 0.1);
+}
+
+.playlist-item.active {
+    background: linear-gradient(135deg, rgba(169, 158, 208, 0.2) 0%, rgba(255, 107, 157, 0.15) 100%);
+}
+
+.playlist-item-art {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--purple-pale) 0%, var(--pink-pale) 100%);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.playlist-item-art .material-icons {
+    font-size: 16px;
+    color: var(--purple-medium);
+}
+
+.playlist-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.playlist-item-title {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.playlist-item-artist {
+    font-size: 10px;
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.playlist-item-duration {
+    font-size: 10px;
+    color: var(--text-light);
+    font-family: var(--font-display);
+    flex-shrink: 0;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+======================================== */
+.playlist-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.playlist-container::-webkit-scrollbar-track {
+    background: rgba(139, 124, 179, 0.1);
+    border-radius: var(--radius-round);
+}
+
+.playlist-container::-webkit-scrollbar-thumb {
+    background: var(--purple-medium);
+    border-radius: var(--radius-round);
+}
+
+.playlist-container::-webkit-scrollbar-thumb:hover {
+    background: var(--purple-dark);
+}
+
+/* ========================================
+   DARK MODE
+======================================== */
+[data-theme="dark"] .music-player {
+    background: rgba(30, 26, 46, 0.95);
+    border-color: rgba(107, 91, 147, 0.3);
+}
+
+[data-theme="dark"] .player-header {
+    background: linear-gradient(135deg, rgba(74, 63, 107, 0.6) 0%, rgba(58, 40, 53, 0.6) 100%);
+}
+
+[data-theme="dark"] .progress-bar,
+[data-theme="dark"] .volume-slider {
+    background: rgba(107, 91, 147, 0.3);
+}
+
+[data-theme="dark"] .playlist-toggle {
+    background: rgba(107, 91, 147, 0.2);
+    border-color: rgba(107, 91, 147, 0.3);
+}
+
+[data-theme="dark"] .playlist-toggle:hover {
+    background: rgba(107, 91, 147, 0.3);
+}
+
+[data-theme="dark"] .playlist-item:hover {
+    background: rgba(107, 91, 147, 0.2);
+}
+
+[data-theme="dark"] .playlist-item.active {
+    background: linear-gradient(135deg, rgba(107, 91, 147, 0.3) 0%, rgba(155, 107, 138, 0.2) 100%);
+}
+
+[data-theme="dark"] .playlist-container {
+    border-color: rgba(107, 91, 147, 0.3);
+}
+
+[data-theme="dark"] .control-btn:hover {
+    background: rgba(107, 91, 147, 0.3);
+}
+
+/* ========================================
+   RESPONSIVE - TABLET
+======================================== */
+@media (max-width: 768px) {
+    .music-player {
+        width: 300px;
+        right: var(--space-md);
+        bottom: var(--space-md);
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE (Ultra Minimalist)
+======================================== */
+@media (max-width: 480px) {
+    /* Base mobile player - Ultra compact floating pill */
+    .music-player {
+        width: auto;
+        min-width: 200px;
+        max-width: calc(100% - 32px);
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        transform: translateY(0);
+        border-radius: 50px;
+        padding: 0;
+        touch-action: pan-y;
+        will-change: transform, bottom;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.3s ease;
+    }
+    
+    /* Hidden state - slides down off screen */
+    .music-player.mobile-hidden {
+        transform: translateY(calc(100% + 40px));
+        opacity: 0.8;
+    }
+    
+    /* Peek state - shows just the pull tab */
+    .music-player.mobile-peek {
+        transform: translateY(calc(100% - 24px));
+    }
+    
+    /* Dragging state - no transition during drag */
+    .music-player.dragging {
+        transition: none !important;
+    }
+
+    /* Header becomes the entire visible player on mobile */
+    .player-header {
+        position: relative;
+        padding: 8px 12px;
+        border-radius: 50px;
+        gap: 8px;
+        background: linear-gradient(135deg, var(--purple-pale) 0%, var(--pink-pale) 100%);
+    }
+    
+    /* Drag handle indicator */
+    .player-header::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: rgba(139, 124, 179, 0.4);
+        border-radius: 2px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    
+    .music-player.mobile-expanded .player-header::before {
+        opacity: 1;
+        top: 8px;
+    }
+
+    /* Compact player icon */
+    .player-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        border-radius: 50%;
+    }
+    
+    /* Song info - single line */
+    .player-info-mini {
+        flex: 1;
+        gap: 0;
+    }
+    
+    .player-header .song-title {
+        font-size: 12px;
+        line-height: 1.2;
+    }
+    
+    .player-header .song-artist {
+        font-size: 10px;
+        line-height: 1.2;
+        opacity: 0.7;
+    }
+    
+    /* Compact play button */
+    .mini-btn {
+        width: 32px;
+        height: 32px;
+        box-shadow: none;
+    }
+    
+    .mini-btn .material-icons {
+        font-size: 18px;
+    }
+
+    /* Hide full player body by default on mobile */
+    .player-body {
+        display: none;
+        padding: 12px 16px 16px;
+        gap: 12px;
+        border-top: 1px solid rgba(139, 124, 179, 0.15);
+    }
+    
+    /* Show body when expanded */
+    .music-player.mobile-expanded {
+        border-radius: var(--radius-lg);
+        left: 50%;
+        right: auto;
+        width: calc(100% - 32px);
+        max-width: 320px;
+        transform: translateX(-50%);
+    }
+    
+    .music-player.mobile-expanded .player-header {
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 20px 16px 12px;
+    }
+    
+    .music-player.mobile-expanded .player-body {
+        display: flex;
+        animation: slideDownMobile 0.3s ease;
+    }
+    
+    @keyframes slideDownMobile {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Simplified progress bar */
+    .progress-bar {
+        height: 3px;
+    }
+    
+    .progress-bar:hover,
+    .progress-bar:active {
+        height: 6px;
+    }
+    
+    .progress-time {
+        font-size: 9px;
+    }
+
+    /* Compact controls */
+    .player-controls {
+        gap: 4px;
+    }
+    
+    .control-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .control-btn .material-icons {
+        font-size: 18px;
+    }
+
+    /* Simplified volume - icon only, tap to toggle mute */
+    .player-volume {
+        gap: 8px;
+    }
+    
+    .volume-slider {
+        height: 3px;
+    }
+    
+    .volume-icon {
+        font-size: 16px;
+    }
+
+    /* Compact playlist toggle */
+    .playlist-toggle {
+        padding: 6px 10px;
+        font-size: 10px;
+        border-radius: 20px;
+    }
+    
+    .playlist-toggle .material-icons {
+        font-size: 14px;
+    }
+
+    /* Compact playlist */
+    .playlist-container {
+        max-height: 120px;
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+    
+    .playlist-item {
+        padding: 6px 8px;
+        gap: 8px;
+    }
+    
+    .playlist-item-art {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .playlist-item-art .material-icons {
+        font-size: 12px;
+    }
+    
+    .playlist-item-title {
+        font-size: 10px;
+    }
+    
+    .playlist-item-artist {
+        font-size: 9px;
+    }
+    
+    .playlist-item-duration {
+        font-size: 9px;
+    }
+
+    /* Pull-up tab when hidden - visible indicator to bring back player */
+    .mobile-pull-tab {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 24px;
+        background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-hot) 100%);
+        border-radius: 12px 12px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: calc(var(--z-sticky) - 1);
+        box-shadow: 0 -2px 10px rgba(139, 124, 179, 0.3);
+    }
+    
+    .mobile-pull-tab::before {
+        content: '';
+        width: 24px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 2px;
+    }
+    
+    .mobile-pull-tab.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    .mobile-pull-tab:active {
+        transform: translateX(-50%) scale(0.95);
+    }
+    
+    /* Dark mode mobile */
+    [data-theme="dark"] .player-header::before {
+        background: rgba(169, 158, 208, 0.5);
+    }
+    
+    [data-theme="dark"] .mobile-pull-tab {
+        background: linear-gradient(135deg, var(--purple-dark) 0%, var(--pink-medium) 100%);
+    }
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+.music-player {
+    animation: playerSlideIn 0.5s var(--transition-bounce);
+}
+
+@keyframes playerSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile-specific animation override */
+@media (max-width: 480px) {
+    .music-player {
+        animation: playerSlideInMobile 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes playerSlideInMobile {
+        0% {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .music-player.mobile-expanded {
+        animation: none;
+    }
+}
+
+/* ========================================
+   LEGACY CLEANUP - Remove unused elements
+======================================== */
+.player-artwork,
+.vinyl-disc,
+.player-drag-handle,
+.player-minimize,
+.player-minimized,
+.mini-artwork,
+.mini-info,
+.mini-play,
+.mini-title,
+.progress-handle,
+.volume-handle,
+.playlist-header,
+.add-song-btn,
+.playlist-item-play {
+    display: none;
+}

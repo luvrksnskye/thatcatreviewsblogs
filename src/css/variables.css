@@ -1,0 +1,141 @@
+/* =====================================================
+   CSS VARIABLES - THEME CONFIGURATION
+   ===================================================== */
+
+:root {
+    /* ========================================
+       PRIMARY COLORS
+    ======================================== */
+    --purple-dark: #8B7CB3;
+    --purple-medium: #A99ED0;
+    --purple-light: #C4B8E0;
+    --purple-pale: #DDD6F3;
+    --purple-pastel: #E8E0F7;
+    
+    /* ========================================
+       PINK ACCENTS
+    ======================================== */
+    --pink-dark: #D4A5C9;
+    --pink-medium: #E8B4D8;
+    --pink-light: #F5D0E8;
+    --pink-pale: #FBE4F3;
+    --pink-hot: #FF6B9D;
+    
+    /* ========================================
+       WHITE & CREAM
+    ======================================== */
+    --white: #FFFFFF;
+    --cream: #FFF9FC;
+    --off-white: #F8F4FF;
+    
+    /* ========================================
+       CARD COLORS
+    ======================================== */
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-purple: rgba(200, 180, 230, 0.6);
+    --card-pink: rgba(245, 208, 232, 0.7);
+    
+    /* ========================================
+       TEXT COLORS
+    ======================================== */
+    --text-dark: #6B5B8A;
+    --text-medium: #8B7BA8;
+    --text-light: #A99EC0;
+    
+    /* ========================================
+       UI COLORS
+    ======================================== */
+    --toggle-on: #FF8FAB;
+    --toggle-off: #C4B8E0;
+    --badge-purple: #9B8AC4;
+    --badge-pink: #F0A0C8;
+    
+    /* ========================================
+       BACKGROUND GRADIENTS
+    ======================================== */
+    --bg-gradient: linear-gradient(
+        180deg,
+        #B8A8D8 0%,
+        #C4B8E8 20%,
+        #D4C8F0 40%,
+        #E0D8F5 60%,
+        #E8E4F8 80%,
+        #D8E8F8 100%
+    );
+    
+    --device-gradient: linear-gradient(
+        135deg,
+        var(--purple-light) 0%,
+        var(--purple-pale) 50%,
+        var(--pink-pale) 100%
+    );
+    
+    --content-gradient: linear-gradient(
+        180deg,
+        var(--purple-pale) 0%,
+        var(--pink-pale) 50%,
+        var(--purple-pastel) 100%
+    );
+    
+    /* ========================================
+       SHADOWS
+    ======================================== */
+    --shadow-soft: 0 4px 20px rgba(139, 124, 179, 0.15);
+    --shadow-medium: 0 8px 32px rgba(139, 124, 179, 0.2);
+    --shadow-card: 0 4px 16px rgba(180, 160, 210, 0.25);
+    --shadow-hover: 0 12px 40px rgba(180, 160, 210, 0.35);
+    
+    /* ========================================
+       FONTS
+    ======================================== */
+    --font-main: 'Nunito', 'Varela Round', sans-serif;
+    --font-display: 'Varela Round', 'Nunito', sans-serif;
+    --font-accent: 'Anton', sans-serif;
+    
+    /* ========================================
+       SPACING
+    ======================================== */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    
+    /* ========================================
+       BORDER RADIUS
+    ======================================== */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-round: 50px;
+    --radius-circle: 50%;
+    
+    /* ========================================
+       TRANSITIONS
+    ======================================== */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* ========================================
+       Z-INDEX LAYERS
+    ======================================== */
+    --z-background: -1;
+    --z-default: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal: 300;
+    --z-notification: 400;
+    --z-tooltip: 500;
+    --z-clouds: -3;
+    
+    /* ========================================
+       ANIMATIONS DURATION
+    ======================================== */
+    --anim-duration-fast: 0.2s;
+    --anim-duration-normal: 0.4s;
+    --anim-duration-slow: 0.8s;
+}
