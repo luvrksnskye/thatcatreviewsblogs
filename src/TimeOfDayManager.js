@@ -242,7 +242,7 @@ export class TimeOfDayManager {
     playMeow() {
         if (this.sound) {
             // Register meow sound if not already registered
-            this.sound.register('meow', { url: '/src/sound/meow.mp3', volume: 0.8 });
+            this.sound.register('meow', { url: './src/sound/meow.mp3', volume: 0.8 });
             this.sound.play('meow');
         }
     }
@@ -287,7 +287,7 @@ export class TimeOfDayManager {
         this.closeModal();
         
         // Play confirmation sound
-        this.sound?.register('codeFinish', { url: '/src/sound/UI_Code_Finish.wav', volume: 0.8 });
+        this.sound?.register('codeFinish', { url: './src/sound/UI_Code_Finish.wav', volume: 0.8 });
         this.sound?.play('codeFinish');
         
         // Short delay before showing clock
@@ -297,7 +297,7 @@ export class TimeOfDayManager {
         await this.showClockAnimation(time);
         
         // Play countdown finish sound
-        this.sound?.register('timerCountdown', { url: '/src/sound/System_Timer_CountDown.wav', volume: 0.8 });
+        this.sound?.register('timerCountdown', { url: './src/sound/System_Timer_CountDown.wav', volume: 0.8 });
         this.sound?.play('timerCountdown');
         
         // Brief pause
