@@ -460,51 +460,28 @@ export class TimeOfDayManager {
         document.documentElement.classList.add(`time-${time}`);
     }
 
-    // ========================================
-    // UPDATE PLAYLIST - Uses MusicPlayer's public API
-    // ========================================
-    updatePlaylist(time) {
-        if (!this.musicPlayer) {
-            console.warn('MusicPlayer not available for playlist update');
-            return;
-        }
-        
-        const playlist = this.playlists[time];
-        if (!playlist || playlist.length === 0) {
-            console.warn(`No playlist found for time: ${time}`);
-            return;
-        }
-        
-        // Check if music was playing before the change
-        const wasPlaying = this.musicPlayer.getIsPlaying();
-        
-        // Use the public API to update playlist
-        // This ensures proper state management in the MusicPlayer
-        if (typeof this.musicPlayer.setPlaylist === 'function') {
-            // Use setPlaylist which handles everything properly
-            this.musicPlayer.setPlaylist(playlist, wasPlaying);
-        } else {
-            // Fallback for backwards compatibility
-            // Direct property access (legacy method)
-            this.musicPlayer.playlist = [...playlist];
-            this.musicPlayer.currentIndex = 0;
-            this.musicPlayer.renderPlaylist();
-            
-            // Update track info for first song
-            if (playlist.length > 0) {
-                this.musicPlayer.updateTrackInfo(playlist[0]);
-            }
-            
-            // Resume playback if it was playing
-            if (wasPlaying) {
-                setTimeout(() => {
-                    this.musicPlayer.playTrack(0);
-                }, 100);
-            }
-        }
-        
-        console.log(`✧ Playlist updated to ${time}: ${playlist.length} tracks`);
+  updatePlaylist(time) {
+    if (!this.musicPlayer) {
+        console.warn('MusicPlayer not available for playlist update');
+        return;
     }
+    
+    const playlist = this.playlists[time];
+    if (!playlist || playlist.length === 0) {
+        console.warn(`No playlist found for time: ${time}`);
+        return;
+    }
+    
+    // Check if music was playing before the change
+    const wasPlaying = this.musicPlayer.isPlaying; // USAR LA PROPIEDAD DIRECTA
+    
+    // Use the public API to update playlist
+    if (typeof this.musicPlayer.setPlaylist === 'function') {
+        this.musicPlayer.setPlaylist(playlist, wasPlaying);
+    }
+    
+    console.log(`Playlist updated to ${time}: ${playlist.length} tracks`);
+}
 
     // ========================================
     // GET PLAYLIST FOR TIME

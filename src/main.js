@@ -19,6 +19,7 @@ import { TimeOfDayManager } from './TimeOfDayManager.js';
 import { BlogStatusManager } from './BlogStatusManager.js';
 import { SitePetManager } from './SitePetManager.js';
 import { Utils } from './Utils.js';
+import { MusicStateManager } from './MusicStateManager.js';
 
 // ========================================
 // APPLICATION CLASS
@@ -111,6 +112,14 @@ class KawaiiBlogApp {
         );
         this.modules.music.init();
         
+
+ // Music State Manager
+    this.modules.musicState = new MusicStateManager(
+        this.modules.storage,
+        this.modules.music
+    );
+    
+    await this.modules.musicState.init();
         // Gallery
         this.modules.gallery = new GalleryManager(this.modules.sound);
         this.modules.gallery.init();

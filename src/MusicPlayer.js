@@ -1,6 +1,6 @@
 /* =====================================================
    MUSICPLAYER.JS - Audio Player with Playlist
-   Full-featured music player component
+   Full-featured music player component (VERSION ORIGINAL)
    ===================================================== */
 
 import { Utils } from './Utils.js';
@@ -10,7 +10,7 @@ export class MusicPlayer {
         this.storage = storage;
         this.notification = notificationManager;
         this.sound = soundManager;
-        
+
         this.audio = new Audio();
         this.isPlaying = false;
         this.isMinimized = false;
@@ -23,7 +23,7 @@ export class MusicPlayer {
         this.elements = {};
         this.isDragging = false;
         this.dragOffset = { x: 0, y: 0 };
-        
+
         // Mobile state
         this.isMobile = false;
         this.mobileState = 'visible'; // 'visible', 'hidden', 'expanded'
@@ -32,9 +32,17 @@ export class MusicPlayer {
         this.touchStartTime = 0;
         this.isDraggingMobile = false;
         this.pullTab = null;
-        
+
         // Track whether playlist was changed externally
         this.isExternalPlaylistChange = false;
+
+        // Autoplay/resume state
+        this.shouldAutoplay = false;
+        this.savedCurrentTime = 0;
+        this._pendingResume = null;
+
+        // Throttling saves
+        this._lastSave = 0;
     }
 
     init() {
@@ -45,11 +53,27 @@ export class MusicPlayer {
         this.setupDesktopDragging();
         this.setupMobileInteractions();
         this.setupPlaylist();
-        this.loadState();
+
+        // IMPORTANT: playlist first, then state
         this.setupDefaultPlaylist();
+        this.loadState();
+
+        // Update UI based on loaded state
+        this.renderPlaylist();
+        if (this.playlist.length > 0) {
+            this.currentIndex = Utils.clamp(this.currentIndex, 0, this.playlist.length - 1);
+            this.updateTrackInfo(this.playlist[this.currentIndex]);
+        }
+
         this.setupResizeListener();
+
+        // Attempt resume/autoplay after initialization (gesture-based)
+        this.attemptAutoplay();
+
         console.log('✧ Music Player initialized ✧');
+        return this;
     }
+
 
     cacheElements() {
         this.elements = {
@@ -97,8 +121,7 @@ export class MusicPlayer {
             resizeTimeout = setTimeout(() => {
                 const wasMobile = this.isMobile;
                 this.checkMobile();
-                
-                // Handle transition between mobile and desktop
+
                 if (wasMobile && !this.isMobile) {
                     this.resetToDesktop();
                 } else if (!wasMobile && this.isMobile) {
@@ -111,60 +134,52 @@ export class MusicPlayer {
     resetToDesktop() {
         const player = this.elements.player;
         if (!player) return;
-        
-        // Remove mobile classes and styles
+
         player.classList.remove('mobile-hidden', 'mobile-expanded', 'mobile-peek', 'dragging');
         player.style.transform = '';
         player.style.bottom = '';
-        
-        // Hide pull tab
+
         if (this.pullTab) {
             this.pullTab.classList.remove('visible');
         }
-        
+
         this.mobileState = 'visible';
     }
 
     resetToMobile() {
         const player = this.elements.player;
         if (!player) return;
-        
-        // Reset to mobile visible state
+
         player.classList.remove('mobile-hidden', 'mobile-expanded', 'mobile-peek');
         this.mobileState = 'visible';
-        
-        // Ensure pull tab exists
+
         if (!this.pullTab) {
             this.createPullTab();
         }
     }
 
     createPullTab() {
-        // Remove existing pull tab if any
         if (this.pullTab) {
             this.pullTab.remove();
         }
-        
-        // Create pull tab element
+
         this.pullTab = document.createElement('div');
         this.pullTab.className = 'mobile-pull-tab';
         this.pullTab.setAttribute('aria-label', 'Show music player');
         document.body.appendChild(this.pullTab);
-        
-        // Pull tab click handler
+
         this.pullTab.addEventListener('click', () => {
             this.showMobilePlayer();
         });
-        
-        // Pull tab swipe up handler
+
         this.pullTab.addEventListener('touchstart', (e) => {
             this.touchStartY = e.touches[0].clientY;
         }, { passive: true });
-        
+
         this.pullTab.addEventListener('touchend', (e) => {
             const touchEndY = e.changedTouches[0].clientY;
             const deltaY = this.touchStartY - touchEndY;
-            
+
             if (deltaY > 30) {
                 this.showMobilePlayer();
             }
@@ -178,6 +193,17 @@ export class MusicPlayer {
         this.audio.addEventListener('play', () => this.onPlay());
         this.audio.addEventListener('pause', () => this.onPause());
         this.audio.addEventListener('error', (e) => this.handleError(e));
+
+        // Always track time and persist (throttled)
+        this.audio.addEventListener('timeupdate', () => {
+            this.savedCurrentTime = this.audio.currentTime || 0;
+
+            const now = Date.now();
+            if (now - this._lastSave > 1000) {
+                this._lastSave = now;
+                this.saveState();
+            }
+        });
     }
 
     setupControls() {
@@ -210,7 +236,7 @@ export class MusicPlayer {
         header.addEventListener('mousedown', (e) => {
             if (this.isMobile) return;
             if (e.target.closest('.player-minimize') || e.target.closest('.mini-btn')) return;
-            
+
             this.isDragging = true;
             player.classList.add('dragging');
             const rect = player.getBoundingClientRect();
@@ -241,28 +267,24 @@ export class MusicPlayer {
         const player = this.elements.player;
         if (!header || !player) return;
 
-        // Touch start
         header.addEventListener('touchstart', (e) => {
             if (!this.isMobile) return;
-            
+
             this.isDraggingMobile = true;
             this.touchStartY = e.touches[0].clientY;
             this.touchCurrentY = this.touchStartY;
             this.touchStartTime = Date.now();
-            
+
             player.classList.add('dragging');
         }, { passive: true });
 
-        // Touch move
         header.addEventListener('touchmove', (e) => {
             if (!this.isDraggingMobile || !this.isMobile) return;
-            
+
             this.touchCurrentY = e.touches[0].clientY;
             const deltaY = this.touchCurrentY - this.touchStartY;
-            
-            // Apply drag transform based on current state
+
             if (this.mobileState === 'visible' || this.mobileState === 'expanded') {
-                // Only allow downward swipe
                 if (deltaY > 0) {
                     player.style.transform = `translateY(${deltaY}px)`;
                     if (this.mobileState === 'expanded') {
@@ -270,32 +292,26 @@ export class MusicPlayer {
                     }
                 }
             } else if (this.mobileState === 'hidden') {
-                // Allow upward swipe to show
                 if (deltaY < 0) {
-                    const currentOffset = player.offsetHeight + 40;
-                    const newOffset = Math.max(0, currentOffset + deltaY);
                     player.style.transform = `translateY(calc(100% + 40px + ${deltaY}px))`;
                 }
             }
         }, { passive: true });
 
-        // Touch end
-        header.addEventListener('touchend', (e) => {
+        header.addEventListener('touchend', () => {
             if (!this.isDraggingMobile || !this.isMobile) return;
-            
+
             const deltaY = this.touchCurrentY - this.touchStartY;
             const touchDuration = Date.now() - this.touchStartTime;
-            const velocity = Math.abs(deltaY) / touchDuration;
+            const velocity = Math.abs(deltaY) / Math.max(1, touchDuration);
             const threshold = 50;
             const velocityThreshold = 0.5;
-            
+
             player.classList.remove('dragging');
             player.style.transform = '';
-            
-            // Determine action based on swipe direction and magnitude
+
             const isQuickSwipe = velocity > velocityThreshold;
-            const isSignificantSwipe = Math.abs(deltaY) > threshold;
-            
+
             if (this.mobileState === 'visible') {
                 if ((deltaY > threshold || isQuickSwipe) && deltaY > 0) {
                     this.hideMobilePlayer();
@@ -309,65 +325,57 @@ export class MusicPlayer {
                     this.showMobilePlayer();
                 }
             }
-            
+
             this.isDraggingMobile = false;
         }, { passive: true });
 
-        // Tap to expand (on header, not on controls)
         header.addEventListener('click', (e) => {
             if (!this.isMobile) return;
             if (this.isDraggingMobile) return;
-            
-            // Don't expand if clicking on buttons
             if (e.target.closest('.mini-btn') || e.target.closest('button')) return;
-            
-            // Check for quick tap (not a drag)
+
             const touchDuration = Date.now() - this.touchStartTime;
             if (touchDuration < 200 && Math.abs(this.touchCurrentY - this.touchStartY) < 10) {
                 this.toggleMobileExpand();
             }
         });
 
-        // Close expanded view when clicking outside
         document.addEventListener('click', (e) => {
             if (!this.isMobile || this.mobileState !== 'expanded') return;
-            
             if (!player.contains(e.target)) {
                 this.collapseMobilePlayer();
             }
         });
     }
 
-    // Mobile state management
     showMobilePlayer() {
         const player = this.elements.player;
         if (!player) return;
-        
+
         player.classList.remove('mobile-hidden', 'mobile-peek');
         this.mobileState = 'visible';
-        
+
         if (this.pullTab) {
             this.pullTab.classList.remove('visible');
         }
-        
+
         this.sound?.play('whoosh');
     }
 
     hideMobilePlayer() {
         const player = this.elements.player;
         if (!player) return;
-        
+
         player.classList.add('mobile-hidden');
         player.classList.remove('mobile-expanded', 'mobile-peek');
         this.mobileState = 'hidden';
-        
-        // Show pull tab after transition
+
         setTimeout(() => {
             if (this.pullTab && this.mobileState === 'hidden') {
                 this.pullTab.classList.add('visible');
             }
         }, 300);
-        
+
         this.sound?.play('whoosh');
     }
 
@@ -382,24 +390,23 @@ export class MusicPlayer {
     expandMobilePlayer() {
         const player = this.elements.player;
         if (!player) return;
-        
+
         player.classList.add('mobile-expanded');
         player.classList.remove('mobile-hidden', 'mobile-peek');
         this.mobileState = 'expanded';
-        
+
         this.sound?.play('pop');
     }
 
     collapseMobilePlayer() {
         const player = this.elements.player;
         if (!player) return;
-        
+
         player.classList.remove('mobile-expanded');
         this.mobileState = 'visible';
-        
-        // Close playlist if open
+
         this.elements.playlistContainer?.classList.remove('show');
-        
+
         this.sound?.play('click');
     }
 
@@ -410,19 +417,18 @@ export class MusicPlayer {
     }
 
     setupDefaultPlaylist() {
-        // Only set default if no external playlist has been set
         if (this.playlist.length === 0 && !this.isExternalPlaylistChange) {
             this.playlist = [
                 { id: '1', title: 'Dreamy', artist: 'Lo-Fi Beats', duration: '3:00', src: './src/bgm/Dreamy.mp3' },
                 { id: '2', title: 'Peace and Tranquility', artist: 'A Hat in Time', duration: '15:00', src: './src/bgm/Peace_and_Tranquility.mp3' },
                 { id: '3', title: 'Null', artist: '???', duration: '0:00', src: '' }
             ];
-            this.renderPlaylist();
         }
     }
 
     renderPlaylist() {
         if (!this.elements.playlistList) return;
+
         this.elements.playlistList.innerHTML = this.playlist.map((song, index) => `
             <li class="playlist-item ${index === this.currentIndex ? 'active' : ''}" data-index="${index}">
                 <div class="playlist-item-art"><span class="material-icons">music_note</span></div>
@@ -434,30 +440,50 @@ export class MusicPlayer {
                 <button class="playlist-item-play"><span class="material-icons">play_arrow</span></button>
             </li>
         `).join('');
-        
+
         this.elements.playlistList.querySelectorAll('.playlist-item').forEach(item => {
-            item.addEventListener('click', () => this.playTrack(parseInt(item.dataset.index)));
+            item.addEventListener('click', () => this.playTrack(parseInt(item.dataset.index, 10)));
         });
     }
 
-    playTrack(index) {
+    playTrack(index, resumeTime = null) {
         if (index < 0 || index >= this.playlist.length) return;
+
         this.currentIndex = index;
         const track = this.playlist[index];
         this.updateTrackInfo(track);
-        
+
+        // Prep state immediately
+        this.savedCurrentTime = (resumeTime !== null && resumeTime > 0) ? resumeTime : 0;
+        this.saveState();
+
         if (track.src) {
+            // If switching tracks, pause current first (avoid overlap)
+            try { this.audio.pause(); } catch (_) {}
+
             this.audio.src = track.src;
+
+            if (resumeTime !== null && resumeTime > 0) {
+                const targetTime = resumeTime;
+                this.audio.addEventListener('loadedmetadata', () => {
+                    this.audio.currentTime = Math.min(targetTime, this.audio.duration || targetTime);
+                }, { once: true });
+            }
+
             this.audio.play().catch(error => {
                 console.warn('Auto-play prevented:', error);
+                this.isPlaying = false;
+                this.updatePlayState();
                 this.notification?.info('Click Play', 'Click the play button to start the music');
+                this.saveState();
             });
         } else {
             this.notification?.info('Demo Mode', `Playing: ${track.title}`);
             this.isPlaying = true;
             this.updatePlayState();
+            this.saveState();
         }
-        
+
         this.renderPlaylist();
         this.sound?.play('pop');
     }
@@ -473,21 +499,29 @@ export class MusicPlayer {
             this.notification?.warning('No Songs', 'Add some songs to your playlist first!');
             return;
         }
-        if (this.isPlaying) { 
-            this.pause(); 
-        } else { 
-            this.play(); 
+        if (this.isPlaying) {
+            this.pause();
+        } else {
+            this.play();
         }
         this.sound?.play('toggle');
     }
 
     play() {
-        if (this.audio.src) { 
+        // If we have a pending resume (from last session), use it now
+        if (this._pendingResume) {
+            const { index, time } = this._pendingResume;
+            this._pendingResume = null;
+            this.playTrack(index, time);
+            return;
+        }
+
+        if (this.audio.src) {
             this.audio.play().catch(error => {
                 console.warn('Play prevented:', error);
-            }); 
-        } else if (this.playlist.length > 0) { 
-            this.playTrack(this.currentIndex); 
+            });
+        } else if (this.playlist.length > 0) {
+            this.playTrack(this.currentIndex, this.savedCurrentTime || 0);
         }
     }
 
@@ -495,55 +529,60 @@ export class MusicPlayer {
         this.audio.pause();
         this.isPlaying = false;
         this.updatePlayState();
+        this.saveState();
     }
 
-    onPlay() { 
-        this.isPlaying = true; 
-        this.updatePlayState(); 
+    onPlay() {
+        this.isPlaying = true;
+        this.updatePlayState();
+        this.saveState();
     }
-    
-    onPause() { 
-        this.isPlaying = false; 
-        this.updatePlayState(); 
+
+    onPause() {
+        this.isPlaying = false;
+        this.updatePlayState();
+        this.saveState();
     }
-    
-    updatePlayState() { 
-        this.elements.player?.classList.toggle('playing', this.isPlaying); 
+
+    updatePlayState() {
+        this.elements.player?.classList.toggle('playing', this.isPlaying);
     }
 
     nextTrack() {
-        let nextIndex = this.isShuffle 
-            ? Math.floor(Math.random() * this.playlist.length) 
+        const nextIndex = this.isShuffle
+            ? Math.floor(Math.random() * this.playlist.length)
             : (this.currentIndex + 1) % this.playlist.length;
-        this.playTrack(nextIndex);
+        this.playTrack(nextIndex, 0);
     }
 
     prevTrack() {
-        if (this.audio.currentTime > 3) { 
-            this.audio.currentTime = 0; 
-            return; 
+        if (this.audio.currentTime > 3) {
+            this.audio.currentTime = 0;
+            this.savedCurrentTime = 0;
+            this.saveState();
+            return;
         }
-        let prevIndex = this.isShuffle 
-            ? Math.floor(Math.random() * this.playlist.length) 
+        let prevIndex = this.isShuffle
+            ? Math.floor(Math.random() * this.playlist.length)
             : this.currentIndex - 1;
         if (prevIndex < 0) prevIndex = this.playlist.length - 1;
-        this.playTrack(prevIndex);
+        this.playTrack(prevIndex, 0);
     }
 
     handleSongEnd() {
         switch (this.repeatMode) {
-            case 'one': 
-                this.audio.currentTime = 0; 
-                this.audio.play(); 
+            case 'one':
+                this.audio.currentTime = 0;
+                this.audio.play().catch(() => {});
                 break;
-            case 'all': 
-                this.nextTrack(); 
+            case 'all':
+                this.nextTrack();
                 break;
-            default: 
-                if (this.currentIndex < this.playlist.length - 1) { 
-                    this.nextTrack(); 
-                } else { 
-                    this.pause(); 
+            default:
+                if (this.currentIndex < this.playlist.length - 1) {
+                    this.nextTrack();
+                } else {
+                    this.pause();
                 }
         }
     }
@@ -585,6 +624,8 @@ export class MusicPlayer {
         const rect = this.elements.progressBar.getBoundingClientRect();
         const percent = (e.clientX - rect.left) / rect.width;
         this.audio.currentTime = percent * this.audio.duration;
+        this.savedCurrentTime = this.audio.currentTime || 0;
+        this.saveState();
     }
 
     setVolumeFromClick(e) {
@@ -603,11 +644,11 @@ export class MusicPlayer {
     }
 
     toggleMute() {
-        if (this.audio.volume > 0) { 
-            this.previousVolume = this.volume; 
-            this.setVolume(0); 
-        } else { 
-            this.setVolume(this.previousVolume || 0.7); 
+        if (this.audio.volume > 0) {
+            this.previousVolume = this.volume;
+            this.setVolume(0);
+        } else {
+            this.setVolume(this.previousVolume || 0.7);
         }
     }
 
@@ -623,6 +664,7 @@ export class MusicPlayer {
         this.isMinimized = !this.isMinimized;
         this.elements.player?.classList.toggle('minimized', this.isMinimized);
         this.sound?.play('switch');
+        this.saveState();
     }
 
     togglePlaylist() {
@@ -639,145 +681,191 @@ export class MusicPlayer {
         this.playlist.push({ id: Utils.generateId('track'), ...track });
         this.renderPlaylist();
         this.notification?.success('Added', `"${track.title}" added to playlist`);
+        this.saveState();
     }
 
     removeFromPlaylist(index) {
         if (index < 0 || index >= this.playlist.length) return;
         const removed = this.playlist.splice(index, 1)[0];
+
         if (index < this.currentIndex) {
             this.currentIndex--;
-        } else if (index === this.currentIndex) { 
-            this.pause(); 
+        } else if (index === this.currentIndex) {
+            this.pause();
             if (this.playlist.length > 0) {
-                this.currentIndex = Math.min(this.currentIndex, this.playlist.length - 1); 
+                this.currentIndex = Math.min(this.currentIndex, this.playlist.length - 1);
+                this.updateTrackInfo(this.playlist[this.currentIndex]);
             }
         }
+
         this.renderPlaylist();
         this.notification?.info('Removed', `"${removed.title}" removed from playlist`);
+        this.saveState();
+    }
+
+    // ========================================
+    // RESUME / "AUTOPLAY" (gesture-based)
+    // ========================================
+
+    attemptAutoplay() {
+        const state = this.storage?.get('musicPlayer');
+
+        if (!state || !state.wasPlaying) {
+            console.log('✧ No autoplay: Music was not playing on last visit');
+            return;
+        }
+
+        if (this.playlist.length === 0) {
+            console.log('✧ No autoplay: Playlist is empty');
+            return;
+        }
+
+        const savedIndex = state.currentIndex ?? 0;
+        const savedTime = state.currentTime ?? 0;
+
+        if (savedIndex < 0 || savedIndex >= this.playlist.length) {
+            console.log('✧ No autoplay: Saved track index is invalid');
+            return;
+        }
+
+        // Set UI to last track without forcing play
+        this.currentIndex = savedIndex;
+        this.savedCurrentTime = savedTime;
+        this.updateTrackInfo(this.playlist[this.currentIndex]);
+        this.renderPlaylist();
+
+        // Queue resume for first user interaction
+        this._pendingResume = { index: savedIndex, time: savedTime };
+
+        const resumeOnce = () => {
+            if (!this._pendingResume) return;
+            const { index, time } = this._pendingResume;
+            this._pendingResume = null;
+            this.playTrack(index, time);
+        };
+
+        window.addEventListener('pointerdown', resumeOnce, { once: true });
+        window.addEventListener('keydown', resumeOnce, { once: true });
+
+        console.log(`✧ Resume armed: Track ${savedIndex + 1} at ${savedTime.toFixed(1)}s (on first interaction)`);
     }
 
     // ========================================
     // PUBLIC API for TimeOfDayManager
     // ========================================
-    
-    /**
-     * Set playlist from external source (TimeOfDayManager)
-     * This is the preferred method for external playlist changes
-     * @param {Array} newPlaylist - Array of track objects
-     * @param {boolean} autoPlay - Whether to start playing automatically
-     */
+
     setPlaylist(newPlaylist, autoPlay = false) {
         if (!newPlaylist || !Array.isArray(newPlaylist)) return;
-        
+
         this.isExternalPlaylistChange = true;
         const wasPlaying = this.isPlaying;
-        
-        // Pause current track
+
         this.pause();
-        
-        // Update playlist
+
         this.playlist = [...newPlaylist];
         this.currentIndex = 0;
-        
-        // Render new playlist
+        this.savedCurrentTime = 0;
+
         this.renderPlaylist();
-        
-        // Update track info for first song
+
         if (this.playlist.length > 0) {
             this.updateTrackInfo(this.playlist[0]);
-            
-            // If was playing or autoPlay requested, start new track
+
             if (wasPlaying || autoPlay) {
-                // Small delay to let UI update
                 setTimeout(() => {
-                    this.playTrack(0);
+                    this.playTrack(0, 0);
                 }, 100);
             }
         }
-        
+
+        this.saveState();
         console.log('✧ Playlist updated:', this.playlist.length, 'tracks');
     }
-    
-    /**
-     * Update playlist without interrupting playback if possible
-     * Used by TimeOfDayManager for seamless transitions
-     * @param {Array} newPlaylist - Array of track objects  
-     */
+
     updatePlaylistSeamless(newPlaylist) {
         if (!newPlaylist || !Array.isArray(newPlaylist)) return;
-        
+
         this.isExternalPlaylistChange = true;
-        
-        // Just update the playlist data and re-render
         this.playlist = [...newPlaylist];
-        
-        // Clamp currentIndex to valid range
+
         if (this.currentIndex >= this.playlist.length) {
             this.currentIndex = 0;
+            this.savedCurrentTime = 0;
         }
-        
-        // Render new playlist
+
         this.renderPlaylist();
-        
-        // Update track info
+
         if (this.playlist.length > 0 && this.playlist[this.currentIndex]) {
             this.updateTrackInfo(this.playlist[this.currentIndex]);
         }
-        
+
+        this.saveState();
         console.log('✧ Playlist updated seamlessly:', this.playlist.length, 'tracks');
     }
-    
-    /**
-     * Get current playlist
-     * @returns {Array} Current playlist
-     */
+
     getPlaylist() {
         return [...this.playlist];
     }
-    
-    /**
-     * Check if player is currently playing
-     * @returns {boolean} Playing state
-     */
+
     getIsPlaying() {
         return this.isPlaying;
     }
 
     saveState() {
-        this.storage?.set('musicPlayer', { 
-            volume: this.volume, 
-            isShuffle: this.isShuffle, 
-            repeatMode: this.repeatMode, 
-            currentIndex: this.currentIndex 
+        this.storage?.set('musicPlayer', {
+            volume: this.volume,
+            isShuffle: this.isShuffle,
+            repeatMode: this.repeatMode,
+            currentIndex: this.currentIndex,
+            wasPlaying: this.isPlaying,
+            currentTime: this.savedCurrentTime
         });
     }
 
     loadState() {
         const state = this.storage?.get('musicPlayer');
-        if (state) {
-            this.setVolume(state.volume ?? 0.7);
-            this.isShuffle = state.isShuffle ?? false;
-            this.repeatMode = state.repeatMode ?? 'none';
-            this.currentIndex = state.currentIndex ?? 0;
-            this.elements.btnShuffle?.classList.toggle('active', this.isShuffle);
-            this.elements.btnRepeat?.classList.toggle('active', this.repeatMode !== 'none');
-            
-            const icon = this.elements.btnRepeat?.querySelector('.material-icons');
-            if (icon) icon.textContent = this.repeatMode === 'one' ? 'repeat_one' : 'repeat';
-        }
+        if (!state) return;
+
+        this.setVolume(state.volume ?? 0.7);
+        this.isShuffle = state.isShuffle ?? false;
+        this.repeatMode = state.repeatMode ?? 'none';
+        this.currentIndex = state.currentIndex ?? 0;
+        this.shouldAutoplay = state.wasPlaying ?? false;
+        this.savedCurrentTime = state.currentTime ?? 0;
+
+        this.elements.btnShuffle?.classList.toggle('active', this.isShuffle);
+        this.elements.btnRepeat?.classList.toggle('active', this.repeatMode !== 'none');
+
+        const icon = this.elements.btnRepeat?.querySelector('.material-icons');
+        if (icon) icon.textContent = this.repeatMode === 'one' ? 'repeat_one' : 'repeat';
+
+        console.log(`✧ State loaded: Index ${this.currentIndex}, WasPlaying ${this.shouldAutoplay}, Time ${this.savedCurrentTime.toFixed(1)}s`);
     }
 
-    destroy() { 
-        this.pause(); 
-        this.saveState(); 
-        this.audio.src = ''; 
-        
-        // Remove pull tab
+    destroy() {
+        this.pause();
+        this.saveState();
+        this.audio.src = '';
+
         if (this.pullTab) {
             this.pullTab.remove();
             this.pullTab = null;
         }
     }
+
+     getCurrentState() {
+        return {
+            isPlaying: this.isPlaying,
+            currentIndex: this.currentIndex,
+            currentTime: this.audio.currentTime || this.savedCurrentTime,
+            volume: this.volume,
+            isShuffle: this.isShuffle,
+            repeatMode: this.repeatMode,
+            track: this.playlist[this.currentIndex] || null
+        };
+    }
 }
+
+
 
 export default MusicPlayer;

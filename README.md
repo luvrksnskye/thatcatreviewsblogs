@@ -111,31 +111,74 @@ Tu página principal tiene un "Status Tab" que muestra automáticamente tus 4 po
 
 ---
 
-## Sistema de Comentarios por Blog
+# Sistema de Comentarios por Blog
 
 (PENDIENTE)
 
-## Comandos de Consola para probar la mascota del website
+# Site Pet - Horarios de Sprites
 
+## Horario Normal
+
+| Horario | Sprite | Descripción |
+|---------|--------|-------------|
+| 11 PM - 2 AM | `lookingAtSky` | Mirando las estrellas |
+| 2 AM - 6 AM | `sleeping` | Durmiendo |
+| 6 AM - 8 AM | `idle` | Despierto, moviendo cola |
+| 8 AM - 10 AM | `idleSit` | Sentado relajado |
+| 10 AM - 12 PM | `reading` | Leyendo un libro |
+| 12 PM - 2 PM | `silly` | Modo zoomies/juguetón |
+| 2 PM - 4 PM | `playing` | Jugando |
+| 4 PM - 6 PM | `idleSit` | Sentado relajado |
+| 6 PM - 8 PM | `reading` | Leyendo un libro |
+| 8 PM - 11 PM | `idle` | Despierto, moviendo cola |
+
+---
+
+## Sprites de Temporada
+
+### Halloween (Octubre)
+| Horario | Sprite |
+|---------|--------|
+| 6 PM - 11 PM | `halloween` |
+
+### Navidad (Diciembre)
+| Horario | Sprite |
+|---------|--------|
+| 6 AM - 10 PM | `christmas` |
+
+---
+
+## Comandos de Consola
+
+```javascript
+pet.help()          // Ver todos los comandos
+pet.list()          // Ver sprites disponibles
+pet.state()         // Ver estado actual
+
+// Cambiar sprite manualmente
+pet.set("nombre")   // Por nombre
+pet.idle()          // Atajos directos
+pet.sleeping()
+pet.lookingAtSky()
+pet.idleSit()
+pet.reading()
+pet.silly()
+pet.playing()
+pet.halloween()
+pet.christmas()
+
+// Control de animación
+pet.pause()         // Pausar
+pet.resume()        // Reanudar
+pet.speed(100)      // Más rápido
+pet.speed(200)      // Más lento
+
+// Pensamientos
+pet.think()         // Pensamiento random
+pet.think("Hola!")  // Pensamiento custom
 ```
-pet.help()           - Ver todos los comandos
-pet.list()           - Ver behaviors disponibles
-pet.set("nombre")    - Cambiar behavior
-pet.idle()           - Atajo para idle
-pet.sleeping()       - Atajo para sleeping
-pet.silly()          - Atajo para silly
-pet.lookingAtSky()   - Atajo para lookingAtSky
-pet.reading()        - Atajo para reading
-pet.christmas()      - Atajo para christmas
-pet.halloween()      - Atajo para halloween
-pet.playing()        - Atajo para playing
-pet.pause()          - Pausar animación
-pet.resume()         - Reanudar
-pet.speed(100)       - Cambiar velocidad (ms)
-pet.think()          - Pensamiento random
-pet.think("texto")   - Pensamiento custom
-pet.state()          - Ver estado actual
-```
+
+---
 
 ¡Happy blogging! Gracias por elegirme para hacer este trabajo. ♡
 
