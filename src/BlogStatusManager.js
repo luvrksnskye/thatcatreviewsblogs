@@ -220,7 +220,7 @@ export class BlogStatusManager {
     // ========================================
     async loadBlogManifest() {
         const sources = [
-            '/src/blogs/manifest.json'
+            './src/blogs/manifest.json'
         ];
         
         for (const source of sources) {

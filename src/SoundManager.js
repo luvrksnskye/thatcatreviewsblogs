@@ -7,15 +7,15 @@ export class SoundManager {
         this.sounds = new Map();
         
         this.soundConfigs = {
-            click: { url: '/src/sound/UI_Check.wav', volume: 0.9 },
-            hover: { url: '/src/sound/UI_AlbumSubmit_Out.wav', volume: 0.6 },
-            tab: { url: '/src/sound/UI_MessageWindow_Open.wav', volume: 0.7 },
-            switch: { url: '/src/sound/UI_AlbumSubmit_Finish.wav', volume: 0.7 },
-            card: { url: '/src/sound/System_Lumi_01.wav', volume: 0.7 },
-            toggle: { url: '/src/sound/UI_AppWipe_In.wav', volume: 0.7 },
-            notification: { url: '/src/sound/UI_Announce_New.wav', volume: 0.8 },
-            success: { url: '/src/sound/UI_AlbumSubmit_Finish.wav', volume: 0.8 },
-            error: { url: '/src/sound/UI_Cancel.wav', volume: 0.8 }
+            click: { url: './src/sound/UI_Check.wav', volume: 0.9 },
+            hover: { url: './src/sound/UI_AlbumSubmit_Out.wav', volume: 0.6 },
+            tab: { url: './src/sound/UI_MessageWindow_Open.wav', volume: 0.7 },
+            switch: { url: './src/sound/UI_AlbumSubmit_Finish.wav', volume: 0.7 },
+            card: { url: './src/sound/System_Lumi_01.wav', volume: 0.7 },
+            toggle: { url: './src/sound/UI_AppWipe_In.wav', volume: 0.7 },
+            notification: { url: './src/sound/UI_Announce_New.wav', volume: 0.8 },
+            success: { url: './src/sound/UI_AlbumSubmit_Finish.wav', volume: 0.8 },
+            error: { url: './src/sound/UI_Cancel.wav', volume: 0.8 }
         };
         
         this.initialized = false;
