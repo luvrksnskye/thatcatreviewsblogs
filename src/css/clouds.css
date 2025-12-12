@@ -37,7 +37,7 @@
     height: auto;
     top: -10%;
     right: -15%;
-    animation: cloudFloat 40s ease-in-out infinite;
+    animation: cloudDrift 60s ease-in-out infinite;
     z-index: 1;
 }
 
@@ -47,7 +47,7 @@
     height: auto;
     bottom: -46%;
     left: clamp(-370px, -20vw, -100px);
-    animation: cloudFloat 50s ease-in-out infinite reverse;
+    animation: cloudSway 80s ease-in-out infinite;
     z-index: -1;
 }
 
@@ -56,7 +56,7 @@
     height: auto;
     bottom: 30%;
     right: 40%;
-    animation: cloudFloat 45s ease-in-out infinite;
+    animation: cloudBob 55s ease-in-out infinite;
     animation-delay: 5s;
     z-index: 1;
 }
@@ -66,7 +66,7 @@
     height: auto;
     top: 35%;
     right: 10%;
-    animation: cloudFloat 35s ease-in-out infinite reverse;
+    animation: cloudFloat 70s ease-in-out infinite;
     animation-delay: 10s;
     z-index: -2;
 }
@@ -195,18 +195,68 @@
 /* ========================================
    CLOUD ANIMATIONS
 ======================================== */
+
+/* Primary gentle drift animation */
 @keyframes cloudFloat {
     0%, 100% {
         transform: translateX(0) translateY(0);
     }
+    20% {
+        transform: translateX(15px) translateY(-8px);
+    }
+    40% {
+        transform: translateX(25px) translateY(-5px);
+    }
+    60% {
+        transform: translateX(10px) translateY(-15px);
+    }
+    80% {
+        transform: translateX(-10px) translateY(-10px);
+    }
+}
+
+/* Secondary wave-like motion */
+@keyframes cloudDrift {
+    0%, 100% {
+        transform: translateX(0) translateY(0) scale(1);
+    }
     25% {
-        transform: translateX(20px) translateY(-10px);
+        transform: translateX(30px) translateY(-12px) scale(1.01);
     }
     50% {
-        transform: translateX(0) translateY(-20px);
+        transform: translateX(15px) translateY(-20px) scale(1);
     }
     75% {
+        transform: translateX(-15px) translateY(-8px) scale(0.99);
+    }
+}
+
+/* Gentle bobbing motion */
+@keyframes cloudBob {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    33% {
         transform: translateX(-20px) translateY(-10px);
+    }
+    66% {
+        transform: translateX(10px) translateY(-18px);
+    }
+}
+
+/* Slow horizontal sway */
+@keyframes cloudSway {
+    0%, 100% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(20px) translateY(-5px) rotate(0.5deg);
+    }
+    50% {
+        transform: translateX(35px) translateY(-12px) rotate(0deg);
+    }
+    75% {
+        transform: translateX(15px) translateY(-8px) rotate(-0.5deg);
     }
 }
 
@@ -217,13 +267,40 @@
             transform: translateX(0) translateY(0);
         }
         25% {
-            transform: translateX(10px) translateY(-5px);
+            transform: translateX(8px) translateY(-5px);
         }
         50% {
-            transform: translateX(0) translateY(-10px);
+            transform: translateX(12px) translateY(-10px);
         }
         75% {
-            transform: translateX(-10px) translateY(-5px);
+            transform: translateX(-5px) translateY(-6px);
+        }
+    }
+    
+    @keyframes cloudDrift {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(15px) translateY(-8px);
+        }
+    }
+    
+    @keyframes cloudBob {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(-8px) translateY(-6px);
+        }
+    }
+    
+    @keyframes cloudSway {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(10px) translateY(-5px);
         }
     }
 }

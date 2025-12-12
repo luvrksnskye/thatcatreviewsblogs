@@ -15,7 +15,7 @@ export class StarfallManager {
         
         // Configuration
         this.config = {
-            starsPerSegment: 3,
+            starsPerSegment: 3.15,  // Increased 5% (was 3)
             baseAnimationDuration: 3000,
             durationVariance: 500,
             maxDelay: 9999,
@@ -37,8 +37,8 @@ export class StarfallManager {
         this.soundConfig = {
             enabled: true,
             volume: 0.3,
-            soundInterval: 5000,      // Minimum ms between sounds
-            soundChance: 0.3,         // 30% chance of playing sound per star
+            soundInterval: 4545,      // Decreased 10% for more sounds (was 5000)
+            soundChance: 0.33,        // Increased 10% - 33% chance (was 0.3)
             sounds: [
                 '/src/sound/System_Lumi_01.wav',
                 '/src/sound/System_Lumi_02.wav',
@@ -192,7 +192,8 @@ export class StarfallManager {
     // ========================================
     createStars() {
         this.config.segments.forEach(segment => {
-            for (let i = 0; i < this.config.starsPerSegment; i++) {
+            const starCount = Math.round(this.config.starsPerSegment);
+            for (let i = 0; i < starCount; i++) {
                 this.createStar(segment);
             }
         });

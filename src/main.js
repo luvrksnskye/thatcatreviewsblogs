@@ -17,6 +17,7 @@ import { SoundManager } from './SoundManager.js';
 import { StorageManager } from './StorageManager.js';
 import { TimeOfDayManager } from './TimeOfDayManager.js';
 import { BlogStatusManager } from './BlogStatusManager.js';
+import { SitePetManager } from './SitePetManager.js';
 import { Utils } from './Utils.js';
 
 // ========================================
@@ -44,6 +45,9 @@ class KawaiiBlogApp {
             
             // Initialize time of day system
             await this.initTimeOfDaySystem();
+            
+            // Initialize site pet
+            await this.initSitePet();
             
             // Setup global event listeners
             this.setupGlobalEvents();
@@ -130,6 +134,18 @@ class KawaiiBlogApp {
     }
 
     // ----------------------------------------
+    // SITE PET INITIALIZATION
+    // ----------------------------------------
+    async initSitePet() {
+        this.modules.sitePet = new SitePetManager(
+            this.modules.storage,
+            this.modules.timeOfDay,
+            this.modules.sound  
+        );
+        this.modules.sitePet.init();
+    }
+
+    // ----------------------------------------
     // GLOBAL EVENT LISTENERS
     // ----------------------------------------
     setupGlobalEvents() {
@@ -140,8 +156,10 @@ class KawaiiBlogApp {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.modules.animation.pauseAll();
+                this.modules.sitePet?.pause();
             } else {
                 this.modules.animation.resumeAll();
+                this.modules.sitePet?.resume();
             }
         });
         
@@ -219,7 +237,7 @@ class KawaiiBlogApp {
             setTimeout(() => {
                 this.modules.notification.showWelcome({
                     title: 'Welcome to Abby\'s Blog!',
-                    message: 'Hey there! Thanks for stopping by. Feel free to explore around and enjoy your stay! Click the paw button to change the time of day! 🐱',
+                    message: 'Hey there! Thanks for stopping by. Feel free to explore around and enjoy your stay! Click the paw button to change the time of day!',
                     duration: 8000
                 });
             }, 1500);

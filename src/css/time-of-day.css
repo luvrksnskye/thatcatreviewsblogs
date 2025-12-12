@@ -485,9 +485,9 @@
     
     --device-gradient: linear-gradient(
         135deg,
-        #D4B8D8 0%,
-        #E0C8E0 50%,
-        #F0D0E8 100%
+        #d4b8d87d 0%,
+        #e0c8e06e 50%,
+        #f0d0e871 100%
     );
     
     --content-gradient: linear-gradient(

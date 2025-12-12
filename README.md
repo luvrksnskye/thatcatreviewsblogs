@@ -115,6 +115,28 @@ Tu página principal tiene un "Status Tab" que muestra automáticamente tus 4 po
 
 (PENDIENTE)
 
+## Comandos de Consola para probar la mascota del website
+
+```
+pet.help()           - Ver todos los comandos
+pet.list()           - Ver behaviors disponibles
+pet.set("nombre")    - Cambiar behavior
+pet.idle()           - Atajo para idle
+pet.sleeping()       - Atajo para sleeping
+pet.silly()          - Atajo para silly
+pet.lookingAtSky()   - Atajo para lookingAtSky
+pet.reading()        - Atajo para reading
+pet.christmas()      - Atajo para christmas
+pet.halloween()      - Atajo para halloween
+pet.playing()        - Atajo para playing
+pet.pause()          - Pausar animación
+pet.resume()         - Reanudar
+pet.speed(100)       - Cambiar velocidad (ms)
+pet.think()          - Pensamiento random
+pet.think("texto")   - Pensamiento custom
+pet.state()          - Ver estado actual
+```
+
 ¡Happy blogging! Gracias por elegirme para hacer este trabajo. ♡
 
 ---

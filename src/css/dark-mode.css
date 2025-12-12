@@ -533,9 +533,48 @@ body,
 .card,
 .notification,
 .music-player,
-.theme-toggle {
+.theme-toggle,
+.ground-floor {
     transition: background-color 0.3s ease,
                 border-color 0.3s ease,
                 color 0.3s ease,
                 box-shadow 0.3s ease;
+}
+
+/* ========================================
+   GROUND FLOOR DARK MODE
+======================================== */
+[data-theme="dark"] .ground-floor {
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        #050218 30%,
+        #050218 100%
+    );
+}
+
+[data-theme="dark"] .ground-floor::before {
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(5, 2, 24, 0.3) 50%,
+        rgba(5, 2, 24, 0.7) 100%
+    );
+}
+
+[data-theme="dark"] .ground-floor::after {
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(74, 63, 107, 0.3) 0px,
+        rgba(74, 63, 107, 0.3) 2px,
+        transparent 2px,
+        transparent 8px
+    );
+}
+
+/* ========================================
+   SITE PET DARK MODE
+======================================== */
+[data-theme="dark"] .site-pet img {
+    filter: drop-shadow(0 2px 8px rgba(139, 124, 179, 0.4));
 }

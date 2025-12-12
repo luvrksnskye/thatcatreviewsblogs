@@ -41,18 +41,21 @@ export class TimeOfDayManager {
         this.playlists = {
             morning: [
                 { id: 'morning-1', title: 'Peace and Tranquility', artist: 'A Hat in Time', duration: '15:00', src: './src/bgm/Peace_and_Tranquility.mp3' },
-                { id: 'morning-2', title: 'Coffee & Dreams', artist: 'Lo-Fi Cafe', duration: '4:12', src: './src/bgm/morning/coffee_dreams.mp3' },
-                { id: 'morning-3', title: 'Fresh Start', artist: 'Ambient Vibes', duration: '3:45', src: './src/bgm/morning/fresh_start.mp3' }
+                { id: 'morning-2', title: 'Poems In The Fog', artist: 'OMORI', duration: '1:50', src: './src/bgm/vf_pinwheel.mp3' },
+                { id: 'morning-3', title: 'A Home For Flowers (Sunflower)', artist: 'OMORI', duration: '1:25', src: './src/bgm/sunflower.mp3' }
             ],
             sunset: [
                 { id: 'sunset-1', title: 'Crossroads', artist: 'OMORI', duration: '2:09', src: './src/bgm/fat_sunset.mp3' },
-                { id: 'sunset-2', title: 'Evening Glow', artist: 'Chill Wave', duration: '3:56', src: './src/bgm/sunset/evening_glow.mp3' },
-                { id: 'sunset-3', title: 'Dusk Serenade', artist: 'Soft Tones', duration: '4:18', src: './src/bgm/sunset/dusk_serenade.mp3' }
+                { id: 'sunset-2', title: 'A Home For Flowers (Daisy)', artist: 'OMORI', duration: '1:20', src: './src/bgm/daisy.mp3' },
+                { id: 'sunset-3', title: 'Dusk Serenade', artist: 'Soft Tones', duration: '4:18', src: './src/bgm/sunset/dusk_serenade.mp3' },
+                    { id: 'sunset-4', title: '12 AM', artist: 'Animal Crossing New Horizons', duration: '2:40', src: './src/bgm/12_AM.mp3' }
             ],
             night: [
-                { id: 'night-1', title: 'Room Peaceful', artist: 'OMORI', duration: '5:00', src: './src/bgm/night/room_peaceful.mp3' },
-                { id: 'night-2', title: 'Moonlit Path', artist: 'Night Owl', duration: '4:42', src: './src/bgm/night/moonlit_path.mp3' },
-                { id: 'night-3', title: 'Peaceful Slumber', artist: 'Sleep Sounds', duration: '6:15', src: './src/bgm/night/peaceful_slumber.mp3' }
+                { id: 'night-1', title: 'A Home For Flowers (Empty)', artist: 'OMORI', duration: '1:16', src: './src/bgm/Empty.mp3' },
+                { id: 'night-2', title: 'Sugar Star Planetarium', artist: 'OMORI', duration: '2:14', src: './src/bgm/sugar_star.mp3' },
+                { id: 'night-3', title: 'Space Junk Road', artist: 'Mario Galaxy', duration: '3:21', src: './src/bgm/space_junk_road.mp3' },
+                { id: 'night-4', title: '2 AM', artist: 'Animal Crossing New Horizons', duration: '3:42', src: './src/bgm/2_AM.mp3' },
+                { id: 'night-5', title: 'Festivale', artist: 'Animal Crossing New Horizons', duration: '2:06', src: './src/bgm/Fireworks Show ACNH.mp3' }
             ]
         };
         
