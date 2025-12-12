@@ -13,7 +13,7 @@ export class SitePetManager {
         // Sprite configurations (each sprite can have different dimensions)
         this.sprites = {
             lookingAtSky: {
-                path: './src/assets/site_pet_sprites/kitty_looking_at_sky.svg',
+                path: './src/site_pet_sprites/kitty_looking_at_sky.svg',
                 width: 2000,
                 height: 1600,
                 columns: 5,
@@ -31,7 +31,7 @@ export class SitePetManager {
                 ]
             },
             sleeping: {
-                path: './src/assets/site_pet_sprites/kitty_sleeping.svg',
+                path: './src/site_pet_sprites/kitty_sleeping.svg',
                 width: 1866,
                 height: 672,
                 columns: 3,
@@ -49,7 +49,7 @@ export class SitePetManager {
                 ]
             },
             idle: {
-                path: './src/assets/site_pet_sprites/kitty_idle.svg',
+                path: './src/site_pet_sprites/kitty_idle.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -67,7 +67,7 @@ export class SitePetManager {
                 ]
             },
             idleSit: {
-                path: './src/assets/site_pet_sprites/kitty_idle_sit.svg',
+                path: './src/site_pet_sprites/kitty_idle_sit.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -85,7 +85,7 @@ export class SitePetManager {
                 ]
             },
             reading: {
-                path: './src/assets/site_pet_sprites/kitty_reading.svg',
+                path: './src/site_pet_sprites/kitty_reading.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -103,7 +103,7 @@ export class SitePetManager {
                 ]
             },
             silly: {
-                path: './src/assets/site_pet_sprites/kitty_silly.svg',
+                path: './src/site_pet_sprites/kitty_silly.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -122,7 +122,7 @@ export class SitePetManager {
                 ]
             },
             christmas: {
-                path: './src/assets/site_pet_sprites/kitty_christmas.svg',
+                path: './src/site_pet_sprites/kitty_christmas.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -141,7 +141,7 @@ export class SitePetManager {
                 ]
             },
             halloween: {
-                path: './src/assets/site_pet_sprites/kitty_halloween.svg',
+                path: './src/site_pet_sprites/kitty_halloween.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -160,7 +160,7 @@ export class SitePetManager {
                 ]
             },
             playing: {
-                path: '/src/assets/site_pet_sprites/kitty_playing.svg',
+                path: './src/site_pet_sprites/kitty_playing.svg',
                 width: 2000,
                 height: 1600,
                 columns: 5,
