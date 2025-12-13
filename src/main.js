@@ -20,6 +20,8 @@ import { BlogStatusManager } from './BlogStatusManager.js';
 import { SitePetManager } from './SitePetManager.js';
 import { Utils } from './Utils.js';
 import { MusicStateManager } from './MusicStateManager.js';
+import { HolidayManager } from './HolidayManager.js';
+
 
 // ========================================
 // APPLICATION CLASS
@@ -49,6 +51,9 @@ class KawaiiBlogApp {
             
             // Initialize site pet
             await this.initSitePet();
+            
+            // Initialize holiday system
+            await this.initHoliday();
             
             // Setup global event listeners
             this.setupGlobalEvents();
@@ -153,6 +158,16 @@ class KawaiiBlogApp {
         );
         this.modules.sitePet.init();
     }
+
+    async initHoliday() {
+    this.modules.holiday = new HolidayManager(
+        this.modules.storage,
+        this.modules.sound,
+        this.modules.music,
+        this.modules.sitePet
+    );
+    this.modules.holiday.init();
+}
 
     // ----------------------------------------
     // GLOBAL EVENT LISTENERS

@@ -10,6 +10,9 @@ export class SitePetManager {
         this.timeOfDay = timeOfDayManager;
         this.sound = soundManager;
         
+        // Holiday lock - prevents normal schedule from overriding seasonal sprites
+        this.holidayLock = false;
+        
         // Sprite configurations (each sprite can have different dimensions)
         this.sprites = {
             lookingAtSky: {
@@ -78,7 +81,8 @@ export class SitePetManager {
                 bottom: -50,
                 thoughts: [
                     "This spot is quite nice.",
-                    "mhm.",
+                    "...stretches...",
+                    "Hmm? What's over there?",
                     "Feeling relaxed~",
                     "I could sit here all day."
                 ]
@@ -102,7 +106,7 @@ export class SitePetManager {
                 ]
             },
             silly: {
-                path: './src/site_pet_sprites/kitty_silly.svg',
+                path: '/src/site_pet_sprites/kitty_silly.svg',
                 width: 2000,
                 height: 1333,
                 columns: 3,
@@ -120,23 +124,40 @@ export class SitePetManager {
                     "Nyoom!"
                 ]
             },
-            christmas: {
-                path: './src/site_pet_sprites/kitty_christmas.svg',
+            christmasCute: {
+                path: './src/site_pet_sprites/kitty_xmas_cute.svg',
                 width: 2000,
-                height: 1333,
-                columns: 3,
+                height: 2000,
+                columns: 2,
                 rows: 2,
-                totalFrames: 6,
+                totalFrames: 3,
                 displayWidth: 200,
                 displayHeight: 200,
-                bottom: -50,
+                bottom: -20,
                 thoughts: [
                     "Happy holidays~!",
-                    "I wonder if there are presents...",
-                    "So warm and cozy in here.",
-                    "The decorations are so pretty!",
+                    "I love the snow!",
+                    "So warm and cozy...",
                     "Jingle jingle~",
                     "Best time of the year!"
+                ]
+            },
+            christmasHat: {
+                path: './src/site_pet_sprites/kitty_xmas_hat.svg',
+                width: 2000,
+                height: 2000,
+                columns: 2,
+                rows: 2,
+                totalFrames: 4,
+                displayWidth: 200,
+                displayHeight: 200,
+                bottom: -20,
+                thoughts: [
+                    "Merry Christmas!",
+                    "Where are the presents?",
+                    "This scarf is so warm~",
+                    "Ho ho ho!",
+                    "Let it snow~"
                 ]
             },
             halloween: {
@@ -553,6 +574,11 @@ export class SitePetManager {
     // UPDATE BEHAVIOR BY TIME
     // ========================================
     updateBehaviorByTime() {
+        // Don't change if holiday mode is active
+        if (this.holidayLock) {
+            return;
+        }
+        
         const hour = new Date().getHours();
         
         for (const slot of this.schedule) {
@@ -688,6 +714,8 @@ export class SitePetManager {
             reading: () => window.pet.set('reading'),
             silly: () => window.pet.set('silly'),
             christmas: () => window.pet.set('christmas'),
+            christmasCute: () => window.pet.set('christmasCute'),
+            christmasHat: () => window.pet.set('christmasHat'),
             halloween: () => window.pet.set('halloween'),
             playing: () => window.pet.set('playing'),
             
