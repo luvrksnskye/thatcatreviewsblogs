@@ -85,7 +85,7 @@ export class WelcomeNoticeManager {
             // Trigger entrance animation after a tiny delay
             setTimeout(() => {
                 // Animate overlay background
-                this.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+                this.overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
                 
                 // Animate notice element
                 this.noticeElement.style.opacity = '1';
