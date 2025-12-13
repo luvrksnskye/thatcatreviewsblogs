@@ -110,8 +110,9 @@ export class WelcomeNoticeManager {
             left: '0',
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0)',
+            backgroundColor: 'rgba(255, 255, 255, 0.25)',
             zIndex: '99998',
+            backdropFilter: 'blur(4px)',
             transition: `background-color ${this.config.animationDuration}ms ease`,
             cursor: 'pointer'
         });
@@ -150,7 +151,6 @@ export class WelcomeNoticeManager {
             maxHeight: '90vh',
             objectFit: 'contain',
             borderRadius: '12px',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.1)',
             display: 'block'
         });
         
