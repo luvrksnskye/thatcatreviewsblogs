@@ -5,11 +5,12 @@
    ===================================================== */
 
 export class HolidayManager {
-    constructor(storage, sound, music, sitePet) {
+    constructor(storage, sound, music, sitePet, welcomeNotice = null) {
         this.storage = storage;
         this.sound = sound;
         this.music = music;
         this.sitePet = sitePet;
+        this.welcomeNotice = welcomeNotice; // Reference to welcome notice manager
         
         // Holiday state
         this.isHolidayMode = false;
@@ -135,9 +136,22 @@ export class HolidayManager {
     }
 
     // ========================================
+    // CHECK IF WELCOME NOTICE IS ACTIVE
+    // ========================================
+    isWelcomeNoticeActive() {
+        return this.welcomeNotice && this.welcomeNotice.isActive();
+    }
+
+    // ========================================
     // CHECK HOLIDAY MODE
     // ========================================
     checkHolidayMode() {
+        // Don't activate if welcome notice is still showing
+        if (this.isWelcomeNoticeActive()) {
+            console.log('✧ Holiday check delayed - welcome notice is active ✧');
+            return;
+        }
+        
         const now = new Date();
         const month = now.getMonth();
         const hour = now.getHours();
@@ -163,6 +177,12 @@ export class HolidayManager {
     async activateChristmas() {
         if (this.isHolidayMode) return;
         
+        // Double check welcome notice isn't showing
+        if (this.isWelcomeNoticeActive()) {
+            console.log('✧ Christmas activation blocked - welcome notice active ✧');
+            return;
+        }
+        
         console.log('✧ Activating Christmas Mode (waiting 10 seconds...) ✧');
         
         this.isHolidayMode = true;
@@ -176,6 +196,18 @@ export class HolidayManager {
         
         // Wait 10 seconds before starting the magic
         await this.sleep(10000);
+        
+        // Check again after wait in case user just dismissed notice
+        if (this.isWelcomeNoticeActive()) {
+            console.log('✧ Christmas activation cancelled - welcome notice appeared ✧');
+            this.isHolidayMode = false;
+            this.currentHoliday = null;
+            this.holidayLock = false;
+            if (this.sitePet) {
+                this.sitePet.holidayLock = false;
+            }
+            return;
+        }
         
         console.log('✧ Starting Christmas transition... ✧');
         

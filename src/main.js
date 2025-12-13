@@ -21,6 +21,7 @@ import { SitePetManager } from './SitePetManager.js';
 import { Utils } from './Utils.js';
 import { MusicStateManager } from './MusicStateManager.js';
 import { HolidayManager } from './HolidayManager.js';
+import { WelcomeNoticeManager } from './WelcomeNoticeManager.js';
 
 
 // ========================================
@@ -52,17 +53,17 @@ class KawaiiBlogApp {
             // Initialize site pet
             await this.initSitePet();
             
-            // Initialize holiday system
-            await this.initHoliday();
-            
             // Setup global event listeners
             this.setupGlobalEvents();
             
-            // Check for first visit
-            this.checkFirstVisit();
-            
             // Update date display
             this.updateDateDisplay();
+            
+            // Show welcome notice for new users (blocks holiday until dismissed)
+            await this.showWelcomeNotice();
+            
+            // Initialize holiday system AFTER welcome notice is dismissed
+            await this.initHoliday();
             
             this.isInitialized = true;
             console.log('✧ App initialized successfully! ✧');
@@ -88,6 +89,13 @@ class KawaiiBlogApp {
         
         // Notification Manager
         this.modules.notification = new NotificationManager(this.modules.sound);
+        
+        // Welcome Notice Manager
+        this.modules.welcomeNotice = new WelcomeNoticeManager(
+            this.modules.storage,
+            this.modules.sound
+        );
+        this.modules.welcomeNotice.init();
     }
 
     // ----------------------------------------
@@ -159,15 +167,31 @@ class KawaiiBlogApp {
         this.modules.sitePet.init();
     }
 
+    // ----------------------------------------
+    // WELCOME NOTICE FOR NEW USERS
+    // ----------------------------------------
+    async showWelcomeNotice() {
+        // This will show the notice if user is new, and wait until dismissed
+        // Holiday manager will not activate until this resolves
+        if (this.modules.welcomeNotice.shouldShowNotice()) {
+            console.log('✧ Showing welcome notice for new user ✧');
+            await this.modules.welcomeNotice.show();
+        }
+    }
+
+    // ----------------------------------------
+    // HOLIDAY SYSTEM INITIALIZATION
+    // ----------------------------------------
     async initHoliday() {
-    this.modules.holiday = new HolidayManager(
-        this.modules.storage,
-        this.modules.sound,
-        this.modules.music,
-        this.modules.sitePet
-    );
-    this.modules.holiday.init();
-}
+        this.modules.holiday = new HolidayManager(
+            this.modules.storage,
+            this.modules.sound,
+            this.modules.music,
+            this.modules.sitePet,
+            this.modules.welcomeNotice // Pass welcome notice manager for coordination
+        );
+        this.modules.holiday.init();
+    }
 
     // ----------------------------------------
     // GLOBAL EVENT LISTENERS
@@ -248,27 +272,6 @@ class KawaiiBlogApp {
     handleResize() {
         // Recalculate star positions if needed
         this.modules.starfall.recalculate();
-    }
-
-    // ----------------------------------------
-    // FIRST VISIT CHECK
-    // ----------------------------------------
-    checkFirstVisit() {
-        const hasVisited = this.modules.storage.get('hasVisited');
-        
-        if (!hasVisited) {
-            // Show welcome notification
-            setTimeout(() => {
-                this.modules.notification.showWelcome({
-                    title: 'Welcome to Abby\'s Blog!',
-                    message: 'Hey there! Thanks for stopping by. Feel free to explore around and enjoy your stay! Click the paw button to change the time of day!',
-                    duration: 8000
-                });
-            }, 1500);
-            
-            // Mark as visited
-            this.modules.storage.set('hasVisited', true);
-        }
     }
 
     // ----------------------------------------
