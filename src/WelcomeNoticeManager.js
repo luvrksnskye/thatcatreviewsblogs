@@ -98,8 +98,7 @@ export class WelcomeNoticeManager {
     createOverlay() {
         this.overlay = document.createElement('div');
         this.overlay.className = 'welcome-notice-overlay';
-        
-        // Add styles inline for simplicity (can be moved to CSS)
+
         Object.assign(this.overlay.style, {
             position: 'fixed',
             top: '0',
@@ -107,7 +106,7 @@ export class WelcomeNoticeManager {
             width: '100%',
             height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0)',
-            zIndex: '99998',
+            zIndex: '99999999',
             transition: `background-color ${this.config.animationDuration}ms ease`,
             cursor: 'pointer'
         });
