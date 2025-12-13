@@ -148,7 +148,7 @@ export class WelcomeNoticeManager {
         // Style the image
         Object.assign(img.style, {
             maxWidth: '100%',
-            maxHeight: '90vh',
+            maxHeight: '10ß0vh',
             objectFit: 'contain',
             borderRadius: '12px',
             display: 'block'
@@ -204,7 +204,7 @@ export class WelcomeNoticeManager {
         this.isShowing = false;
         
         // Start exit animation
-        this.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        this.overlay.style.backgroundColor = 'rgba(255, 255, 255, 0)55, 0)';
         this.noticeElement.style.opacity = '0';
         this.noticeElement.style.transform = 'translate(-50%, -50%) scale(0.9)';
         
