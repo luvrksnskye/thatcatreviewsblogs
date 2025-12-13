@@ -76,16 +76,21 @@ export class WelcomeNoticeManager {
             document.body.appendChild(this.noticeElement);
             
             // Force reflow for animation
-            this.noticeElement.offsetHeight;
+            void this.noticeElement.offsetHeight;
+            void this.overlay.offsetHeight;
             
             // Play sound
             this.playSound();
             
-            // Trigger entrance animation
-            requestAnimationFrame(() => {
-                this.overlay.classList.add('visible');
-                this.noticeElement.classList.add('visible');
-            });
+            // Trigger entrance animation after a tiny delay
+            setTimeout(() => {
+                // Animate overlay background
+                this.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+                
+                // Animate notice element
+                this.noticeElement.style.opacity = '1';
+                this.noticeElement.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 20);
             
             // Setup dismiss handlers
             this.setupDismissHandlers(resolve);
@@ -98,7 +103,7 @@ export class WelcomeNoticeManager {
     createOverlay() {
         this.overlay = document.createElement('div');
         this.overlay.className = 'welcome-notice-overlay';
-
+        
         Object.assign(this.overlay.style, {
             position: 'fixed',
             top: '0',
@@ -106,7 +111,7 @@ export class WelcomeNoticeManager {
             width: '100%',
             height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0)',
-            zIndex: '99999999',
+            zIndex: '99998',
             transition: `background-color ${this.config.animationDuration}ms ease`,
             cursor: 'pointer'
         });
@@ -125,7 +130,7 @@ export class WelcomeNoticeManager {
         img.alt = 'Welcome Notice';
         img.draggable = false;
         
-        // Style the notice container
+        // Style the notice container - starts hidden and scaled down
         Object.assign(this.noticeElement.style, {
             position: 'fixed',
             top: '50%',
@@ -133,7 +138,7 @@ export class WelcomeNoticeManager {
             transform: 'translate(-50%, -50%) scale(0.8)',
             zIndex: '99999',
             opacity: '0',
-            transition: `all ${this.config.animationDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+            transition: `opacity ${this.config.animationDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1), transform ${this.config.animationDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
             pointerEvents: 'none',
             maxWidth: '90vw',
             maxHeight: '90vh'
@@ -143,7 +148,10 @@ export class WelcomeNoticeManager {
         Object.assign(img.style, {
             maxWidth: '100%',
             maxHeight: '90vh',
-            objectFit: 'contain'
+            objectFit: 'contain',
+            borderRadius: '12px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 255, 255, 0.1)',
+            display: 'block'
         });
         
         this.noticeElement.appendChild(img);
@@ -156,7 +164,6 @@ export class WelcomeNoticeManager {
         if (this.noticeSound) {
             this.noticeSound.currentTime = 0;
             this.noticeSound.play().catch(() => {
-                // Autoplay blocked, that's okay
                 console.debug('Welcome notice sound blocked by autoplay policy');
             });
         }
@@ -167,11 +174,6 @@ export class WelcomeNoticeManager {
     // ========================================
     setupDismissHandlers(resolvePromise) {
         const dismiss = (e) => {
-            // Prevent immediate dismissal
-            if (e && e.target === this.noticeElement.querySelector('img')) {
-                return;
-            }
-            
             this.dismiss(resolvePromise);
             
             // Remove listeners
@@ -198,6 +200,9 @@ export class WelcomeNoticeManager {
     dismiss(resolvePromise) {
         if (!this.isShowing) return;
         
+        // Prevent multiple dismiss calls
+        this.isShowing = false;
+        
         // Start exit animation
         this.overlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
         this.noticeElement.style.opacity = '0';
@@ -215,7 +220,6 @@ export class WelcomeNoticeManager {
                 this.noticeElement.parentNode.removeChild(this.noticeElement);
             }
             
-            this.isShowing = false;
             this.overlay = null;
             this.noticeElement = null;
             
