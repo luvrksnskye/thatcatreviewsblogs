@@ -49,12 +49,12 @@ export class HolidayManager {
                 totalFrames: 3,
                 displayWidth: 200,
                 displayHeight: 200,
-                bottom: -20,
+                   bottom: -39,
+                right: 20,
                 thoughts: [
                     "Happy holidays~!",
                     "I love the snow!",
                     "So warm and cozy...",
-                    "Jingle jingle~",
                     "Best time of the year!"
                 ]
             },
