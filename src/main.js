@@ -1,6 +1,6 @@
 /* =====================================================
    MAIN.JS - Application Entry Point
-   Initializes and coordinates all modules
+   Optimized initialization and coordination
    ===================================================== */
 
 // ========================================
@@ -23,7 +23,6 @@ import { MusicStateManager } from './MusicStateManager.js';
 import { HolidayManager } from './HolidayManager.js';
 import { WelcomeNoticeManager } from './WelcomeNoticeManager.js';
 
-
 // ========================================
 // APPLICATION CLASS
 // ========================================
@@ -31,39 +30,33 @@ class KawaiiBlogApp {
     constructor() {
         this.modules = {};
         this.isInitialized = false;
-        this.version = '1.1.0';
+        this.version = '1.2.0';
     }
 
-    // ----------------------------------------
-    // INITIALIZATION
-    // ----------------------------------------
     async init() {
         console.log('✧ Initializing Kawaii Blog App ✧');
         
         try {
-            // Initialize core modules first
-            await this.initCoreModules();
+            // Phase 1: Core modules
+            this._initCoreModules();
             
-            // Initialize feature modules
-            await this.initFeatureModules();
+            // Phase 2: UI update
+            this._updateDateDisplay();
             
-            // Initialize time of day system
-            await this.initTimeOfDaySystem();
+            // Phase 3: Background
+            this._initBackgroundModules();
             
-            // Initialize site pet
-            await this.initSitePet();
+            // Phase 4: Interactive modules
+            await this._initInteractiveModules();
             
-            // Setup global event listeners
-            this.setupGlobalEvents();
+            // Phase 5: Welcome flow
+            await this._handleWelcomeFlow();
             
-            // Update date display
-            this.updateDateDisplay();
+            // Phase 6: Holiday system
+            this._initHolidaySystem();
             
-            // Show welcome notice for new users (blocks holiday until dismissed)
-            await this.showWelcomeNotice();
-            
-            // Initialize holiday system AFTER welcome notice is dismissed
-            await this.initHoliday();
+            // Phase 7: Global events
+            this._setupGlobalEvents();
             
             this.isInitialized = true;
             console.log('✧ App initialized successfully! ✧');
@@ -73,39 +66,19 @@ class KawaiiBlogApp {
         }
     }
 
-    // ----------------------------------------
-    // CORE MODULES INITIALIZATION
-    // ----------------------------------------
-    async initCoreModules() {
-        // Storage Manager (must be first)
+    _initCoreModules() {
         this.modules.storage = new StorageManager();
-        
-        // Sound Manager
         this.modules.sound = new SoundManager();
-        
-        // Animation Manager
-        this.modules.animation = new AnimationManager();
-
-        
-        // Notification Manager
         this.modules.notification = new NotificationManager(this.modules.sound);
-        
-        // Welcome Notice Manager
-        this.modules.welcomeNotice = new WelcomeNoticeManager(
-            this.modules.storage,
-            this.modules.sound
-        );
-        this.modules.welcomeNotice.init();
+        this.modules.animation = new AnimationManager();
     }
 
-    // ----------------------------------------
-    // FEATURE MODULES INITIALIZATION
-    // ----------------------------------------
-    async initFeatureModules() {
-        // Starfall Background
+    _initBackgroundModules() {
         this.modules.starfall = new StarfallManager();
         this.modules.starfall.init();
-        
+    }
+
+    async _initInteractiveModules() {
         // Tab Navigation
         this.modules.tabs = new TabManager(this.modules.sound);
         this.modules.tabs.init();
@@ -125,24 +98,18 @@ class KawaiiBlogApp {
         );
         this.modules.music.init();
         
-
- // Music State Manager
-    this.modules.musicState = new MusicStateManager(
-        this.modules.storage,
-        this.modules.music
-    );
-    
-    await this.modules.musicState.init();
+        // Music State Manager
+        this.modules.musicState = new MusicStateManager(
+            this.modules.storage,
+            this.modules.music
+        );
+        await this.modules.musicState.init();
+        
         // Gallery
         this.modules.gallery = new GalleryManager(this.modules.sound);
         this.modules.gallery.init();
-    }
-
-    // ----------------------------------------
-    // TIME OF DAY SYSTEM INITIALIZATION
-    // ----------------------------------------
-    async initTimeOfDaySystem() {
-        // Time of Day Manager (depends on storage, sound, and music)
+        
+        // Time of Day System
         this.modules.timeOfDay = new TimeOfDayManager(
             this.modules.storage,
             this.modules.sound,
@@ -150,178 +117,149 @@ class KawaiiBlogApp {
         );
         this.modules.timeOfDay.init();
         
-        // Blog Status Manager (dynamic blog content in status tab)
+        // Blog Status Manager
         this.modules.blogStatus = new BlogStatusManager(this.modules.sound);
         await this.modules.blogStatus.init();
-    }
-
-    // ----------------------------------------
-    // SITE PET INITIALIZATION
-    // ----------------------------------------
-    async initSitePet() {
+        
+        // Site Pet
         this.modules.sitePet = new SitePetManager(
             this.modules.storage,
             this.modules.timeOfDay,
-            this.modules.sound  
+            this.modules.sound
         );
         this.modules.sitePet.init();
     }
 
-    // ----------------------------------------
-    // WELCOME NOTICE FOR NEW USERS
-    // ----------------------------------------
-    async showWelcomeNotice() {
-        // This will show the notice if user is new, and wait until dismissed
-        // Holiday manager will not activate until this resolves
+    async _handleWelcomeFlow() {
+        // Initialize Welcome Notice Manager
+        this.modules.welcomeNotice = new WelcomeNoticeManager(
+            this.modules.storage,
+            this.modules.sound
+        );
+        this.modules.welcomeNotice.init();
+        
+        // Connect TimeOfDay to WelcomeNotice for settings button
+        this.modules.timeOfDay.setWelcomeNotice(this.modules.welcomeNotice);
+        
+        // Show welcome if new user
         if (this.modules.welcomeNotice.shouldShowNotice()) {
-            console.log('✧ Showing welcome notice for new user ✧');
+            console.log('✧ Showing welcome flow for new user ✧');
             await this.modules.welcomeNotice.show();
+        }
+        
+        // Apply saved preferences
+        this._applyPreferences();
+    }
+
+    _applyPreferences() {
+        const prefs = this.modules.storage.getPreferences();
+        
+        if (prefs.musicAutoplay && this.modules.music) {
+            setTimeout(() => {
+                this.modules.music.play?.();
+            }, 1000);
+        }
+        
+        if (!prefs.soundEnabled && this.modules.sound) {
+            this.modules.sound.setEnabled?.(false);
         }
     }
 
-    // ----------------------------------------
-    // HOLIDAY SYSTEM INITIALIZATION
-    // ----------------------------------------
-    async initHoliday() {
+    _initHolidaySystem() {
         this.modules.holiday = new HolidayManager(
             this.modules.storage,
             this.modules.sound,
             this.modules.music,
             this.modules.sitePet,
-            this.modules.welcomeNotice // Pass welcome notice manager for coordination
+            this.modules.welcomeNotice
         );
         this.modules.holiday.init();
     }
 
-    // ----------------------------------------
-    // GLOBAL EVENT LISTENERS
-    // ----------------------------------------
-    setupGlobalEvents() {
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+    _setupGlobalEvents() {
+        document.addEventListener('keydown', (e) => this._handleKeyboard(e));
         
-        // Visibility change (pause animations when hidden)
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                this.modules.animation.pauseAll();
-                this.modules.sitePet?.pause();
+                this.modules.animation?.pauseAll?.();
+                this.modules.sitePet?.pause?.();
             } else {
-                this.modules.animation.resumeAll();
-                this.modules.sitePet?.resume();
+                this.modules.animation?.resumeAll?.();
+                this.modules.sitePet?.resume?.();
             }
         });
         
-        // Resize handler
-        window.addEventListener('resize', Utils.debounce(() => {
-            this.handleResize();
-        }, 250));
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.modules.starfall?.recalculate?.();
+            }, 200);
+        });
         
-        // Before unload - save state
         window.addEventListener('beforeunload', () => {
-            this.saveState();
+            this._saveState();
         });
     }
 
-    // ----------------------------------------
-    // KEYBOARD HANDLER
-    // ----------------------------------------
-    handleKeyboard(e) {
-        // Escape key - close modals
+    _handleKeyboard(e) {
         if (e.key === 'Escape') {
-            this.modules.gallery.closeLightbox();
+            this.modules.gallery?.closeLightbox?.();
         }
         
-        // Space key - toggle music (if not typing)
-        if (e.code === 'Space' && !this.isTyping(e)) {
+        if (e.code === 'Space' && !this._isTyping(e)) {
             e.preventDefault();
-            this.modules.music.togglePlay();
+            this.modules.music?.togglePlay?.();
         }
         
-        // Arrow keys for music
-        if (e.code === 'ArrowRight' && e.ctrlKey) {
-            this.modules.music.nextTrack();
-        }
-        if (e.code === 'ArrowLeft' && e.ctrlKey) {
-            this.modules.music.prevTrack();
-        }
-        
-        // Theme toggle shortcut (Ctrl + Shift + D)
-        if (e.ctrlKey && e.shiftKey && e.code === 'KeyD') {
-            this.modules.theme.toggle();
-        }
-        
-        // Time of day shortcut (Ctrl + Shift + T)
-        if (e.ctrlKey && e.shiftKey && e.code === 'KeyT') {
-            this.modules.timeOfDay.openModal();
+        if (e.ctrlKey) {
+            if (e.code === 'ArrowRight') this.modules.music?.nextTrack?.();
+            if (e.code === 'ArrowLeft') this.modules.music?.prevTrack?.();
+            
+            if (e.shiftKey && e.code === 'KeyT') {
+                this.modules.timeOfDay?.openModal?.();
+            }
         }
     }
 
-    // ----------------------------------------
-    // CHECK IF USER IS TYPING
-    // ----------------------------------------
-    isTyping(e) {
+    _isTyping(e) {
         const target = e.target;
         return target.tagName === 'INPUT' || 
                target.tagName === 'TEXTAREA' || 
                target.isContentEditable;
     }
 
-    // ----------------------------------------
-    // RESIZE HANDLER
-    // ----------------------------------------
-    handleResize() {
-        // Recalculate star positions if needed
-        this.modules.starfall.recalculate();
-    }
-
-    // ----------------------------------------
-    // UPDATE DATE DISPLAY
-    // ----------------------------------------
-    updateDateDisplay() {
+    _updateDateDisplay() {
         const dateElement = document.getElementById('topbar-date');
-        if (dateElement) {
-            const now = new Date();
-            const weekStart = new Date(now);
-            weekStart.setDate(now.getDate() - now.getDay());
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            
-            const formatDate = (date) => {
-                const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 
-                               'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-                return `${months[date.getMonth()]} ${date.getDate()}`;
-            };
-            
-            dateElement.textContent = `WEEK OF ${formatDate(weekStart)} TO ${formatDate(weekEnd)}`;
-        }
+        if (!dateElement) return;
+        
+        const now = new Date();
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        
+        const formatDate = (date) => {
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 
+                           'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            return `${months[date.getMonth()]} ${date.getDate()}`;
+        };
+        
+        dateElement.textContent = `WEEK OF ${formatDate(weekStart)} TO ${formatDate(weekEnd)}`;
     }
 
-    // ----------------------------------------
-    // SAVE STATE
-    // ----------------------------------------
-    saveState() {
-        // Save any necessary state before page unload
-        if (this.modules.music) {
-            this.modules.music.saveState();
-        }
+    _saveState() {
+        this.modules.music?.saveState?.();
     }
 
-    // ----------------------------------------
-    // GET MODULE
-    // ----------------------------------------
     getModule(name) {
         return this.modules[name] || null;
     }
 
-    // ----------------------------------------
-    // DESTROY
-    // ----------------------------------------
     destroy() {
-        Object.values(this.modules).forEach(module => {
-            if (module.destroy) {
-                module.destroy();
-            }
-        });
+        for (const module of Object.values(this.modules)) {
+            module?.destroy?.();
+        }
         this.modules = {};
         this.isInitialized = false;
     }
@@ -332,14 +270,12 @@ class KawaiiBlogApp {
 // ========================================
 const app = new KawaiiBlogApp();
 
-// Wait for DOM to be ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => app.init());
 } else {
     app.init();
 }
 
-// Export for external access
 window.KawaiiBlogApp = app;
 
 export default app;

@@ -1,9 +1,7 @@
 /* =====================================================
    TIMEOFDAYMANAGER.JS - Time-based Theme Controller
-   Manages morning/sunset/night themes with animated clock
+   Manages morning/sunset/night themes with settings button
    ===================================================== */
-
-import { Utils } from './Utils.js';
 
 export class TimeOfDayManager {
     constructor(storage, soundManager, musicPlayer) {
@@ -11,33 +9,21 @@ export class TimeOfDayManager {
         this.sound = soundManager;
         this.musicPlayer = musicPlayer;
         
-        this.currentTimeOfDay = 'morning'; // morning, sunset, night
+        // Reference to welcome notice manager (set externally)
+        this.welcomeNotice = null;
+        
+        this.currentTimeOfDay = 'morning';
         this.isModalOpen = false;
         this.isAnimating = false;
         
         // Time configurations
         this.timeConfig = {
-            morning: {
-                hours: '08',
-                minutes: '30',
-                label: 'Morning',
-                icon: 'wb_sunny'
-            },
-            sunset: {
-                hours: '17',
-                minutes: '45',
-                label: 'Sunset',
-                icon: 'wb_twilight'
-            },
-            night: {
-                hours: '22',
-                minutes: '00',
-                label: 'Night',
-                icon: 'dark_mode'
-            }
+            morning: { hours: '08', minutes: '30', label: 'Morning', icon: 'wb_sunny' },
+            sunset: { hours: '17', minutes: '45', label: 'Sunset', icon: 'wb_twilight' },
+            night: { hours: '22', minutes: '00', label: 'Night', icon: 'dark_mode' }
         };
         
-        // Playlist configurations for each time of day
+        // Playlists
         this.playlists = {
             morning: [
                 { id: 'morning-1', title: 'Peace and Tranquility', artist: 'A Hat in Time', duration: '15:00', src: './src/bgm/Peace_and_Tranquility.mp3' },
@@ -47,7 +33,7 @@ export class TimeOfDayManager {
             sunset: [
                 { id: 'sunset-1', title: 'Crossroads', artist: 'OMORI', duration: '2:09', src: './src/bgm/fat_sunset.mp3' },
                 { id: 'sunset-2', title: 'A Home For Flowers (Daisy)', artist: 'OMORI', duration: '1:20', src: './src/bgm/daisy.mp3' },
-                    { id: 'sunset-3', title: '12 AM', artist: 'Animal Crossing New Horizons', duration: '2:40', src: './src/bgm/12_AM.mp3' }
+                { id: 'sunset-3', title: '12 AM', artist: 'Animal Crossing New Horizons', duration: '2:40', src: './src/bgm/12_AM.mp3' }
             ],
             night: [
                 { id: 'night-1', title: 'A Home For Flowers (Empty)', artist: 'OMORI', duration: '1:16', src: './src/bgm/Empty.mp3' },
@@ -59,6 +45,13 @@ export class TimeOfDayManager {
         };
         
         this.elements = {};
+    }
+
+    // ========================================
+    // SET WELCOME NOTICE REFERENCE
+    // ========================================
+    setWelcomeNotice(welcomeNotice) {
+        this.welcomeNotice = welcomeNotice;
     }
 
     // ========================================
@@ -76,7 +69,12 @@ export class TimeOfDayManager {
     // CREATE DOM ELEMENTS
     // ========================================
     createElements() {
-        // Create cat paw button
+        // Create button container
+        const btnContainer = document.createElement('div');
+        btnContainer.className = 'control-buttons-container';
+        btnContainer.id = 'control-buttons-container';
+        
+        // Cat paw button (center)
         const catPawBtn = document.createElement('button');
         catPawBtn.className = 'cat-paw-btn';
         catPawBtn.id = 'cat-paw-btn';
@@ -87,15 +85,30 @@ export class TimeOfDayManager {
             </svg>
         `;
         
+        // Settings button (right of paw)
+        const settingsBtn = document.createElement('button');
+        settingsBtn.className = 'settings-btn';
+        settingsBtn.id = 'settings-btn';
+        settingsBtn.setAttribute('aria-label', 'Open settings');
+        settingsBtn.innerHTML = `
+            <div class="settings-btn-bg"></div>
+            <span class="material-icons settings-icon">settings</span>
+            <span class="settings-tooltip">Settings</span>
+        `;
+        
         // Insert after theme toggle
         const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle && themeToggle.parentNode) {
-            themeToggle.parentNode.insertBefore(catPawBtn, themeToggle.nextSibling);
+        if (themeToggle?.parentNode) {
+            themeToggle.parentNode.insertBefore(btnContainer, themeToggle.nextSibling);
         } else {
-            document.body.appendChild(catPawBtn);
+            document.body.appendChild(btnContainer);
         }
         
-        // Create time selection modal
+        // Add buttons to container (Holiday button will be added by HolidayManager)
+        btnContainer.appendChild(catPawBtn);
+        btnContainer.appendChild(settingsBtn);
+        
+        // Create modal
         const modal = document.createElement('div');
         modal.className = 'time-modal';
         modal.id = 'time-modal';
@@ -103,9 +116,7 @@ export class TimeOfDayManager {
             <div class="time-modal-backdrop"></div>
             <div class="time-modal-content">
                 <div class="time-modal-header">
-                    <div class="modal-cat-icon">
-                        <div class="cat-svg-mask"></div>
-                    </div>
+                    <div class="modal-cat-icon"><div class="cat-svg-mask"></div></div>
                     <h3>What time is it?</h3>
                     <p>Choose your preferred time of day</p>
                 </div>
@@ -133,7 +144,7 @@ export class TimeOfDayManager {
         `;
         document.body.appendChild(modal);
         
-        // Create clock display overlay
+        // Clock overlay
         const clockOverlay = document.createElement('div');
         clockOverlay.className = 'clock-overlay';
         clockOverlay.id = 'clock-overlay';
@@ -155,19 +166,12 @@ export class TimeOfDayManager {
         `;
         document.body.appendChild(clockOverlay);
         
-        // Create splash transition overlay
+        // Splash overlay
         const splashOverlay = document.createElement('div');
         splashOverlay.className = 'splash-overlay';
         splashOverlay.id = 'splash-overlay';
         splashOverlay.innerHTML = `
-            <video 
-                class="splash-video" 
-                id="splash-video" 
-                muted 
-                playsinline 
-                webkit-playsinline
-                preload="auto"
-            >
+            <video class="splash-video" id="splash-video" muted playsinline webkit-playsinline preload="none">
                 <source src="./src/assets/splash.webm" type="video/webm">
             </video>
         `;
@@ -180,6 +184,7 @@ export class TimeOfDayManager {
     cacheElements() {
         this.elements = {
             catPawBtn: document.getElementById('cat-paw-btn'),
+            settingsBtn: document.getElementById('settings-btn'),
             modal: document.getElementById('time-modal'),
             modalClose: document.getElementById('time-modal-close'),
             modalBackdrop: document.querySelector('.time-modal-backdrop'),
@@ -199,84 +204,66 @@ export class TimeOfDayManager {
     // SETUP EVENT LISTENERS
     // ========================================
     setupEventListeners() {
-        // Cat paw button click
         this.elements.catPawBtn?.addEventListener('click', () => {
-            this.playMeow();
+            this._playMeow();
             this.openModal();
         });
         
-        // Modal close button
-        this.elements.modalClose?.addEventListener('click', () => {
-            this.closeModal();
+        // Settings button opens preferences panel
+        this.elements.settingsBtn?.addEventListener('click', () => {
+            this._playClick();
+            if (this.welcomeNotice) {
+                this.welcomeNotice.showPreferencesPanel();
+            }
         });
         
-        // Modal backdrop click
-        this.elements.modalBackdrop?.addEventListener('click', () => {
-            this.closeModal();
-        });
+        this.elements.modalClose?.addEventListener('click', () => this.closeModal());
+        this.elements.modalBackdrop?.addEventListener('click', () => this.closeModal());
         
-        // Time options
         this.elements.timeOptions?.forEach(option => {
             option.addEventListener('click', () => {
-                const time = option.dataset.time;
-                this.selectTimeOfDay(time);
+                this.selectTimeOfDay(option.dataset.time);
             });
         });
         
-        // Keyboard events
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isModalOpen) {
                 this.closeModal();
             }
         });
-        
-        // Video ended event for Safari compatibility
-        this.elements.splashVideo?.addEventListener('ended', () => {
-            this.hideSplashTransition();
-        });
     }
 
-    // ========================================
-    // PLAY MEOW SOUND
-    // ========================================
-    playMeow() {
+    _playMeow() {
         if (this.sound) {
-            // Register meow sound if not already registered
             this.sound.register('meow', { url: './src/sound/meow.mp3', volume: 0.8 });
             this.sound.play('meow');
         }
     }
 
-    // ========================================
-    // OPEN MODAL
-    // ========================================
+    _playClick() {
+        if (this.sound) {
+            this.sound.register('click', { url: './src/sound/UI_Check.wav', volume: 0.5 });
+            this.sound.play('click');
+        }
+    }
+
     openModal() {
         this.isModalOpen = true;
         this.elements.modal?.classList.add('active');
         
-        // Update active state for current time
         this.elements.timeOptions?.forEach(option => {
             option.classList.toggle('active', option.dataset.time === this.currentTimeOfDay);
         });
         
-        // Add paw bounce animation
         this.elements.catPawBtn?.classList.add('bouncing');
-        setTimeout(() => {
-            this.elements.catPawBtn?.classList.remove('bouncing');
-        }, 500);
+        setTimeout(() => this.elements.catPawBtn?.classList.remove('bouncing'), 500);
     }
 
-    // ========================================
-    // CLOSE MODAL
-    // ========================================
     closeModal() {
         this.isModalOpen = false;
         this.elements.modal?.classList.remove('active');
     }
 
-    // ========================================
-    // SELECT TIME OF DAY
-    // ========================================
     async selectTimeOfDay(time) {
         if (this.isAnimating || time === this.currentTimeOfDay) {
             this.closeModal();
@@ -286,114 +273,77 @@ export class TimeOfDayManager {
         this.isAnimating = true;
         this.closeModal();
         
-        // Play confirmation sound
         this.sound?.register('codeFinish', { url: './src/sound/UI_Code_Finish.wav', volume: 0.8 });
         this.sound?.play('codeFinish');
         
-        // Short delay before showing clock
-        await this.sleep(300);
+        await this._sleep(250);
+        await this._showClockAnimation(time);
         
-        // Show clock animation
-        await this.showClockAnimation(time);
-        
-        // Play countdown finish sound
         this.sound?.register('timerCountdown', { url: './src/sound/System_Timer_CountDown.wav', volume: 0.8 });
         this.sound?.play('timerCountdown');
         
-        // Brief pause
-        await this.sleep(500);
+        await this._sleep(400);
+        await this._showSplashTransition();
         
-        // Show splash transition
-        await this.showSplashTransition();
+        this._applyTimeOfDay(time);
+        this._updatePlaylist(time);
         
-        // Apply the theme
-        this.applyTimeOfDay(time);
-        
-        // Update music playlist using the public API
-        this.updatePlaylist(time);
-        
-        // Save preference
         this.currentTimeOfDay = time;
         this.storage?.set('timeOfDay', time);
         
         this.isAnimating = false;
     }
 
-    // ========================================
-    // SHOW CLOCK ANIMATION
-    // ========================================
-    async showClockAnimation(time) {
+    async _showClockAnimation(time) {
         const config = this.timeConfig[time];
-        const targetH1 = config.hours[0];
-        const targetH2 = config.hours[1];
-        const targetM1 = config.minutes[0];
-        const targetM2 = config.minutes[1];
         
-        // Set label
         if (this.elements.clockLabel) {
             this.elements.clockLabel.textContent = config.label;
         }
         
-        // Show overlay
         this.elements.clockOverlay?.classList.add('active');
         
-        // Register panel sound (plays ONCE at the start)
         this.sound?.register('airportPanel', { url: '/src/sound/UI_AirportPanel_Small.wav', volume: 0.6 });
         
-        // Animate digits with stagger
-        await this.sleep(300);
-        
-        // Play the sound ONCE before all digits animate
+        await this._sleep(250);
         this.sound?.play('airportPanel');
         
-        // Animate all digits simultaneously (no sound per digit)
         await Promise.all([
-            this.animateDigit(this.elements.digitH1, targetH1, 0),
-            this.animateDigit(this.elements.digitH2, targetH2, 50),
-            this.animateDigit(this.elements.digitM1, targetM1, 100),
-            this.animateDigit(this.elements.digitM2, targetM2, 150)
+            this._animateDigit(this.elements.digitH1, config.hours[0], 0),
+            this._animateDigit(this.elements.digitH2, config.hours[1], 40),
+            this._animateDigit(this.elements.digitM1, config.minutes[0], 80),
+            this._animateDigit(this.elements.digitM2, config.minutes[1], 120)
         ]);
         
-        // Hold for a moment
-        await this.sleep(800);
-        
-        // Hide clock overlay
+        await this._sleep(600);
         this.elements.clockOverlay?.classList.remove('active');
-        await this.sleep(300);
+        await this._sleep(250);
     }
 
-    // ========================================
-    // ANIMATE SINGLE DIGIT (no sound - plays once globally)
-    // ========================================
-    async animateDigit(element, targetValue, delay = 0) {
+    async _animateDigit(element, targetValue, delay = 0) {
         if (!element) return;
         
-        await this.sleep(delay);
+        await this._sleep(delay);
         
-        const steps = 8; // Number of flips before landing on target
-        const stepDuration = 80;
+        const steps = 6;
+        const stepDuration = 60;
         
         element.classList.add('flipping');
         
         for (let i = 0; i < steps; i++) {
-            const randomDigit = Math.floor(Math.random() * 10);
-            element.textContent = randomDigit;
-            await this.sleep(stepDuration);
+            element.textContent = Math.floor(Math.random() * 10);
+            await this._sleep(stepDuration);
         }
         
-        // Final value
         element.textContent = targetValue;
         element.classList.remove('flipping');
         element.classList.add('landed');
         
-        await this.sleep(100);
+        await this._sleep(80);
         element.classList.remove('landed');
     }
 
-    // ========================================
-    // SHOW SPLASH TRANSITION
-    // ========================================
-    async showSplashTransition() {
+    async _showSplashTransition() {
         return new Promise((resolve) => {
             const video = this.elements.splashVideo;
             const overlay = this.elements.splashOverlay;
@@ -403,44 +353,32 @@ export class TimeOfDayManager {
                 return;
             }
             
-            // Reset video
             video.currentTime = 0;
-            
-            // Show overlay
             overlay.classList.add('active');
             
-            // Play video with Safari compatibility
             const playPromise = video.play();
             
             if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    // Video started successfully
-                }).catch((error) => {
-                    // Autoplay was prevented, skip to end
-                    console.log('Video autoplay prevented:', error);
-                    this.hideSplashTransition();
+                playPromise.catch(() => {
+                    this._hideSplashTransition();
                     resolve();
                 });
             }
             
-            // Set a timeout as fallback (2 seconds)
-            setTimeout(() => {
-                this.hideSplashTransition();
+            const timeout = setTimeout(() => {
+                this._hideSplashTransition();
                 resolve();
-            }, 2000);
+            }, 1800);
             
-            // Also listen for video end
             video.onended = () => {
-                this.hideSplashTransition();
+                clearTimeout(timeout);
+                this._hideSplashTransition();
                 resolve();
             };
         });
     }
 
-    // ========================================
-    // HIDE SPLASH TRANSITION
-    // ========================================
-    hideSplashTransition() {
+    _hideSplashTransition() {
         this.elements.splashOverlay?.classList.remove('active');
         if (this.elements.splashVideo) {
             this.elements.splashVideo.pause();
@@ -448,116 +386,74 @@ export class TimeOfDayManager {
         }
     }
 
-    // ========================================
-    // APPLY TIME OF DAY THEME
-    // ========================================
-    applyTimeOfDay(time) {
-        // Remove all time classes
+    _applyTimeOfDay(time) {
         document.documentElement.classList.remove('time-morning', 'time-sunset', 'time-night');
-        
-        // Add new time class
         document.documentElement.classList.add(`time-${time}`);
     }
 
-  updatePlaylist(time) {
-    if (!this.musicPlayer) {
-        console.warn('MusicPlayer not available for playlist update');
-        return;
+    _updatePlaylist(time) {
+        if (!this.musicPlayer) return;
+        
+        const playlist = this.playlists[time];
+        if (!playlist?.length) return;
+        
+        const wasPlaying = this.musicPlayer.isPlaying;
+        
+        if (typeof this.musicPlayer.setPlaylist === 'function') {
+            this.musicPlayer.setPlaylist(playlist, wasPlaying);
+        }
     }
-    
-    const playlist = this.playlists[time];
-    if (!playlist || playlist.length === 0) {
-        console.warn(`No playlist found for time: ${time}`);
-        return;
-    }
-    
-    // Check if music was playing before the change
-    const wasPlaying = this.musicPlayer.isPlaying; // USAR LA PROPIEDAD DIRECTA
-    
-    // Use the public API to update playlist
-    if (typeof this.musicPlayer.setPlaylist === 'function') {
-        this.musicPlayer.setPlaylist(playlist, wasPlaying);
-    }
-    
-    console.log(`Playlist updated to ${time}: ${playlist.length} tracks`);
-}
 
-    // ========================================
-    // GET PLAYLIST FOR TIME
-    // ========================================
     getPlaylistForTime(time) {
         return this.playlists[time] || [];
     }
 
-    // ========================================
-    // SET CUSTOM PLAYLIST FOR TIME
-    // ========================================
     setPlaylistForTime(time, playlist) {
-        if (!['morning', 'sunset', 'night'].includes(time)) {
-            console.warn(`Invalid time: ${time}`);
-            return;
-        }
+        if (!['morning', 'sunset', 'night'].includes(time)) return;
         
         this.playlists[time] = [...playlist];
         
-        // If this is the current time, update the music player
         if (time === this.currentTimeOfDay) {
-            this.updatePlaylist(time);
+            this._updatePlaylist(time);
         }
     }
 
-    // ========================================
-    // LOAD SAVED TIME OF DAY
-    // ========================================
     loadSavedTimeOfDay() {
         const savedTime = this.storage?.get('timeOfDay');
         
         if (savedTime && ['morning', 'sunset', 'night'].includes(savedTime)) {
             this.currentTimeOfDay = savedTime;
-            this.applyTimeOfDay(savedTime);
-            this.updatePlaylist(savedTime);
+            this._applyTimeOfDay(savedTime);
+            this._updatePlaylist(savedTime);
         } else {
-            // Default to morning or detect based on actual time
             const hour = new Date().getHours();
             let defaultTime = 'morning';
             
-            if (hour >= 6 && hour < 12) {
-                defaultTime = 'morning';
-            } else if (hour >= 12 && hour < 19) {
-                defaultTime = 'sunset';
-            } else {
-                defaultTime = 'night';
-            }
+            if (hour >= 6 && hour < 12) defaultTime = 'morning';
+            else if (hour >= 12 && hour < 19) defaultTime = 'sunset';
+            else defaultTime = 'night';
             
             this.currentTimeOfDay = defaultTime;
-            this.applyTimeOfDay(defaultTime);
-            this.updatePlaylist(defaultTime);
+            this._applyTimeOfDay(defaultTime);
+            this._updatePlaylist(defaultTime);
         }
     }
 
-    // ========================================
-    // UTILITY: SLEEP
-    // ========================================
-    sleep(ms) {
+    _sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // ========================================
-    // GET CURRENT TIME OF DAY
-    // ========================================
     getTimeOfDay() {
         return this.currentTimeOfDay;
     }
 
-    // ========================================
-    // DESTROY
-    // ========================================
     destroy() {
-        // Remove created elements
         this.elements.catPawBtn?.remove();
+        this.elements.settingsBtn?.remove();
         this.elements.modal?.remove();
         this.elements.clockOverlay?.remove();
         this.elements.splashOverlay?.remove();
+        document.getElementById('control-buttons-container')?.remove();
     }
 }
 
