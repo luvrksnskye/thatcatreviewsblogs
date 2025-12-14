@@ -303,7 +303,7 @@ export class TimeOfDayManager {
         
         this.elements.clockOverlay?.classList.add('active');
         
-        this.sound?.register('airportPanel', { url: '/src/sound/UI_AirportPanel_Small.wav', volume: 0.6 });
+        this.sound?.register('airportPanel', { url: './src/sound/UI_AirportPanel_Small.wav', volume: 0.6 });
         
         await this._sleep(250);
         this.sound?.play('airportPanel');
