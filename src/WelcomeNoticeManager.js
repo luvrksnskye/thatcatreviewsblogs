@@ -140,11 +140,10 @@ export class WelcomeNoticeManager {
         
         Object.assign(img.style, {
             maxWidth: '100%',
-            maxHeight: '90vh',
+            maxHeight: '100vh',
             objectFit: 'contain',
             borderRadius: '16px',
             display: 'block',
-            boxShadow: '0 25px 80px rgba(0, 0, 0, 0.3)'
         });
         
         this.noticeElement.appendChild(img);
