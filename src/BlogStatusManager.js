@@ -3,9 +3,6 @@
    Manages dynamic content in status tab based on blog posts
    + Automatic time-based status (sleeping/online/offline)
    + Dynamic blog tab rendering
-   
-   ACTUALIZADO: Ahora usa estructura de carpetas
-   /blogs/nombre-post/index.html en vez de /blogs/nombre-post.html
    ===================================================== */
 
 export class BlogStatusManager {
