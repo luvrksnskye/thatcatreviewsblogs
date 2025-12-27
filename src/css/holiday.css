@@ -1,0 +1,180 @@
+/* =====================================================
+   HOLIDAY STYLES - Christmas Mode
+   Seasonal decorations and animations
+   ===================================================== */
+
+/* ========================================
+   TRANSITION OVERLAY
+======================================== */
+.holiday-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0612;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+.holiday-transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ========================================
+   CHRISTMAS LIGHTS VIDEO CONTAINER
+======================================== */
+.christmas-lights-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.christmas-lights-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: screen;
+}
+
+/* Safari & iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .christmas-lights-video {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .christmas-lights-video {
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 480px) {
+    .christmas-lights-video {
+        opacity: 0.4;
+    }
+}
+
+/* ========================================
+   CHRISTMAS CONFETTI
+======================================== */
+.christmas-confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.christmas-confetti {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+    pointer-events: none;
+    animation: confettiFall 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+}
+
+@keyframes confettiFall {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(calc(var(--vx) * 0.3), calc(var(--vy) * 0.3)) rotate(calc(var(--rotation) * 0.3)) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--vx), calc(var(--vy) + 200px)) rotate(var(--rotation)) scale(0.5);
+    }
+}
+
+/* ========================================
+   CHRISTMAS MODE BODY STYLES
+======================================== */
+body.christmas-mode {
+    /* Subtle warm tint */
+}
+
+body.christmas-mode::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at top,
+        rgba(255, 200, 200, 0.03) 0%,
+        transparent 50%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+@media (prefers-reduced-motion: reduce) {
+    .holiday-transition-overlay {
+        transition: opacity 0.3s ease;
+    }
+    
+    .christmas-confetti {
+        animation: confettiFallSimple 1s ease-out forwards;
+    }
+    
+    @keyframes confettiFallSimple {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(100px);
+        }
+    }
+    
+    .christmas-lights-video {
+        display: none;
+    }
+}
+
+/* ========================================
+   DARK MODE ADJUSTMENTS
+======================================== */
+[data-theme="dark"] .christmas-lights-video {
+    opacity: 0.5;
+}
+
+[data-theme="dark"] body.christmas-mode::before {
+    background: radial-gradient(
+        ellipse at top,
+        rgba(255, 150, 150, 0.05) 0%,
+        transparent 50%
+    );
+}

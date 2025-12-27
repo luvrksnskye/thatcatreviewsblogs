@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey there from Skye Journey! - Abby's Blog</title>
+    <link rel="icon" type="image/x-icon" href="/src/assets/icon.svg">
+    <link rel="stylesheet" href="/src/css/blog-post.css">
+    <link rel="stylesheet" href="/src/css/blog-comments.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <meta name="blog-title" content="Hey there from Skye Journey!">
+    <meta name="blog-subtitle" content="the story behind this tiny website!">
+    <meta name="blog-category" content="Updates">
+    <meta name="blog-date" content="2025-12-07T09:39:46.023Z">
+    <meta name="blog-author" content="Skye">
+</head>
+<body>
+    <div class="starfall-container">
+        <div class="starfield" id="starfield"></div>
+    </div>
+
+    <div class="clouds-container">
+        <img src="/src/assets/cloud_small_size.png" class="cloud cloud-small-top" alt="">
+        <img src="/src/assets/cloud_big_size.png" class="cloud cloud-big-left" alt="">
+        <img src="/src/assets/cloud_left_medium_size.png" class="cloud cloud-medium-right" alt="">
+        <img src="/src/assets/cloud_medium_size.png" class="cloud cloud-medium-right-2" alt="">
+    </div>
+
+    <article class="blog-wrapper">
+        <a href="/index.html" class="back-btn">
+            <span class="material-icons">arrow_back</span>
+            Go Back
+        </a>
+
+        <div class="blog-card">
+            <header class="blog-header">
+                <span class="header-deco cloud"></span>
+                <span class="header-deco star"></span>
+                <span class="header-deco heart"></span>
+
+                <div class="blog-meta">
+                    <div class="date-badge">
+                        <span class="date-day">7</span>
+                        <span class="date-month">Dic</span>
+                        <span class="date-year">2025</span>
+                    </div>
+                    <span class="category-badge">
+                        <span class="material-icons">campaign</span>
+                        Updates
+                    </span>
+                    <span class="reading-time">
+                        <span class="material-icons">schedule</span>
+                        5 min of read
+                    </span>
+                </div>
+
+                <h1 class="blog-title">Hey there from Skye Journey!</h1>
+                <p class="blog-subtitle">The story behind this tiny website!</p>
+
+                <div class="author-info">
+                    <div class="author-avatar">
+                        <span class="material-icons">code</span>
+                    </div>
+                    <div class="author-details">
+                        <span class="author-name">Skye Journey</span>
+                        <span class="author-label">Indie Web & Game Dev</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="blog-content">
+                <p>Hi everyone! I'm Skye, the developer and designer behind this website. I wanted to take a moment to share how I built this blog system and why I decided to do it this way. Plus, I thought it would be a nice way to leave my client with a template for all her future posts.</p>
+
+                <h2>The Idea</h2>
+
+                <p>Everything started when Abby asked me for a blog that was easy to use. She wanted something simple... and well, huh, "simple" and I don't always get along.</p>
+
+                <div class="callout-box">
+                    <p><strong>My solution was straightforward:</strong> just create an HTML file and let the system handle everything else. No databases, no admin panels, no headaches.</p>
+                </div>
+
+                <h2>How the Magic Works</h2>
+
+                <p>The system is made of three main parts:</p>
+
+                <ul>
+                    <li><strong>The smart server</strong> - Keeps an eye on the blog folder and detects when you add or update posts</li>
+                    <li><strong>The manifest generator</strong> - Reads each post's meta tags and builds a JSON file with all the info</li>
+                    <li><strong>The dynamic Status Tab</strong> - Automatically shows the latest posts on the homepage</li>
+                </ul>
+
+                <h2>The Details</h2>
+
+                <p>I had a lot of fun adding small touches that make the site feel special:</p>
+
+                <ul>
+                    <li>The floating clouds in the background</li>
+                    <li>The softly falling stars</li>
+                    <li>The calming pastel colors</li>
+                    <li>The smooth little animations everywhere</li>
+                </ul>
+
+                <h2>For the Tech-Curious</h2>
+
+                <p>The tech stack is intentionally simple:</p>
+
+                <ul>
+                    <li><strong>HTML/CSS/JavaScript</strong> - Pure vanilla, no frameworks</li>
+                    <li><strong>Node.js</strong> - Only for the dev server</li>
+                    <li><strong>File System Watcher</strong> - To detect real-time changes</li>
+                    <li><strong>CSS Variables</strong> - For the light/dark theme system</li>
+                    <li><strong>ES6 Modules</strong> - To keep the code clean and organized</li>
+                </ul>
+
+                <p>No React, no Vue, no complicated build steps. Just clean code that anyone can read and tweak.</p>
+
+                <p>For now, the system works exactly the way Abby needs it to - and that's what matters most.</p>
+
+                <h2>Thanks for Reading</h2>
+
+                <p>I hope you enjoy exploring this little corner of the internet. If you have questions about how it was built or want a similar project of your own, you can find me here:</p>
+
+                <p><a href="https://luvrksnsnskyedev.space/" target="_blank">luvrksnsnskyedev.space</a></p>
+
+                <p>See ya!</p>
+            </div>
+
+            <footer class="blog-footer">
+                <script>
+                    hcb_user = {
+                        comments_header: '',
+                        name_label: 'Your name',
+                        content_label: 'Share your thoughts...',
+                        submit: 'Post Comment',
+                        no_comments_msg: 'No comments yet. Be the first to share!',
+                        add: 'Add your comment',
+                        again: 'Post another comment',
+                        said: 'said:',
+                        website_label: 'Website (optional)',
+                        email_label: 'Email',
+                        anonymous: 'Anonymous',
+                        reply: 'Reply',
+                        flag: 'Flag',
+                        like: 'Like',
+                        days_ago: 'days ago',
+                        hours_ago: 'hours ago',
+                        minutes_ago: 'minutes ago',
+                        within_the_last_minute: 'just now',
+                        msg_thankyou: 'Thank you for commenting!',
+                        MAX_CHARS: 8192,
+                        RELATIVE_DATES: true
+                    };
+                </script>
+                
+                <div id="HCB_comment_box">
+                    <a href="http://www.htmlcommentbox.com">Widget</a> is loading comments...
+                </div>
+                
+                <script type="text/javascript" id="hcb">
+                    if(!window.hcb_user){hcb_user={};} 
+                    (function(){
+                        var s=document.createElement("script"), 
+                            l=hcb_user.PAGE || (""+window.location).replace(/'/g,"%27"), 
+                            h="https://www.htmlcommentbox.com";
+                        s.setAttribute("type","text/javascript");
+                        s.setAttribute("src", h+"/jread?page="+encodeURIComponent(l).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24drJsjW78TrHCcXSjr8tLt0"+"&opts=16798&num=10&ts=1766811907669");
+                        if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);
+                    })();
+                </script>
+            </footer>
+        </div>
+    </article>
+
+    <script type="module">
+        try {
+            const { StarfallManager } = await import('/src/StarfallManager.js');
+            const starfall = new StarfallManager();
+            starfall.init();
+        } catch (e) {}
+    </script>
+    
+    <script type="module">
+        import { DreamyCommentsManager } from '/src/DreamyCommentsManager.js';
+        
+        const comments = new DreamyCommentsManager({
+            maxComments: 50,
+            particles: true,
+            textGlow: true,
+            fillColor1: '#C4B8E0',
+            fillColor2: '#E8E0F7',
+            moonDark: '#1E1A2E',
+            moonImage: '/src/assets/moon.png',
+            starImage: '/src/assets/planets.gif',
+            chimeSound: '/src/sound/mystical-chime.mp3'
+        });
+        
+        comments.init();
+    </script>
+</body>
+</html>

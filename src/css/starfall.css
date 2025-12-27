@@ -1,0 +1,208 @@
+/* =====================================================
+   STARFALL ANIMATION STYLES
+   Falling stars background effect
+   ===================================================== */
+
+/* ========================================
+   STARFALL CONTAINER
+======================================== */
+.starfall-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: transparent;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    z-index: var(--z-background);
+    pointer-events: none;
+}
+
+/* ========================================
+   STARFIELD
+======================================== */
+.starfall-container .starfield {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: rotateZ(45deg);
+}
+
+/* ========================================
+   FALLING STAR BASE
+======================================== */
+.starfall-container .falling-star {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(-45deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    border-radius: 999px;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+    animation:
+        star-tail 3000ms ease-in-out infinite,
+        star-falling 3000ms ease-in-out infinite;
+}
+
+/* ========================================
+   STAR GLOW EFFECTS
+======================================== */
+.starfall-container .falling-star::before,
+.starfall-container .falling-star::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 1px);
+    right: 0;
+    height: 2px;
+    background: linear-gradient(-45deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    border-radius: 100%;
+    animation: star-glow 3000ms ease-in-out infinite;
+}
+
+.starfall-container .falling-star::before {
+    transform: translateX(50%) rotateZ(45deg);
+}
+
+.starfall-container .falling-star::after {
+    transform: translateX(50%) rotateZ(-45deg);
+}
+
+/* ========================================
+   STAR ANIMATIONS
+======================================== */
+@keyframes star-tail {
+    0% { width: 0; }
+    30% { width: 100px; }
+    100% { width: 0; }
+}
+
+@keyframes star-glow {
+    0% { width: 0; }
+    50% { width: 30px; }
+    100% { width: 0; }
+}
+
+@keyframes star-falling {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(300px); }
+}
+
+/* ========================================
+   STATIC BACKGROUND STARS
+======================================== */
+.static-star {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: twinkle-star 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: var(--z-background);
+}
+
+@keyframes twinkle-star {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+}
+
+/* ========================================
+   SHOOTING STAR VARIATIONS
+======================================== */
+
+/* Pink tinted stars */
+.falling-star.pink {
+    background: linear-gradient(-45deg, rgba(255, 143, 171, 1), rgba(255, 143, 171, 0));
+    filter: drop-shadow(0 0 6px rgba(255, 143, 171, 0.7));
+}
+
+.falling-star.pink::before,
+.falling-star.pink::after {
+    background: linear-gradient(-45deg, rgba(255, 143, 171, 0), rgba(255, 143, 171, 1), rgba(255, 143, 171, 0));
+}
+
+/* Purple tinted stars */
+.falling-star.purple {
+    background: linear-gradient(-45deg, rgba(200, 180, 230, 1), rgba(200, 180, 230, 0));
+    filter: drop-shadow(0 0 6px rgba(200, 180, 230, 0.7));
+}
+
+.falling-star.purple::before,
+.falling-star.purple::after {
+    background: linear-gradient(-45deg, rgba(200, 180, 230, 0), rgba(200, 180, 230, 1), rgba(200, 180, 230, 0));
+}
+
+/* Golden stars */
+.falling-star.gold {
+    background: linear-gradient(-45deg, rgb(203, 231, 255), rgba(255, 215, 0, 0));
+    filter: drop-shadow(0 0 6px rgba(218, 237, 255, 0.7));
+}
+
+.falling-star.gold::before,
+.falling-star.gold::after {
+    background: linear-gradient(-45deg, rgba(255, 215, 0, 0), rgb(226, 250, 255), rgba(255, 215, 0, 0));
+}
+
+/* ========================================
+   SPEED VARIATIONS
+======================================== */
+.falling-star.fast {
+    animation-duration: 2000ms, 2000ms;
+}
+
+.falling-star.slow {
+    animation-duration: 4000ms, 4000ms;
+}
+
+/* ========================================
+   SIZE VARIATIONS
+======================================== */
+.falling-star.large {
+    height: 3px;
+}
+
+.falling-star.large::before,
+.falling-star.large::after {
+    height: 3px;
+    top: calc(50% - 1.5px);
+}
+
+.falling-star.small {
+    height: 1px;
+}
+
+.falling-star.small::before,
+.falling-star.small::after {
+    height: 1px;
+    top: calc(50% - 0.5px);
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+@media (prefers-reduced-motion: reduce) {
+    .starfall-container .falling-star {
+        animation: none;
+        opacity: 0.5;
+        width: 50px;
+    }
+    
+    .starfall-container .falling-star::before,
+    .starfall-container .falling-star::after {
+        animation: none;
+        width: 15px;
+    }
+    
+    .static-star {
+        animation: none;
+        opacity: 0.6;
+    }
+}

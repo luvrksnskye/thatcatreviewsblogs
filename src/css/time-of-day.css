@@ -1,0 +1,1130 @@
+/* =====================================================
+   TIME OF DAY STYLES
+   Cat paw button, modal, clock animation, splash transition
+   Fantasy cool-toned themes matching original design
+   ===================================================== */
+
+/* ========================================
+   CAT PAW BUTTON
+======================================== */
+.cat-paw-btn {
+    position: fixed;
+    top: var(--space-lg);
+    right: calc(var(--space-lg) + 60px);
+    width: 48px;
+    height: 48px;
+    background: var(--white);
+    border-radius: var(--radius-circle);
+    box-shadow: var(--shadow-medium);
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--pink-light);
+    overflow: hidden;
+    transition: all var(--transition-bounce);
+    cursor: pointer;
+}
+
+.cat-paw-btn:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--pink-hot);
+}
+
+.cat-paw-btn:active {
+    transform: scale(0.95);
+}
+
+.cat-paw-btn.bouncing {
+    animation: pawBounce 0.5s var(--transition-bounce);
+}
+
+@keyframes pawBounce {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(-10deg); }
+    50% { transform: scale(0.9) rotate(5deg); }
+    75% { transform: scale(1.1) rotate(-3deg); }
+}
+
+.paw-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--pink-hot);
+    transition: all var(--transition-bounce);
+}
+
+.cat-paw-btn:hover .paw-icon {
+    color: var(--pink-dark);
+    transform: scale(1.1);
+}
+
+/* Dark mode cat paw */
+[data-theme="dark"] .cat-paw-btn {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .paw-icon {
+    color: var(--pink-hot);
+}
+
+/* ========================================
+   TIME SELECTION MODAL
+======================================== */
+.time-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+}
+
+.time-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.time-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(107, 91, 138, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.time-modal-content {
+    position: relative;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 25px 80px rgba(139, 124, 179, 0.4);
+    transform: scale(0.8) translateY(20px);
+    transition: transform var(--transition-bounce);
+    border: 3px solid var(--purple-light);
+}
+
+.time-modal.active .time-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.time-modal-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.modal-cat-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-md);
+    color: var(--purple-medium);
+    animation: catSquish 3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    transform-origin: center bottom;
+}
+
+.modal-cat-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.modal-cat-icon object {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.cat-svg-mask {
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    -webkit-mask-image: url(../assets/cat_head.svg);
+    mask-image: url(../assets/cat_head.svg);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+@keyframes catSquish {
+    0%, 100% {
+        transform: scaleX(1) scaleY(1) rotate(0deg);
+    }
+    10% {
+        transform: scaleX(1.1) scaleY(0.9) rotate(-2deg);
+    }
+    20% {
+        transform: scaleX(0.9) scaleY(1.1) rotate(2deg);
+    }
+    30% {
+        transform: scaleX(1.05) scaleY(0.95) rotate(-1deg);
+    }
+    40% {
+        transform: scaleX(0.95) scaleY(1.05) rotate(1deg);
+    }
+    50% {
+        transform: scaleX(1.02) scaleY(0.98) rotate(0deg);
+    }
+    60% {
+        transform: scaleX(0.98) scaleY(1.02) rotate(0deg);
+    }
+    70%, 100% {
+        transform: scaleX(1) scaleY(1) rotate(0deg);
+    }
+}
+
+/* Cat animation defined in .modal-cat-icon */
+
+.time-modal-header h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-bottom: var(--space-xs);
+}
+
+.time-modal-header p {
+    font-size: 14px;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.time-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.time-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--off-white);
+    border-radius: var(--radius-lg);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-bounce);
+}
+
+.time-option:hover {
+    background: var(--purple-pale);
+    border-color: var(--purple-light);
+    transform: translateX(8px);
+}
+
+.time-option.active {
+    background: linear-gradient(135deg, var(--purple-pale) 0%, var(--pink-pale) 100%);
+    border-color: var(--pink-hot);
+}
+
+.time-option .material-icons {
+    font-size: 32px;
+    color: var(--purple-medium);
+    transition: all var(--transition-bounce);
+}
+
+.time-option:hover .material-icons {
+    transform: scale(1.2) rotate(-10deg);
+    color: var(--pink-hot);
+}
+
+.time-label {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-align: left;
+}
+
+.time-range {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--text-light);
+    background: var(--white);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+}
+
+.time-modal-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    width: 36px;
+    height: 36px;
+    background: var(--off-white);
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-medium);
+    cursor: pointer;
+    transition: all var(--transition-bounce);
+    border: none;
+}
+
+.time-modal-close:hover {
+    background: var(--pink-pale);
+    color: var(--pink-hot);
+    transform: rotate(90deg);
+}
+
+/* Dark mode modal */
+[data-theme="dark"] .time-modal-backdrop {
+    background: rgba(26, 22, 37, 0.7);
+}
+
+[data-theme="dark"] .time-modal-content {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .time-option {
+    background: var(--purple-pale);
+}
+
+[data-theme="dark"] .time-option:hover {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .time-range {
+    background: var(--purple-pale);
+}
+
+/* ========================================
+   CLOCK OVERLAY
+======================================== */
+.clock-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(107, 91, 138, 0.95);
+    z-index: calc(var(--z-modal) + 100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+}
+
+.clock-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.clock-display {
+    text-align: center;
+    transform: scale(0.5);
+    opacity: 0;
+    transition: all 0.5s var(--transition-bounce);
+}
+
+.clock-overlay.active .clock-display {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.clock-digits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.digit-group {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.digit {
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(180deg, var(--purple-light) 0%, var(--purple-medium) 100%);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-accent);
+    font-size: 72px;
+    color: var(--white);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.digit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.digit.flipping {
+    animation: digitFlip 0.08s ease-in-out;
+}
+
+@keyframes digitFlip {
+    0% { transform: perspective(500px) rotateX(0deg); }
+    50% { transform: perspective(500px) rotateX(-20deg); }
+    100% { transform: perspective(500px) rotateX(0deg); }
+}
+
+.digit.landed {
+    animation: digitLand 0.3s var(--transition-bounce);
+}
+
+@keyframes digitLand {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 8px 32px rgba(255, 143, 171, 0.5); }
+    100% { transform: scale(1); }
+}
+
+.clock-separator {
+    font-family: var(--font-accent);
+    font-size: 72px;
+    color: var(--white);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    animation: separatorBlink 1s ease-in-out infinite;
+}
+
+@keyframes separatorBlink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.3; }
+}
+
+.clock-label {
+    margin-top: var(--space-lg);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    opacity: 0;
+    animation: labelFadeIn 0.5s ease forwards 0.3s;
+}
+
+@keyframes labelFadeIn {
+    to { opacity: 1; }
+}
+
+/* ========================================
+   SPLASH TRANSITION OVERLAY
+======================================== */
+.splash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: calc(var(--z-modal) + 200);
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+}
+
+.splash-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.splash-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ========================================
+   TIME OF DAY THEMES - MORNING (Original Light Theme)
+   Uses the original design colors - fresh, light purple/pink pastels
+======================================== */
+.time-morning {
+    /* Morning uses the default/original light theme - no changes needed */
+}
+
+/* ========================================
+   TIME OF DAY THEMES - SUNSET
+   Warm variation of the original palette - soft lavender/rose tones
+======================================== */
+.time-sunset {
+    --bg-gradient: linear-gradient(
+        180deg,
+        #C9B8D8 0%,
+        #D4C0E0 20%,
+        #E0C8E8 40%,
+        #E8D0EC 60%,
+        #F0D8F0 80%,
+        #E8D8F0 100%
+    );
+    
+    --device-gradient: linear-gradient(
+        135deg,
+        #d4b8d87d 0%,
+        #e0c8e06e 50%,
+        #f0d0e871 100%
+    );
+    
+    --content-gradient: linear-gradient(
+        180deg,
+        #E8D0E8 0%,
+        #F0D8F0 50%,
+        #E8D0E8 100%
+    );
+    
+    /* Warmer purple tones */
+    --purple-dark: #9B7CB3;
+    --purple-medium: #B898C8;
+    --purple-light: #D0B8D8;
+    --purple-pale: #E8D0E8;
+    --purple-pastel: #F0E0F0;
+    
+    /* Warmer pink accents */
+    --pink-dark: #D4A0B8;
+    --pink-medium: #E8B0C8;
+    --pink-light: #F0C8D8;
+    --pink-pale: #F8E0E8;
+    --pink-hot: #E88AAB;
+    
+    /* Backgrounds slightly warmer */
+    --white: #FFF8FA;
+    --cream: #FFF4F8;
+    --off-white: #F8F0F8;
+    
+    /* Card colors */
+    --card-bg: rgba(255, 248, 250, 0.9);
+    --card-purple: rgba(208, 184, 216, 0.6);
+    --card-pink: rgba(248, 200, 216, 0.7);
+    
+    /* Text colors - slightly warmer */
+    --text-dark: #7B5B8A;
+    --text-medium: #9B7BA8;
+    --text-light: #B898B8;
+}
+
+.time-sunset body {
+    background: var(--bg-gradient);
+}
+
+.time-sunset .device-frame {
+    background: var(--device-gradient);
+    border-color: var(--purple-light);
+}
+
+.time-sunset .main-content {
+    background: var(--content-gradient);
+    border-color: var(--purple-light);
+}
+
+.time-sunset .card {
+    background: var(--card-bg);
+    border-color: var(--purple-light);
+}
+
+.time-sunset .card-offline {
+    background: linear-gradient(
+        135deg,
+        rgba(208, 184, 216, 0.7) 0%,
+        rgba(240, 200, 216, 0.6) 50%,
+        rgba(248, 224, 232, 0.5) 100%
+    );
+}
+
+.time-sunset .nav-tabs {
+    background: rgba(255, 248, 250, 0.5);
+}
+
+.time-sunset .nav-tab.active {
+    background: var(--white);
+}
+
+.time-sunset .theme-toggle,
+.time-sunset .cat-paw-btn {
+    background: var(--white);
+    border-color: var(--pink-light);
+}
+
+.time-sunset .paw-icon,
+.time-sunset .theme-toggle .light-icon {
+    color: var(--pink-hot);
+}
+
+/* Sunset clouds - warmer glow */
+.time-sunset .cloud {
+    filter: drop-shadow(0 4px 8px rgba(232, 138, 171, 0.25));
+}
+
+/* Sunset stars - pink/lavender tint */
+.time-sunset .falling-star {
+    background: linear-gradient(-45deg, rgba(232, 176, 200, 1), rgba(232, 176, 200, 0));
+    filter: drop-shadow(0 0 6px rgba(232, 176, 200, 0.7));
+}
+
+.time-sunset .falling-star.pink {
+    background: linear-gradient(-45deg, rgba(232, 138, 171, 1), rgba(232, 138, 171, 0));
+    filter: drop-shadow(0 0 6px rgba(232, 138, 171, 0.7));
+}
+
+/* ========================================
+   TIME OF DAY THEMES - NIGHT (Dark Mode)
+   Uses the existing dark mode colors - cool purple/blue tones
+======================================== */
+.time-night {
+    /* Night inherits from dark mode - same cool fantasy colors */
+    --purple-dark: #6B5B93;
+    --purple-medium: #8B7CB3;
+    --purple-light: #4A3F6B;
+    --purple-pale: #2D2640;
+    --purple-pastel: #1E1A2E;
+    
+    --pink-dark: #9B6B8A;
+    --pink-medium: #C48BA8;
+    --pink-light: #5A3D4F;
+    --pink-pale: #3A2835;
+    --pink-hot: #FF6B9D;
+    
+    --white: #1A1625;
+    --cream: #1E1A2E;
+    --off-white: #252036;
+    
+    --card-bg: rgba(30, 26, 46, 0.9);
+    --card-purple: rgba(74, 63, 107, 0.6);
+    --card-pink: rgba(90, 61, 79, 0.7);
+    
+    --text-dark: #E8E0F7;
+    --text-medium: #B8A8D8;
+    --text-light: #8B7BA8;
+    
+    --toggle-on: #FF6B9D;
+    --toggle-off: #4A3F6B;
+    --badge-purple: #6B5B93;
+    --badge-pink: #9B6B8A;
+    
+    --bg-gradient: linear-gradient(
+        180deg,
+        #1A1625 0%,
+        #1E1A2E 20%,
+        #252036 40%,
+        #2D2640 60%,
+        #1E1A2E 80%,
+        #1A1625 100%
+    );
+    
+    --device-gradient: linear-gradient(
+        135deg,
+        #2D2640 0%,
+        #1E1A2E 50%,
+        #3A2835 100%
+    );
+    
+    --content-gradient: linear-gradient(
+        180deg,
+        #252036 0%,
+        #2D2640 50%,
+        #1E1A2E 100%
+    );
+    
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.time-night body {
+    background: var(--bg-gradient);
+}
+
+.time-night .device-frame {
+    background: var(--device-gradient);
+    border-color: var(--purple-light);
+    background-image: 
+        radial-gradient(ellipse at top left, rgba(107, 91, 147, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(155, 107, 138, 0.2) 0%, transparent 50%);
+}
+
+.time-night .main-content {
+    background: var(--content-gradient);
+    border-color: var(--purple-light);
+    background-image: 
+        radial-gradient(circle, rgba(107, 91, 147, 0.15) 1px, transparent 1px);
+}
+
+.time-night .topbar-date {
+    color: var(--text-dark);
+}
+
+.time-night .wifi-bar,
+.time-night .icon-battery,
+.time-night .battery-level {
+    background: var(--text-dark);
+    border-color: var(--text-dark);
+}
+
+.time-night .nav-tabs {
+    background: rgba(30, 26, 46, 0.5);
+}
+
+.time-night .nav-tab {
+    color: var(--text-light);
+}
+
+.time-night .nav-tab:hover {
+    background: rgba(74, 63, 107, 0.3);
+    color: var(--text-dark);
+}
+
+.time-night .nav-tab.active {
+    background: var(--purple-light);
+    color: var(--text-dark);
+}
+
+.time-night .card {
+    background: var(--card-bg);
+    border-color: var(--purple-light);
+}
+
+.time-night .card-offline {
+    background: linear-gradient(
+        135deg,
+        rgba(74, 63, 107, 0.7) 0%,
+        rgba(58, 40, 53, 0.6) 50%,
+        rgba(45, 38, 64, 0.5) 100%
+    );
+}
+
+.time-night .card-day,
+.time-night .card-thursday {
+    background: var(--card-bg);
+}
+
+.time-night .theme-toggle,
+.time-night .cat-paw-btn {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+.time-night .paw-icon {
+    color: var(--pink-hot);
+}
+
+.time-night .theme-toggle .dark-icon {
+    color: var(--pink-hot);
+}
+
+/* Night text */
+.time-night .offline-title,
+.time-night .stream-title,
+.time-night .section-title,
+.time-night .post-title,
+.time-night h1, .time-night h2, .time-night h3 {
+    color: var(--text-dark);
+}
+
+.time-night .offline-subtitle,
+.time-night .stream-subtitle,
+.time-night p {
+    color: var(--text-medium);
+}
+
+/* Night badges */
+.time-night .day-badge {
+    background: var(--purple-light);
+    border-color: var(--purple-medium);
+}
+
+.time-night .day-badge span {
+    color: var(--text-dark);
+}
+
+.time-night .time-badge {
+    background: var(--purple-light);
+    color: var(--text-dark);
+}
+
+.time-night .time-badge.accent {
+    background: var(--pink-hot);
+    color: var(--white);
+}
+
+/* Night components */
+.time-night .pixel-cloud,
+.time-night .mini-pixel-cloud {
+    background: linear-gradient(180deg, rgb(139, 124, 179) 0%, rgb(139, 124, 179) 100%);
+}
+
+.time-night .pixel-cloud::before,
+.time-night .pixel-cloud::after,
+.time-night .mini-pixel-cloud::before,
+.time-night .mini-pixel-cloud::after {
+    background: inherit;
+}
+
+/* Night blog posts */
+.time-night .blog-post {
+    background: var(--card-bg);
+}
+
+.time-night .post-header {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+.time-night .post-date {
+    background: var(--purple-pale);
+}
+
+.time-night .post-category {
+    background: var(--purple-pale);
+}
+
+.time-night .post-footer {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+/* Night gallery */
+.time-night .gallery-item {
+    background: var(--card-bg);
+}
+
+.time-night .gallery-placeholder {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+/* Night about */
+.time-night .avatar-placeholder {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-medium) 100%);
+}
+
+.time-night .avatar-ring {
+    border-color: var(--pink-pale);
+}
+
+.time-night .bio-card {
+    background: var(--card-bg);
+}
+
+.time-night .tag {
+    background: var(--purple-light);
+}
+
+.time-night .tag:hover {
+    background: var(--pink-pale);
+}
+
+.time-night .social-card {
+    background: var(--card-bg);
+}
+
+/* Night credits */
+.time-night .creator-card {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+.time-night .creator-card::before {
+    background-image: radial-gradient(circle, rgba(139, 124, 179, 0.2) 1px, transparent 1px);
+}
+
+.time-night .creator-badge {
+    background: var(--purple-pale);
+}
+
+.time-night .creator-link {
+    background: var(--purple-pale);
+}
+
+.time-night .credit-item {
+    background: var(--card-bg);
+}
+
+.time-night .credits-footer {
+    border-color: var(--purple-light);
+}
+
+/* Night buttons */
+.time-night .read-more-btn {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-hot) 100%);
+    color: var(--white);
+}
+
+.time-night .load-more-btn {
+    background: rgba(74, 63, 107, 0.3);
+    border-color: var(--purple-light);
+}
+
+.time-night .load-more-btn:hover {
+    background: var(--purple-light);
+}
+
+.time-night .filter-btn {
+    background: rgba(74, 63, 107, 0.3);
+}
+
+.time-night .filter-btn:hover,
+.time-night .filter-btn.active {
+    background: var(--purple-light);
+}
+
+/* Night music player */
+.time-night .music-player {
+    background: rgba(30, 26, 46, 0.95);
+    border-color: var(--purple-light);
+}
+
+.time-night .player-header {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-dark) 100%);
+}
+
+.time-night .progress-bar,
+.time-night .volume-slider {
+    background: var(--purple-light);
+}
+
+.time-night .control-btn:hover {
+    background: var(--purple-light);
+}
+
+.time-night .playlist-toggle {
+    background: var(--purple-light);
+}
+
+.time-night .playlist-toggle:hover {
+    background: var(--pink-pale);
+}
+
+.time-night .playlist-container {
+    border-color: var(--purple-light);
+}
+
+.time-night .playlist-item:hover,
+.time-night .playlist-item.active {
+    background: var(--purple-light);
+}
+
+.time-night .playlist-item-art {
+    background: var(--purple-light);
+}
+
+/* Night notifications */
+.time-night .notification {
+    background: var(--purple-pastel);
+}
+
+.time-night .notification.info .notification-icon {
+    background: var(--purple-light);
+}
+
+.time-night .notification.welcome {
+    background: linear-gradient(135deg, var(--purple-pastel) 0%, var(--pink-pale) 100%);
+}
+
+/* Night clouds */
+.time-night .cloud {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    opacity: 0.7;
+}
+
+/* Night stars - brighter, more magical */
+.time-night .falling-star {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+}
+
+.time-night .falling-star.pink {
+    filter: drop-shadow(0 0 8px rgba(255, 143, 171, 0.9));
+}
+
+.time-night .falling-star.purple {
+    filter: drop-shadow(0 0 8px rgba(139, 124, 179, 0.9));
+}
+
+/* Night scrollbar */
+.time-night ::-webkit-scrollbar-track {
+    background: var(--purple-pastel);
+}
+
+.time-night ::-webkit-scrollbar-thumb {
+    background: var(--purple-light);
+}
+
+.time-night ::-webkit-scrollbar-thumb:hover {
+    background: var(--purple-medium);
+}
+
+/* Night selection */
+.time-night ::selection {
+    background: var(--pink-pale);
+    color: var(--text-dark);
+}
+
+.time-night ::-moz-selection {
+    background: var(--pink-pale);
+    color: var(--text-dark);
+}
+
+/* Night social links */
+.time-night .social-link {
+    background: rgba(74, 63, 107, 0.3);
+}
+
+.time-night .social-link:hover {
+    background: var(--purple-light);
+}
+
+/* Night author credit */
+.time-night .author-badge {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+/* Night corner diamond */
+.time-night .corner-diamond {
+    color: var(--purple-medium);
+}
+
+/* ========================================
+   RESPONSIVE ADJUSTMENTS
+======================================== */
+@media (max-width: 768px) {
+    .cat-paw-btn {
+        top: var(--space-md);
+        right: calc(var(--space-md) + 52px);
+        width: 40px;
+        height: 40px;
+    }
+    
+    .paw-icon {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .digit {
+        width: 50px;
+        height: 75px;
+        font-size: 48px;
+    }
+    
+    .clock-separator {
+        font-size: 48px;
+    }
+    
+    .clock-label {
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+    
+    .time-modal-content {
+        padding: var(--space-lg);
+    }
+    
+    .modal-cat-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .time-modal-header h3 {
+        font-size: 18px;
+    }
+    
+    .time-option {
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .time-option .material-icons {
+        font-size: 24px;
+    }
+    
+    .time-label {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cat-paw-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .paw-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .digit {
+        width: 40px;
+        height: 60px;
+        font-size: 36px;
+        border-radius: var(--radius-sm);
+    }
+    
+    .clock-separator {
+        font-size: 36px;
+    }
+    
+    .clock-label {
+        font-size: 14px;
+    }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+@media (prefers-reduced-motion: reduce) {
+    .digit.flipping,
+    .digit.landed,
+    .modal-cat-icon {
+        animation: none;
+    }
+    
+    .cat-paw-btn.bouncing {
+        animation: none;
+    }
+    
+    .clock-separator {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   TRANSITIONS FOR THEME CHANGES
+======================================== */
+body,
+.device-frame,
+.main-content,
+.card,
+.notification,
+.music-player,
+.theme-toggle,
+.cat-paw-btn,
+.nav-tabs,
+.nav-tab {
+    transition: background-color 0.5s ease,
+                background 0.5s ease,
+                border-color 0.5s ease,
+                color 0.5s ease,
+                box-shadow 0.5s ease;
+}

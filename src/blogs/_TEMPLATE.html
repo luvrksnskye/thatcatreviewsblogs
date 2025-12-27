@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Título Aquí - Abby's Blog</title>
+    <!-- Usar el CSS completo standalone necesario para los estilos del sitio-->
+    <link rel="stylesheet" href="/src/css/blog-post.css">
+     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+      <!-- ========================================
+         STARFALL BACKGROUND (Manejado por StarfallManager.js)
+    ======================================== -->
+    <div class="starfall-container">
+        <div class="starfield" id="starfield"></div>
+    </div>
+
+    <!-- ========================================
+         CLOUDS BACKGROUND (PNG Images)
+    ======================================== -->
+    <div class="clouds-container">
+        <img src="/src/assets/cloud_small_size.png" class="cloud cloud-small-top" alt="">
+        <img src="/src/assets/cloud_big_size.png" class="cloud cloud-big-left" alt="">
+        <img src="/src/assets/cloud_left_medium_size.png" class="cloud cloud-medium-right" alt="">
+        <img src="/src/assets/cloud_medium_size.png" class="cloud cloud-medium-right-2" alt="">
+    </div>
+
+    
+    <!-- =====================================================
+         ✧ INFORMACIÓN DEL POST ✧
+         
+         Cambia el contenido entre comillas "" de cada línea:
+         
+         blog-title    → El título de tu post
+         blog-subtitle → Una descripción corta
+         blog-category → Life, Gaming, Art, Music, Tech, Updates
+         blog-date     → La fecha (formato: AÑO-MES-DÍATHORA:MINUTOS:SEGUNDOSZ)
+         blog-author   → Tu nombre
+         ===================================================== -->
+    <meta name="blog-title" content="Tu Título Aquí">
+    <meta name="blog-subtitle" content="Una descripción corta">
+    <meta name="blog-category" content="Life">
+    <meta name="blog-date" content="2024-12-07T12:00:00Z">
+    <meta name="blog-author" content="Abby">
+</head>
+<body>
+    <article class="blog-entry">
+        <header>
+            <h1>Tu Título Aquí</h1>
+            <p class="blog-meta">
+                <span class="date">December 7, 2024</span>
+                <span class="category">Life</span>
+            </p>
+        </header>
+        
+        <!-- =====================================================
+             ✧ ESCRIBE TU POST AQUÍ ✧
+             
+             Usa estos códigos:
+             
+             <p>Tu párrafo aquí</p>           → Para párrafos
+             <h2>Subtítulo</h2>               → Para subtítulos
+             <strong>texto</strong>           → Para negrita
+             <em>texto</em>                   → Para cursiva
+             <ul><li>item</li></ul>           → Para listas
+             <img src="/src/assets/foto.jpg"> → Para imágenes
+             
+             ===================================================== -->
+        <div class="blog-content">
+            
+            <p>¡Hola! Este es el inicio de tu post ♡</p>
+            
+            <p>Escribe tu contenido aquí. Puedes agregar varios párrafos.</p>
+            
+            <h2>Un Subtítulo</h2>
+            
+            <p>Más contenido aquí...</p>
+            
+            <ul>
+                <li>Puedes hacer listas</li>
+                <li>Como esta</li>
+                <li>Muy fácil</li>
+            </ul>
+            
+            <p>¡Gracias por leer! ♡</p>
+            
+        </div>
+        <!-- FIN DEL CONTENIDO -->
+      
+        <footer>
+            <p>Thanks for reading! ♡</p>
+        </footer>
+    </article>
+
+      <!-- ========================================
+         SCRIPTS (NO TOCAR - for StarfallManager)
+    ======================================== -->
+    <script type="module">
+        // Import StarfallManager if available
+        try {
+            const { StarfallManager } = await import('/src/StarfallManager.js');
+            const starfall = new StarfallManager();
+            starfall.init();
+        } catch (e) {
+            console.log('StarfallManager not loaded - using CSS fallback');
+        }
+    </script>
+</body>
+</html>

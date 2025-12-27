@@ -1,0 +1,580 @@
+/* =====================================================
+   DARK MODE STYLES
+   Theme switching and dark color scheme
+   ===================================================== */
+
+/* ========================================
+   DARK THEME VARIABLES
+======================================== */
+[data-theme="dark"] {
+    /* -- Primary Colors -- */
+    --purple-dark: #6B5B93;
+    --purple-medium: #8B7CB3;
+    --purple-light: #4A3F6B;
+    --purple-pale: #2D2640;
+    --purple-pastel: #1E1A2E;
+    
+    /* -- Pink Accents -- */
+    --pink-dark: #9B6B8A;
+    --pink-medium: #C48BA8;
+    --pink-light: #5A3D4F;
+    --pink-pale: #3A2835;
+    --pink-hot: #FF6B9D;
+    
+    /* -- Background Colors -- */
+    --white: #1A1625;
+    --cream: #1E1A2E;
+    --off-white: #252036;
+    
+    /* -- Card Colors -- */
+    --card-bg: rgba(30, 26, 46, 0.9);
+    --card-purple: rgba(74, 63, 107, 0.6);
+    --card-pink: rgba(90, 61, 79, 0.7);
+    
+    /* -- Text Colors -- */
+    --text-dark: #E8E0F7;
+    --text-medium: #B8A8D8;
+    --text-light: #8B7BA8;
+    
+    /* -- UI Colors -- */
+    --toggle-on: #FF6B9D;
+    --toggle-off: #4A3F6B;
+    --badge-purple: #6B5B93;
+    --badge-pink: #9B6B8A;
+    
+    /* -- Background Gradients -- */
+    --bg-gradient: linear-gradient(
+        180deg,
+        #1A1625 0%,
+        #1E1A2E 20%,
+        #252036 40%,
+        #2D2640 60%,
+        #1E1A2E 80%,
+        #1A1625 100%
+    );
+    
+    --device-gradient: linear-gradient(
+        135deg,
+        #2D2640 0%,
+        #1E1A2E 50%,
+        #3A2835 100%
+    );
+    
+    --content-gradient: linear-gradient(
+        180deg,
+        #252036 0%,
+        #2D2640 50%,
+        #1E1A2E 100%
+    );
+    
+    /* -- Shadows -- */
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   BODY DARK MODE
+======================================== */
+[data-theme="dark"] body {
+    background: var(--bg-gradient);
+}
+
+/* ========================================
+   DEVICE FRAME DARK MODE
+======================================== */
+[data-theme="dark"] .device-frame {
+    background: var(--device-gradient);
+    border-color: var(--purple-light);
+    background-image: 
+        radial-gradient(ellipse at top left, rgba(107, 91, 147, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(155, 107, 138, 0.2) 0%, transparent 50%);
+}
+
+[data-theme="dark"] .main-content {
+    background: var(--content-gradient);
+    border-color: var(--purple-light);
+    background-image: 
+        radial-gradient(circle, rgba(107, 91, 147, 0.15) 1px, transparent 1px);
+}
+
+/* ========================================
+   TOPBAR DARK MODE
+======================================== */
+[data-theme="dark"] .topbar-date {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .wifi-bar,
+[data-theme="dark"] .icon-battery,
+[data-theme="dark"] .battery-level {
+    background: var(--text-dark);
+    border-color: var(--text-dark);
+}
+
+/* ========================================
+   NAVIGATION DARK MODE
+======================================== */
+[data-theme="dark"] .nav-tabs {
+    background: rgba(30, 26, 46, 0.5);
+}
+
+[data-theme="dark"] .nav-tab {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .nav-tab:hover {
+    background: rgba(74, 63, 107, 0.3);
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .nav-tab.active {
+    background: var(--purple-light);
+    color: var(--text-dark);
+}
+
+/* ========================================
+   SCHEDULE HEADER DARK MODE
+======================================== */
+[data-theme="dark"] .schedule-header {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .icon-placeholder {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-medium) 100%);
+}
+
+/* ========================================
+   CARDS DARK MODE
+======================================== */
+[data-theme="dark"] .card {
+    background: var(--card-bg);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .card-offline {
+    background: linear-gradient(
+        135deg,
+        rgba(74, 63, 107, 0.7) 0%,
+        rgba(58, 40, 53, 0.6) 50%,
+        rgba(45, 38, 64, 0.5) 100%
+    );
+}
+
+[data-theme="dark"] .card-day,
+[data-theme="dark"] .card-thursday {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .mini-offline-banner {
+    background: linear-gradient(
+        90deg,
+        rgba(74, 63, 107, 0.5) 0%,
+        rgba(58, 40, 53, 0.4) 100%
+    );
+}
+
+/* ========================================
+   COMPONENTS DARK MODE
+======================================== */
+[data-theme="dark"] .day-badge {
+    background: var(--purple-light);
+    border-color: var(--purple-medium);
+}
+
+[data-theme="dark"] .time-badge {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .time-badge.accent {
+    background: var(--pink-hot);
+}
+
+[data-theme="dark"] .pixel-cloud,
+[data-theme="dark"] .mini-pixel-cloud {
+    background: linear-gradient(180deg, rgb(139, 124, 179) 0%, rgb(139, 124, 179) 100%);
+}
+
+[data-theme="dark"] .pixel-cloud::before,
+[data-theme="dark"] .pixel-cloud::after,
+[data-theme="dark"] .mini-pixel-cloud::before,
+[data-theme="dark"] .mini-pixel-cloud::after {
+    background: inherit;
+}
+
+/* ========================================
+   BLOG POSTS DARK MODE
+======================================== */
+[data-theme="dark"] .blog-post {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .post-header {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+[data-theme="dark"] .post-date {
+    background: var(--purple-pale);
+}
+
+[data-theme="dark"] .post-category {
+    background: var(--purple-pale);
+}
+
+[data-theme="dark"] .post-footer {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+/* ========================================
+   GALLERY DARK MODE
+======================================== */
+[data-theme="dark"] .gallery-item {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .gallery-placeholder {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+/* ========================================
+   ABOUT SECTION DARK MODE
+======================================== */
+[data-theme="dark"] .avatar-placeholder {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-medium) 100%);
+}
+
+[data-theme="dark"] .avatar-ring {
+    border-color: var(--pink-pale);
+}
+
+[data-theme="dark"] .bio-card {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .tag {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .tag:hover {
+    background: var(--pink-pale);
+}
+
+[data-theme="dark"] .social-card {
+    background: var(--card-bg);
+}
+
+/* ========================================
+   CREDITS DARK MODE
+======================================== */
+[data-theme="dark"] .creator-card {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+[data-theme="dark"] .creator-card::before {
+    background-image: radial-gradient(circle, rgba(139, 124, 179, 0.2) 1px, transparent 1px);
+}
+
+[data-theme="dark"] .creator-badge {
+    background: var(--purple-pale);
+}
+
+[data-theme="dark"] .creator-link {
+    background: var(--purple-pale);
+}
+
+[data-theme="dark"] .credit-item {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .credits-footer {
+    border-color: var(--purple-light);
+}
+
+/* ========================================
+   BUTTONS DARK MODE
+======================================== */
+[data-theme="dark"] .read-more-btn {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-hot) 100%);
+    color: var(--white);
+}
+
+[data-theme="dark"] .load-more-btn {
+    background: rgba(74, 63, 107, 0.3);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .load-more-btn:hover {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .filter-btn {
+    background: rgba(74, 63, 107, 0.3);
+}
+
+[data-theme="dark"] .filter-btn:hover,
+[data-theme="dark"] .filter-btn.active {
+    background: var(--purple-light);
+}
+
+/* ========================================
+   MUSIC PLAYER DARK MODE
+======================================== */
+[data-theme="dark"] .music-player {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .player-header {
+    background: linear-gradient(135deg, var(--purple-medium) 0%, var(--pink-dark) 100%);
+}
+
+[data-theme="dark"] .artwork-placeholder {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+[data-theme="dark"] .progress-bar,
+[data-theme="dark"] .volume-slider {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .control-btn:hover {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .playlist-toggle {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .playlist-toggle:hover {
+    background: var(--pink-pale);
+}
+
+[data-theme="dark"] .playlist-container {
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .playlist-item:hover,
+[data-theme="dark"] .playlist-item.active {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .playlist-item-art {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .mini-artwork {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-pale) 100%);
+}
+
+/* ========================================
+   NOTIFICATIONS DARK MODE
+======================================== */
+[data-theme="dark"] .notification {
+    background: var(--purple-pastel);
+}
+
+[data-theme="dark"] .notification.info .notification-icon {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .notification.welcome {
+    background: linear-gradient(135deg, var(--purple-pastel) 0%, var(--pink-pale) 100%);
+}
+
+[data-theme="dark"] .notification-close:hover {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .notification-action.primary {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .notification-action.secondary:hover {
+    background: var(--purple-light);
+}
+
+/* ========================================
+   SIDE DECORATIONS DARK MODE
+======================================== */
+[data-theme="dark"] .folder-icon {
+    background: var(--purple-light);
+    border-color: var(--purple-medium);
+}
+
+[data-theme="dark"] .folder-icon.pink {
+    background: var(--pink-pale);
+}
+
+[data-theme="dark"] .window-box {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .window-btn.yes {
+    background: var(--pink-pale);
+}
+
+[data-theme="dark"] .window-btn.no {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .corner-diamond {
+    color: var(--purple-medium);
+}
+
+/* ========================================
+   AUTHOR CREDIT DARK MODE
+======================================== */
+[data-theme="dark"] .author-badge {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+/* ========================================
+   THEME TOGGLE DARK MODE
+======================================== */
+[data-theme="dark"] .theme-toggle {
+    background: var(--purple-pastel);
+    border-color: var(--purple-light);
+}
+
+[data-theme="dark"] .theme-toggle .light-icon {
+    transform: translateY(-40px);
+    opacity: 0;
+}
+
+[data-theme="dark"] .theme-toggle .dark-icon {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* ========================================
+   STARFALL DARK MODE (MORE VISIBLE)
+======================================== */
+[data-theme="dark"] .falling-star {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+}
+
+[data-theme="dark"] .falling-star.pink {
+    filter: drop-shadow(0 0 8px rgba(255, 143, 171, 0.9));
+}
+
+[data-theme="dark"] .falling-star.purple {
+    filter: drop-shadow(0 0 8px rgba(139, 124, 179, 0.9));
+}
+
+/* ========================================
+   LIGHTBOX DARK MODE
+======================================== */
+[data-theme="dark"] .lightbox-close,
+[data-theme="dark"] .lightbox-prev,
+[data-theme="dark"] .lightbox-next {
+    background: var(--purple-pastel);
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .lightbox-close:hover,
+[data-theme="dark"] .lightbox-prev:hover,
+[data-theme="dark"] .lightbox-next:hover {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] .lightbox-image {
+    background: var(--purple-light);
+}
+
+/* ========================================
+   SCROLLBAR DARK MODE
+======================================== */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--purple-pastel);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--purple-light);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--purple-medium);
+}
+
+/* ========================================
+   SELECTION DARK MODE
+======================================== */
+[data-theme="dark"] ::selection {
+    background: var(--pink-pale);
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] ::-moz-selection {
+    background: var(--pink-pale);
+    color: var(--text-dark);
+}
+
+/* ========================================
+   SOCIAL LINKS DARK MODE
+======================================== */
+[data-theme="dark"] .social-link {
+    background: rgba(74, 63, 107, 0.3);
+}
+
+[data-theme="dark"] .social-link:hover {
+    background: var(--purple-light);
+}
+
+/* ========================================
+   TRANSITION FOR THEME CHANGE
+======================================== */
+body,
+.device-frame,
+.main-content,
+.card,
+.notification,
+.music-player,
+.theme-toggle,
+.ground-floor {
+    transition: background-color 0.3s ease,
+                border-color 0.3s ease,
+                color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* ========================================
+   GROUND FLOOR DARK MODE
+======================================== */
+[data-theme="dark"] .ground-floor {
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        #050218 30%,
+        #050218 100%
+    );
+}
+
+[data-theme="dark"] .ground-floor::before {
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(5, 2, 24, 0.3) 50%,
+        rgba(5, 2, 24, 0.7) 100%
+    );
+}
+
+[data-theme="dark"] .ground-floor::after {
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(74, 63, 107, 0.3) 0px,
+        rgba(74, 63, 107, 0.3) 2px,
+        transparent 2px,
+        transparent 8px
+    );
+}
+
+/* ========================================
+   SITE PET DARK MODE
+======================================== */
+[data-theme="dark"] .site-pet img {
+    filter: drop-shadow(0 2px 8px rgba(139, 124, 179, 0.4));
+}

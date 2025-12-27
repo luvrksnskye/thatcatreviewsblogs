@@ -1,0 +1,354 @@
+/* =====================================================
+   CLOUDS BACKGROUND STYLES
+   PNG Cloud images floating animation
+   Responsive Design
+   ===================================================== */
+
+/* ========================================
+   CLOUDS CONTAINER
+======================================== */
+.clouds-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: var(--z-clouds);
+    pointer-events: none;
+}
+
+/* ========================================
+   BASE CLOUD STYLES
+======================================== */
+.cloud {
+    position: absolute;
+    opacity: 1.0;
+    filter: drop-shadow(0 4px 8px rgba(123, 104, 175, 0.358));
+}
+
+/* ========================================
+   CLOUD POSITIONS - DESKTOP (Default)
+======================================== */
+
+/* Small cloud - floating at the top back */
+.cloud-small-top {
+    width: clamp(400px, 50vw, 990px);
+    height: auto;
+    top: -10%;
+    right: -15%;
+    animation: cloudDrift 60s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Big cloud - bottom left */
+.cloud-big-left {
+    width: clamp(600px, 100vw, 1900px);
+    height: auto;
+    bottom: -46%;
+    left: clamp(-370px, -20vw, -100px);
+    animation: cloudSway 80s ease-in-out infinite;
+    z-index: -1;
+}
+
+.cloud-medium-right {
+    width: clamp(150px, 25vw, 400px);
+    height: auto;
+    bottom: 30%;
+    right: 40%;
+    animation: cloudBob 55s ease-in-out infinite;
+    animation-delay: 5s;
+    z-index: 1;
+}
+
+.cloud-medium-right-2 {
+    width: clamp(300px, 45vw, 880px);
+    height: auto;
+    top: 35%;
+    right: 10%;
+    animation: cloudFloat 70s ease-in-out infinite;
+    animation-delay: 10s;
+    z-index: -2;
+}
+
+/* ========================================
+   TABLET BREAKPOINT (1024px and below)
+======================================== */
+@media (max-width: 1024px) {
+    .cloud-small-top {
+        width: 500px;
+        top: -8%;
+        right: -20%;
+    }
+
+    .cloud-big-left {
+        width: 1200px;
+        bottom: -40%;
+        left: -250px;
+    }
+
+    .cloud-medium-right {
+        width: 250px;
+        bottom: 25%;
+        right: 35%;
+    }
+
+    .cloud-medium-right-2 {
+        width: 550px;
+        top: 30%;
+        right: 5%;
+    }
+}
+
+/* ========================================
+   MOBILE LANDSCAPE (768px and below)
+======================================== */
+@media (max-width: 768px) {
+    .cloud-small-top {
+        width: 350px;
+        top: -5%;
+        right: -15%;
+    }
+
+    .cloud-big-left {
+        width: 900px;
+        bottom: -35%;
+        left: -200px;
+    }
+
+    .cloud-medium-right {
+        width: 180px;
+        bottom: 20%;
+        right: 30%;
+    }
+
+    .cloud-medium-right-2 {
+        width: 400px;
+        top: 25%;
+        right: 0%;
+    }
+}
+
+/* ========================================
+   MOBILE PORTRAIT (480px and below)
+======================================== */
+@media (max-width: 480px) {
+    .cloud-small-top {
+        width: 250px;
+        top: -3%;
+        right: -10%;
+    }
+
+    .cloud-big-left {
+        width: 600px;
+        bottom: -30%;
+        left: -150px;
+    }
+
+    .cloud-medium-right {
+        width: 120px;
+        bottom: 15%;
+        right: 25%;
+    }
+
+    .cloud-medium-right-2 {
+        width: 280px;
+        top: 20%;
+        right: -5%;
+    }
+
+    /* Reduce animation intensity on mobile for performance */
+    .cloud {
+        opacity: 0.85;
+    }
+}
+
+/* ========================================
+   SMALL MOBILE (360px and below)
+======================================== */
+@media (max-width: 360px) {
+    .cloud-small-top {
+        width: 200px;
+        top: -2%;
+        right: -8%;
+    }
+
+    .cloud-big-left {
+        width: 450px;
+        bottom: -25%;
+        left: -100px;
+    }
+
+    .cloud-medium-right {
+        width: 100px;
+        bottom: 12%;
+        right: 20%;
+    }
+
+    .cloud-medium-right-2 {
+        width: 220px;
+        top: 18%;
+        right: -8%;
+    }
+}
+
+/* ========================================
+   CLOUD ANIMATIONS
+======================================== */
+
+/* Primary gentle drift animation */
+@keyframes cloudFloat {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    20% {
+        transform: translateX(15px) translateY(-8px);
+    }
+    40% {
+        transform: translateX(25px) translateY(-5px);
+    }
+    60% {
+        transform: translateX(10px) translateY(-15px);
+    }
+    80% {
+        transform: translateX(-10px) translateY(-10px);
+    }
+}
+
+/* Secondary wave-like motion */
+@keyframes cloudDrift {
+    0%, 100% {
+        transform: translateX(0) translateY(0) scale(1);
+    }
+    25% {
+        transform: translateX(30px) translateY(-12px) scale(1.01);
+    }
+    50% {
+        transform: translateX(15px) translateY(-20px) scale(1);
+    }
+    75% {
+        transform: translateX(-15px) translateY(-8px) scale(0.99);
+    }
+}
+
+/* Gentle bobbing motion */
+@keyframes cloudBob {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    33% {
+        transform: translateX(-20px) translateY(-10px);
+    }
+    66% {
+        transform: translateX(10px) translateY(-18px);
+    }
+}
+
+/* Slow horizontal sway */
+@keyframes cloudSway {
+    0%, 100% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(20px) translateY(-5px) rotate(0.5deg);
+    }
+    50% {
+        transform: translateX(35px) translateY(-12px) rotate(0deg);
+    }
+    75% {
+        transform: translateX(15px) translateY(-8px) rotate(-0.5deg);
+    }
+}
+
+/* Reduced animation movement on mobile */
+@media (max-width: 768px) {
+    @keyframes cloudFloat {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        25% {
+            transform: translateX(8px) translateY(-5px);
+        }
+        50% {
+            transform: translateX(12px) translateY(-10px);
+        }
+        75% {
+            transform: translateX(-5px) translateY(-6px);
+        }
+    }
+    
+    @keyframes cloudDrift {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(15px) translateY(-8px);
+        }
+    }
+    
+    @keyframes cloudBob {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(-8px) translateY(-6px);
+        }
+    }
+    
+    @keyframes cloudSway {
+        0%, 100% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(10px) translateY(-5px);
+        }
+    }
+}
+
+/* ========================================
+   DARK MODE CLOUDS
+======================================== */
+[data-theme="dark"] .cloud {
+    opacity: 0.9;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+@media (max-width: 480px) {
+    [data-theme="dark"] .cloud {
+        opacity: 0.75;
+    }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+@media (prefers-reduced-motion: reduce) {
+    .cloud {
+        animation: none;
+    }
+}
+
+/* ========================================
+   LANDSCAPE ORIENTATION ADJUSTMENTS
+======================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .cloud-small-top {
+        width: 300px;
+        top: -15%;
+    }
+
+    .cloud-big-left {
+        width: 700px;
+        bottom: -50%;
+    }
+
+    .cloud-medium-right {
+        width: 150px;
+        bottom: 10%;
+    }
+
+    .cloud-medium-right-2 {
+        width: 350px;
+        top: 20%;
+    }
+}

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>That Cat Reviews</title>
+    
+    <!-- ========================================
+         EXTERNAL FONTS & ICONS
+    ======================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Varela+Round&family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link rel="icon" type="image/x-icon" href="./src/assets/icon.svg">
+    
+    <!-- ========================================
+         EXTERNAL LIBRARIES
+    ======================================== -->
+    <!-- Animate.css for extra animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- ========================================
+         MAIN STYLESHEETS
+    ======================================== -->
+    <link rel="stylesheet" href="./src/css/variables.css">
+    <link rel="stylesheet" href="./src/css/base.css">
+    <link rel="stylesheet" href="./src/css/starfall.css">
+    <link rel="stylesheet" href="./src/css/clouds.css">
+    <link rel="stylesheet" href="./src/css/components.css">
+    <link rel="stylesheet" href="./src/css/cards.css">
+    <link rel="stylesheet" href="./src/css/music-player.css">
+    <link rel="stylesheet" href="./src/css/notifications.css">
+    <link rel="stylesheet" href="./src/css/dark-mode.css">
+    <link rel="stylesheet" href="./src/css/time-of-day.css">
+    <link rel="stylesheet" href="./src/css/responsive.css">
+    <link rel="stylesheet" href="./src/css/site-pet.css"> 
+    <link rel="stylesheet" href="./src/css/holiday.css">
+    <link rel="stylesheet" href="./src/css/preferences.css">
+</head>
+<body>
+
+    <!-- ========================================
+         STARFALL BACKGROUND
+    ======================================== -->
+    <div class="starfall-container">
+        <div class="starfield" id="starfield"></div>
+    </div>
+
+    <!-- ========================================
+         CLOUDS BACKGROUND (PNG Images)
+    ======================================== -->
+    <div class="clouds-container">
+        <img src="./src/assets/cloud_small_size.png" class="cloud cloud-small-top" alt="">
+        <img src="./src/assets/cloud_big_size.png" class="cloud cloud-big-left" alt="">
+        <img src="./src/assets/cloud_left_medium_size.png" class="cloud cloud-medium-right" alt="">
+        <img src="./src/assets/cloud_medium_size.png" class="cloud cloud-medium-right-2" alt="">
+    </div>
+
+    <!-- ========================================
+         GROUND FLOOR
+    ======================================== -->
+    <div class="ground-floor"></div>
+
+    <!-- ========================================
+         SITE PET (KITTY SPRITE)
+    ======================================== -->
+    <div class="site-pet"></div>
+
+    <!-- ========================================
+         NOTIFICATION CONTAINER
+    ======================================== -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- ========================================
+         MUSIC PLAYER (Minimalist Floating)
+    ======================================== -->
+    <div class="music-player" id="music-player">
+        <div class="player-header" id="player-header">
+            <span class="material-icons player-icon">music_note</span>
+            <div class="player-info-mini">
+                <span class="song-title" id="song-title">No song selected</span>
+                <span class="song-artist" id="song-artist">Select a song</span>
+            </div>
+            <button class="control-btn mini-btn" id="btn-play" aria-label="Play">
+                <span class="material-icons play-icon">play_arrow</span>
+                <span class="material-icons pause-icon">pause</span>
+            </button>
+        </div>
+        
+        <div class="player-body" id="player-body">
+            <div class="player-progress">
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-time">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+            </div>
+            
+            <div class="player-controls">
+                <button class="control-btn" id="btn-prev" aria-label="Previous">
+                    <span class="material-icons">skip_previous</span>
+                </button>
+                <button class="control-btn" id="btn-shuffle" aria-label="Shuffle">
+                    <span class="material-icons">shuffle</span>
+                </button>
+                <button class="control-btn" id="btn-repeat" aria-label="Repeat">
+                    <span class="material-icons">repeat</span>
+                </button>
+                <button class="control-btn" id="btn-next" aria-label="Next">
+                    <span class="material-icons">skip_next</span>
+                </button>
+            </div>
+            
+            <div class="player-volume">
+                <span class="material-icons volume-icon" id="volume-icon">volume_up</span>
+                <div class="volume-slider" id="volume-slider">
+                    <div class="volume-fill" id="volume-fill"></div>
+                </div>
+            </div>
+            
+            <button class="playlist-toggle" id="playlist-toggle">
+                <span class="material-icons">queue_music</span>
+                <span>Playlist</span>
+            </button>
+            
+            <div class="playlist-container" id="playlist-container">
+                <ul class="playlist" id="playlist"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         MAIN CONTAINER - DEVICE FRAME
+    ======================================== -->
+    <div class="device-frame" id="main-device">
+        
+        <!-- Device Top Bar -->
+        <div class="device-topbar">
+            <span class="topbar-date" id="topbar-date">WEEK OF NOV 12 TO NOV 19</span>
+            <div class="topbar-icons">
+                <button class="topbar-btn" id="btn-notifications" aria-label="Notifications">
+                    <span class="material-icons">notifications</span>
+                    <span class="notification-badge" id="notification-badge">0</span>
+                </button>
+                <span class="icon-wifi">
+                    <span class="wifi-bar"></span>
+                    <span class="wifi-bar"></span>
+                    <span class="wifi-bar"></span>
+                </span>
+                <span class="icon-battery">
+                    <span class="battery-level"></span>
+                </span>
+            </div>
+        </div>
+
+        <!-- ========================================
+             MAIN CONTENT AREA
+        ======================================== -->
+        <div class="main-content">
+            
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs" id="nav-tabs">
+                <button class="nav-tab active" data-tab="status">
+                    <span class="material-icons">home</span>
+                    <span>Status</span>
+                </button>
+                <button class="nav-tab" data-tab="blog">
+                    <span class="material-icons">article</span>
+                    <span>Blog</span>
+                </button>
+                <button class="nav-tab" data-tab="gallery">
+                    <span class="material-icons">photo_library</span>
+                    <span>Gallery</span>
+                </button>
+                <button class="nav-tab" data-tab="about">
+                    <span class="material-icons">person</span>
+                    <span>About</span>
+                </button>
+                <button class="nav-tab" data-tab="credits">
+                    <span class="material-icons">favorite</span>
+                    <span>Credits</span>
+                </button>
+            </nav>
+
+            <!-- ========================================
+                 TAB: SCHEDULE
+            ======================================== -->
+            <section class="tab-content active" id="tab-status">
+                
+                <!-- Header Title -->
+                <div class="schedule-header">
+                    <div class="header-icon">
+                        <div class="icon-placeholder"></div>
+                    </div>
+                    <h1 class="header-title">BLOG ACTIVITY!!</h1>
+                </div>
+
+                <!-- Schedule Grid -->
+                <div class="schedule-grid">
+                    
+                    <!-- Row 1: Offline Card + Latest Post Card -->
+                    <div class="grid-row row-1">
+                        
+                        <!-- Large Offline Card (con toggle online/offline) -->
+                        <div class="card card-offline card-large" data-sound="toggle" data-online="false">
+                            <div class="card-inner">
+                                <div class="offline-header">
+                                    <div class="toggle-switch active" data-sound="switch">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                </div>
+                                <div class="offline-content">
+                                    <h2 class="offline-title">offline</h2>
+                                    <p class="offline-subtitle">no signal . . .</p>
+                                </div>
+                                <div class="offline-footer">
+                                    <div class="pixel-cloud"></div>
+                                    <div class="pixel-face">x_x</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Post 1 Card (más reciente) -->
+                        <div class="card card-day card-tuesday" data-sound="card" data-post-index="0">
+                            <div class="card-inner">
+                                <div class="day-badge">
+                                    <span>loading...</span>
+                                </div>
+                                <div class="card-bookmark"></div>
+                                <h3 class="stream-title">Loading post...</h3>
+                                <p class="stream-subtitle">Please wait~</p>
+                                <div class="time-slots">
+                                    <div class="time-slot">
+                                        <span class="time-badge">--</span>
+                                        <span class="timezone">--</span>
+                                    </div>
+                                    <div class="time-slot">
+                                        <span class="time-badge accent">--</span>
+                                        <span class="timezone">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Row 2: Wide Card con Post 2 -->
+                    <div class="grid-row row-2">
+                        <div class="card card-wide card-thursday" data-sound="card" data-post-index="1">
+                            <div class="card-inner">
+                                <!-- Offline Banner (con toggle) -->
+                                <div class="mini-offline-banner" data-online="false">
+                                    <div class="toggle-switch active" data-sound="switch">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                    <span class="mini-offline-text">offline</span>
+                                    <span class="mini-offline-face">x_x</span>
+                                    <span class="mini-offline-signal">no signal . . .</span>
+                                    <div class="mini-pixel-cloud"></div>
+                                </div>
+                                
+                                <!-- Post Content -->
+                                <div class="thursday-content">
+                                    <div class="day-badge">
+                                        <span>loading...</span>
+                                    </div>
+                                    <div class="thursday-info">
+                                        <h3 class="stream-title">Loading post...</h3>
+                                        <p class="stream-subtitle">Please wait~</p>
+                                    </div>
+                                    <div class="time-slots vertical">
+                                        <div class="time-slot">
+                                            <span class="time-badge">--</span>
+                                            <span class="timezone">--</span>
+                                        </div>
+                                        <div class="time-slot">
+                                            <span class="time-badge accent">--</span>
+                                            <span class="timezone">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Decorative Elements -->
+                                <div class="card-decorations">
+                                    <span class="deco-heart">♡</span>
+                                    <span class="deco-star-small">✦</span>
+                                    <span class="deco-star-small alt">✧</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Post 3, Post 4, y Small Offline -->
+                    <div class="grid-row row-3">
+                        
+                        <!-- Post 3 Card -->
+                        <div class="card card-day card-friday" data-sound="card" data-post-index="2">
+                            <div class="card-inner">
+                                <div class="day-badge">
+                                    <span>loading...</span>
+                                </div>
+                                <div class="card-bookmark pink"></div>
+                                <h3 class="stream-title">Loading post...</h3>
+                                <p class="stream-subtitle">Please wait~</p>
+                                <div class="time-slots">
+                                    <div class="time-slot">
+                                        <span class="time-badge">--</span>
+                                        <span class="timezone">--</span>
+                                    </div>
+                                    <div class="time-slot">
+                                        <span class="time-badge accent">--</span>
+                                        <span class="timezone">--</span>
+                                    </div>
+                                </div>
+                                <span class="card-deco-cloud">☁</span>
+                            </div>
+                        </div>
+
+                        <!-- Post 4 Card -->
+                        <div class="card card-day card-saturday" data-sound="card" data-post-index="3">
+                            <div class="card-inner">
+                                <div class="day-badge">
+                                    <span>loading...</span>
+                                </div>
+                                <div class="card-bookmark"></div>
+                                <h3 class="stream-title">Loading post...</h3>
+                                <p class="stream-subtitle">Please wait~</p>
+                                <div class="time-slots">
+                                    <div class="time-slot">
+                                        <span class="time-badge">--</span>
+                                        <span class="timezone">--</span>
+                                    </div>
+                                    <div class="time-slot">
+                                        <span class="time-badge accent">--</span>
+                                        <span class="timezone">--</span>
+                                    </div>
+                                </div>
+                                <span class="card-deco-star">✦</span>
+                                <span class="card-deco-heart">♡</span>
+                            </div>
+                        </div>
+
+                        <!-- Small Offline Card (con toggle) -->
+                        <div class="card card-offline card-small" data-sound="toggle" data-online="false">
+                            <div class="card-inner">
+                                <div class="offline-header">
+                                    <div class="toggle-switch" data-sound="switch">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                </div>
+                                <div class="offline-content">
+                                    <h2 class="offline-title small">offline</h2>
+                                    <p class="offline-subtitle">no signal . . .</p>
+                                </div>
+                                <div class="offline-footer">
+                                    <div class="pixel-cloud small"></div>
+                                    <div class="pixel-face">x_x</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="schedule-footer">
+                    <div class="social-links">
+                        <a href="#" class="social-link" data-sound="click">
+                            <span class="material-icons">camera_alt</span>
+                        </a>
+                        <a href="#" class="social-link" data-sound="click">
+                            <span class="material-icons">smart_display</span>
+                        </a>
+                        <a href="#" class="social-link" data-sound="click">
+                            <span class="material-icons">tag</span>
+                        </a>
+                        <span class="social-text">@ABBY</span>
+                    </div>
+                
+                </div>
+            </section>
+   <!-- ========================================
+                 TAB: BLOG
+            ======================================== -->
+            <section class="tab-content" id="tab-blog">
+                <div class="blog-header">
+                    <h1 class="section-title">
+                        <span class="material-icons">auto_stories</span>
+                        Abby's Blog
+                    </h1>
+                    <p class="section-subtitle">thoughts, updates & more ✧</p>
+                </div>
+
+                <!-- Blog posts will be dynamically rendered by BlogStatusManager -->
+                <div class="blog-posts">
+                    <!-- Loading placeholder -->
+                    <div class="blog-loading">
+                        <span class="material-icons spinning">sync</span>
+                        <p>Loading posts...</p>
+                    </div>
+                </div>
+
+                <!-- Load More -->
+                <button class="load-more-btn" id="load-more-blog" data-sound="click">
+                    <span class="material-icons">expand_more</span>
+                    Load More Posts
+                </button>
+            </section>
+
+            <!-- ========================================
+                 TAB: GALLERY
+            ======================================== -->
+            <section class="tab-content" id="tab-gallery">
+                <div class="gallery-header">
+                    <h1 class="section-title">
+                        <span class="material-icons">collections</span>
+                        Gallery
+                    </h1>
+                    <p class="section-subtitle">memories & moments ♡</p>
+                </div>
+
+                <div class="gallery-filters">
+                    <button class="filter-btn active" data-filter="all" data-sound="click">All</button>
+                    <button class="filter-btn" data-filter="photos" data-sound="click">Photos</button>
+                    <button class="filter-btn" data-filter="art" data-sound="click">Art</button>
+                    <button class="filter-btn" data-filter="screenshots" data-sound="click">Screenshots</button>
+                </div>
+
+                <div class="gallery-grid" id="gallery-grid">
+                    <!-- Gallery items will be dynamically generated -->
+                    <div class="gallery-item" data-category="photos" data-sound="card">
+                        <div class="gallery-placeholder">
+                            <span class="material-icons">image</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="art" data-sound="card">
+                        <div class="gallery-placeholder">
+                            <span class="material-icons">palette</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="screenshots" data-sound="card">
+                        <div class="gallery-placeholder">
+                            <span class="material-icons">screenshot</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="photos" data-sound="card">
+                        <div class="gallery-placeholder">
+                            <span class="material-icons">image</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="art" data-sound="card">
+                        <div class="gallery-placeholder">
+                            <span class="material-icons">brush</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="screenshots" data-sound="card">
+                        <div class="gallery-placeholder">
+                            <span class="material-icons">videogame_asset</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================
+                 TAB: ABOUT
+            ======================================== -->
+            <section class="tab-content" id="tab-about">
+                <div class="about-container">
+                    <div class="about-header">
+                        <div class="about-avatar">
+                            <div class="avatar-placeholder">
+                                <span class="material-icons">person</span>
+                            </div>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <h1 class="about-name">Abby</h1>
+                        <p class="about-tagline">✧ artist • dreamer ✧</p>
+                    </div>
+
+                    <div class="about-bio">
+                        <div class="bio-card" data-sound="card">
+                            <h3>
+                                <span class="material-icons">info</span>
+                                About Me
+                            </h3>
+                            <p>Hey there! I'm Abby </p>
+                        </div>
+
+                        <div class="bio-card" data-sound="card">
+                            <h3>
+                                <span class="material-icons">favorite</span>
+                                Things I Love
+                            </h3>
+                            <div class="tags-container">
+                                <span class="tag">Cozy Games</span>
+                                <span class="tag">Digital Art</span>
+                                <span class="tag">Cats</span>
+                                <span class="tag">Music</span>
+                                <span class="tag">Anime</span>
+                                <span class="tag">Coffee</span>
+                                <span class="tag">Rainy Days</span>
+                                <span class="tag">Pixel Art</span>
+                            </div>
+                        </div>
+
+                        <div class="bio-card" data-sound="card">
+                            <h3>
+                                <span class="material-icons">✧</span>
+                                Info
+                            </h3>
+                            <p> Bla bla bla bla bla bla </p>
+                        </div>
+                    </div>
+
+                    <div class="social-cards">
+                        <a href="#" class="social-card twitch" data-sound="click">
+                            <span class="material-icons">smart_display</span>
+                            <span>Twitch</span>
+                        </a>
+                        <a href="#" class="social-card twitter" data-sound="click">
+                            <span class="material-icons">tag</span>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="#" class="social-card instagram" data-sound="click">
+                            <span class="material-icons">camera_alt</span>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="#" class="social-card discord" data-sound="click">
+                            <span class="material-icons">forum</span>
+                            <span>Discord</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================
+                 TAB: CREDITS
+            ======================================== -->
+            <section class="tab-content" id="tab-credits">
+                <div class="credits-container">
+                    <div class="credits-header">
+                        <h1 class="section-title">
+                            <span class="material-icons">code</span>
+                            Credits
+                        </h1>
+                        <p class="section-subtitle">built with love & these amazing tools</p>
+                    </div>
+
+                    <div class="credits-main">
+                        <div class="creator-card" data-sound="card">
+                            <div class="creator-badge">
+                                <span class="material-icons">auto_awesome</span>
+                            </div>
+                            <h2>SKYE JOURNEY</h2>
+                            <p class="creator-role">Website Designer & Developer</p>
+                            <p class="creator-desc">This website was designed and developed with love by Skye Journey.</p>
+                            <div class="creator-links">
+                               <a href="https://luvrksnsnskyedev.space/" class="creator-link" data-sound="click" target="_blank" rel="noopener noreferrer">
+    <span class="material-icons">language</span>
+    Portfolio
+</a>
+                               <a href="/cdn-cgi/l/email-protection#abc7deddd9c0d8c5d8c0d2cec1c4ded9c5ced2ebc2c8c7c4decf85c8c4c6" class="creator-link" data-sound="click">
+    <span class="material-icons">mail</span>
+    Contact
+</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="credits-section">
+                        <h3 class="credits-section-title">
+                            <span class="material-icons">build</span>
+                            Libraries & Tools
+                        </h3>
+                        <div class="credits-grid">
+                            <div class="credit-item" data-sound="card">
+                                <span class="credit-icon">✧</span>
+                                <h4>Google Fonts</h4>
+                                <p>Nunito, Varela Round & Anton fonts</p>
+                            </div>
+                            <div class="credit-item" data-sound="card">
+                                <span class="credit-icon">✧</span>
+                                <h4>Material Icons</h4>
+                                <p>Beautiful iconography by Google</p>
+                            </div>
+                            <div class="credit-item" data-sound="card">
+                                <span class="credit-icon">✧</span>
+                                <h4>Animate.css</h4>
+                                <p>CSS animation library by Daniel Eden</p>
+                            </div>
+            
+                            <div class="credit-item" data-sound="card">
+                                <span class="credit-icon">✧</span>
+                                <h4>LocalStorage API</h4>
+                                <p>Browser storage for preferences</p>
+                            </div>
+                            <div class="credit-item" data-sound="card">
+                                <span class="credit-icon">✧</span>
+                                <h4>CSS Custom Properties</h4>
+                                <p>Theming & dark mode support</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="credits-footer">
+                        <p class="version">Version 1.0.0</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ========================================
+             DECORATIVE SIDE ELEMENTS
+        ======================================== -->
+
+        <!-- Corner Diamonds -->
+        <div class="corner-diamond top-left">◇</div>
+        <div class="corner-diamond top-right">◇</div>
+        <div class="corner-diamond bottom-left">◇</div>
+        <div class="corner-diamond bottom-right">◇</div>
+
+    </div>
+
+    <!-- ========================================
+         AUTHOR CREDIT
+    ======================================== -->
+    <div class="author-credit">
+        <div class="author-badge">
+            <span>ABBY</span>
+        </div>
+        <span class="author-link">made by SKYE JOURNEY</span>
+    </div>
+
+    <!-- ========================================
+         LIGHTBOX MODAL
+    ======================================== -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">
+            <span class="material-icons">close</span>
+        </button>
+        <div class="lightbox-content">
+            <div class="lightbox-image" id="lightbox-image"></div>
+        </div>
+        <button class="lightbox-prev" id="lightbox-prev">
+            <span class="material-icons">chevron_left</span>
+        </button>
+        <button class="lightbox-next" id="lightbox-next">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+
+
+    <!-- ========================================
+         JAVASCRIPT MODULES
+    ======================================== -->
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>

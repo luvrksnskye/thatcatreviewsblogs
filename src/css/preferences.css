@@ -1,0 +1,1077 @@
+/* =====================================================
+   PREFERENCES PANEL & CONTROL BUTTONS STYLES
+   Beautiful settings panel and icon buttons
+   ===================================================== */
+
+/* ========================================
+   PREFERENCES OVERLAY
+======================================== */
+.prefs-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(107, 91, 138, 0);
+    backdrop-filter: blur(0px);
+    z-index: 99998;
+    transition: all 0.35s ease;
+}
+
+.prefs-overlay.visible {
+    background-color: rgba(107, 91, 138, 0.5);
+    backdrop-filter: blur(8px);
+}
+
+/* ========================================
+   PREFERENCES PANEL
+======================================== */
+.preferences-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    z-index: 99999;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: linear-gradient(145deg, #ffffff 0%, #f8f4ff 100%);
+    border-radius: 24px;
+    max-width: 380px;
+    width: 92vw;
+    box-shadow: 
+        0 25px 80px rgba(139, 124, 179, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+}
+
+.preferences-panel.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.preferences-panel .prefs-content {
+    position: relative;
+}
+
+/* ========================================
+   CLOSE BUTTON
+======================================== */
+.preferences-panel .prefs-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #8B7BA8;
+}
+
+.preferences-panel .prefs-close-btn:hover {
+    background: #FF6B9D;
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* ========================================
+   HEADER
+======================================== */
+.preferences-panel .prefs-header {
+    background: linear-gradient(135deg, #E8E0F7 0%, #DDD6F3 50%, #FBE4F3 100%);
+    padding: 24px 20px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.preferences-panel .prefs-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 143, 171, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(196, 184, 224, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Icon Container */
+.preferences-panel .prefs-icon-container {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 12px;
+}
+
+.preferences-panel .prefs-icon-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 143, 171, 0.4);
+    border-radius: 50%;
+    animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 0.3; }
+}
+
+.preferences-panel .prefs-icon-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #FF8FAB 0%, #FF6B9D 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+}
+
+.preferences-panel .prefs-icon-inner .material-icons {
+    font-size: 24px;
+    color: white;
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-3px) rotate(-5deg); }
+    75% { transform: translateY(-3px) rotate(5deg); }
+}
+
+/* Sparkles */
+.preferences-panel .prefs-sparkle {
+    position: absolute;
+    font-size: 12px;
+    color: #FF8FAB;
+    animation: sparkleFloat 2.5s ease-in-out infinite;
+}
+
+.preferences-panel .prefs-sparkle.s1 { top: 6px; left: 6px; animation-delay: 0s; }
+.preferences-panel .prefs-sparkle.s2 { top: 4px; right: 4px; animation-delay: 0.8s; }
+.preferences-panel .prefs-sparkle.s3 { bottom: 6px; right: 10px; animation-delay: 1.6s; }
+
+@keyframes sparkleFloat {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.preferences-panel .prefs-header h2 {
+    font-family: 'Varela Round', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6B5B8A;
+    margin: 0 0 4px;
+    position: relative;
+}
+
+.preferences-panel .prefs-header p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: #8B7BA8;
+    margin: 0;
+    position: relative;
+}
+
+/* ========================================
+   OPTIONS - MÁS COMPACTAS
+======================================== */
+.preferences-panel .prefs-options {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.preferences-panel .pref-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #FDFBFF 0%, #F8F4FF 100%);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 2px solid transparent;
+    user-select: none;
+}
+
+.preferences-panel .pref-option:hover {
+    background: linear-gradient(135deg, #F8F4FF 0%, #EDE8F7 100%);
+    border-color: #DDD6F3;
+    transform: translateX(4px);
+}
+
+.preferences-panel .pref-option:active {
+    transform: translateX(2px) scale(0.99);
+}
+
+/* Option Icon */
+.preferences-panel .pref-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+
+.preferences-panel .pref-icon-wrap.music {
+    background: linear-gradient(135deg, #E8B4D8 0%, #F5D0E8 100%);
+}
+
+.preferences-panel .pref-icon-wrap.holiday {
+    background: linear-gradient(135deg, #A8E6CF 0%, #88D8B0 100%);
+}
+
+.preferences-panel .pref-icon-wrap.sound {
+    background: linear-gradient(135deg, #C4B8E0 0%, #DDD6F3 100%);
+}
+
+.preferences-panel .pref-icon-wrap .material-icons {
+    font-size: 20px;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.preferences-panel .pref-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.preferences-panel .pref-label {
+    font-family: 'Varela Round', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B5B8A;
+    line-height: 1.3;
+}
+
+.preferences-panel .pref-desc {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    color: #A99EC0;
+    line-height: 1.3;
+}
+
+/* ========================================
+   TOGGLE SWITCH - MÁS COMPACTO (fit-content)
+   (CAMBIO AQUÍ)
+======================================== */
+.preferences-panel .toggle-switch {
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.preferences-panel .toggle-track {
+    position: relative;
+    width: 38px;
+    height: 20px;
+    background: #D4C8E0;
+    border-radius: 999px;
+    transition: all 0.3s ease;
+}
+
+.preferences-panel .toggle-switch.active .toggle-track {
+    background: linear-gradient(135deg, #FF8FAB 0%, #FF6B9D 100%);
+}
+
+.preferences-panel .toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.preferences-panel .toggle-switch.active .toggle-knob {
+    transform: translateX(18px);
+}
+
+.preferences-panel .toggle-icon {
+    font-size: 9px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.preferences-panel .toggle-icon.on {
+    color: #FF6B9D;
+    opacity: 0;
+    transform: scale(0);
+}
+
+.preferences-panel .toggle-icon.off {
+    color: #C4B8E0;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.preferences-panel .toggle-switch.active .toggle-icon.on {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.preferences-panel .toggle-switch.active .toggle-icon.off {
+    opacity: 0;
+    transform: scale(0);
+    position: absolute;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+.preferences-panel .prefs-footer {
+    padding: 16px 18px 22px;
+    text-align: center;
+    background: linear-gradient(180deg, transparent 0%, rgba(232, 224, 247, 0.3) 100%);
+}
+
+.preferences-panel .prefs-note {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    color: #A99EC0;
+    margin: 0 0 12px;
+}
+
+.preferences-panel .prefs-done-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 32px;
+    background: transparent;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.preferences-panel .prefs-done-btn .btn-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #8B7CB3 0%, #A99ED0 50%, #FF8FAB 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+    border-radius: 50px;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.preferences-panel .prefs-done-btn .btn-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.preferences-panel .prefs-done-btn .btn-content .material-icons {
+    font-size: 18px;
+}
+
+.preferences-panel .prefs-done-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(139, 124, 179, 0.4);
+}
+
+.preferences-panel .prefs-done-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* ========================================
+   CONTROL BUTTONS CONTAINER - ALINEADO
+======================================== */
+.control-buttons-container {
+    position: fixed;
+    top: var(--space-lg, 24px);
+    right: var(--space-lg, 24px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: var(--z-sticky, 200);
+}
+
+/* ========================================
+   SETTINGS BUTTON
+======================================== */
+.settings-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: visible;
+}
+
+.settings-btn .settings-btn-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: 2px solid #DDD6F3;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(139, 124, 179, 0.2);
+    transition: all 0.3s ease;
+}
+
+.settings-btn .settings-icon {
+    position: relative;
+    font-size: 24px;
+    color: #8B7CB3;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.settings-btn:hover {
+    transform: scale(1.1);
+}
+
+.settings-btn:hover .settings-btn-bg {
+    box-shadow: 0 6px 20px rgba(139, 124, 179, 0.35);
+    border-color: #C4B8E0;
+}
+
+.settings-btn:hover .settings-icon {
+    color: #FF6B9D;
+    transform: rotate(90deg);
+}
+
+.settings-btn:active {
+    transform: scale(0.95);
+}
+
+/* Settings Tooltip */
+.settings-btn .settings-tooltip {
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #6B5B8A;
+    color: white;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    pointer-events: none;
+}
+
+.settings-btn .settings-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #6B5B8A;
+}
+
+.settings-btn:hover .settings-tooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: -40px;
+}
+
+/* ========================================
+   HOLIDAY TOGGLE BUTTON
+======================================== */
+.holiday-toggle-btn {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: visible;
+    right: 70px;
+}
+
+.holiday-toggle-btn .holiday-btn-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: 2px solid #DDD6F3;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(139, 124, 179, 0.2);
+    transition: all 0.3s ease;
+}
+
+.holiday-toggle-btn .holiday-icon {
+    position: relative;
+    font-size: 24px;
+    color: #8B7CB3;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.holiday-toggle-btn .holiday-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    background: radial-gradient(circle, rgba(136, 216, 176, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.holiday-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.holiday-toggle-btn:hover .holiday-btn-bg {
+    box-shadow: 0 6px 20px rgba(139, 124, 179, 0.35);
+    border-color: #C4B8E0;
+}
+
+.holiday-toggle-btn:hover .holiday-icon {
+    color: #88D8B0;
+    transform: rotate(180deg);
+}
+
+.holiday-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+/* Active State */
+.holiday-toggle-btn.active .holiday-btn-bg {
+    background: linear-gradient(135deg, #A8E6CF 0%, #88D8B0 100%);
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+.holiday-toggle-btn.active .holiday-icon {
+    color: white;
+    animation: snowflakeFloat 2s ease-in-out infinite;
+    text-shadow: 0 2px 8px rgba(45, 125, 70, 0.3);
+}
+
+.holiday-toggle-btn.active .holiday-glow {
+    opacity: 1;
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes snowflakeFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-2px) rotate(180deg); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+/* Disabled State */
+.holiday-toggle-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.holiday-toggle-btn.disabled:hover {
+    transform: none;
+}
+
+/* Shake Animation */
+.holiday-toggle-btn.shake {
+    animation: btnShake 0.5s ease;
+}
+
+@keyframes btnShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+
+/* Holiday Tooltip */
+.holiday-toggle-btn .holiday-tooltip {
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #6B5B8A;
+    color: white;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    pointer-events: none;
+}
+
+.holiday-toggle-btn .holiday-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #6B5B8A;
+}
+
+.holiday-toggle-btn:hover .holiday-tooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: -40px;
+}
+
+/* ========================================
+   DARK MODE
+======================================== */
+[data-theme="dark"] .prefs-overlay.visible {
+    background-color: rgba(26, 22, 37, 0.7);
+}
+
+[data-theme="dark"] .preferences-panel {
+    background: linear-gradient(145deg, #2A2438 0%, #1E1A2E 100%);
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(74, 63, 107, 0.3);
+}
+
+[data-theme="dark"] .preferences-panel .prefs-close-btn {
+    background: rgba(74, 63, 107, 0.5);
+    color: #C4B8E0;
+}
+
+[data-theme="dark"] .preferences-panel .prefs-header {
+    background: linear-gradient(135deg, #3D3458 0%, #352F4A 50%, #3A2835 100%);
+}
+
+[data-theme="dark"] .preferences-panel .prefs-header h2 {
+    color: #E8E0F7;
+}
+
+[data-theme="dark"] .preferences-panel .prefs-header p {
+    color: #A99EC0;
+}
+
+[data-theme="dark"] .preferences-panel .pref-option {
+    background: linear-gradient(135deg, #352F4A 0%, #2D2640 100%);
+}
+
+[data-theme="dark"] .preferences-panel .pref-option:hover {
+    background: linear-gradient(135deg, #3D3458 0%, #352F4A 100%);
+    border-color: #4A4260;
+}
+
+[data-theme="dark"] .preferences-panel .pref-label {
+    color: #E8E0F7;
+}
+
+[data-theme="dark"] .preferences-panel .pref-desc {
+    color: #8B7BA8;
+}
+
+[data-theme="dark"] .preferences-panel .toggle-track {
+    background: #4A4260;
+}
+
+[data-theme="dark"] .preferences-panel .prefs-note {
+    color: #8B7BA8;
+}
+
+[data-theme="dark"] .settings-btn .settings-btn-bg,
+[data-theme="dark"] .holiday-toggle-btn .holiday-btn-bg {
+    background: #2D2640;
+    border-color: #4A3F6B;
+}
+
+[data-theme="dark"] .settings-btn .settings-icon,
+[data-theme="dark"] .holiday-toggle-btn .holiday-icon {
+    color: #C4B8E0;
+}
+
+[data-theme="dark"] .settings-btn:hover .settings-btn-bg,
+[data-theme="dark"] .holiday-toggle-btn:hover .holiday-btn-bg {
+    border-color: #6B5B93;
+}
+
+[data-theme="dark"] .holiday-toggle-btn.active .holiday-btn-bg {
+    background: linear-gradient(135deg, #2D5A3E 0%, #1F4A30 100%);
+    border-color: #3A6B4F;
+}
+
+/* ========================================
+   RESPONSIVE - TABLET
+======================================== */
+@media (max-width: 768px) {
+    .control-buttons-container {
+        top: var(--space-md, 16px);
+        right: var(--space-md, 16px);
+        gap: 6px;
+    }
+    
+    .settings-btn,
+    .holiday-toggle-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .settings-btn .settings-icon,
+    .holiday-toggle-btn .holiday-icon {
+        font-size: 20px;
+    }
+    
+    .preferences-panel {
+        max-width: 340px;
+        border-radius: 20px;
+    }
+    
+    .preferences-panel .prefs-header {
+        padding: 20px 18px 18px;
+    }
+    
+    .preferences-panel .prefs-icon-container {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .preferences-panel .prefs-icon-inner {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .preferences-panel .prefs-icon-inner .material-icons {
+        font-size: 20px;
+    }
+    
+    .preferences-panel .prefs-header h2 {
+        font-size: 18px;
+    }
+    
+    .preferences-panel .prefs-header p {
+        font-size: 12px;
+    }
+    
+    .preferences-panel .prefs-options {
+        padding: 16px;
+        gap: 6px;
+    }
+    
+    .preferences-panel .pref-option {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    
+    .preferences-panel .pref-icon-wrap {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .preferences-panel .pref-icon-wrap .material-icons {
+        font-size: 18px;
+    }
+    
+    .preferences-panel .pref-label {
+        font-size: 13px;
+    }
+    
+    .preferences-panel .pref-desc {
+        font-size: 10px;
+    }
+    
+    /* CAMBIO: tamaños más compactos */
+    .preferences-panel .toggle-track {
+        width: 34px;
+        height: 18px;
+    }
+    
+    .preferences-panel .toggle-knob {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .preferences-panel .toggle-switch.active .toggle-knob {
+        transform: translateX(16px);
+    }
+    
+    .preferences-panel .prefs-footer {
+        padding: 14px 16px 20px;
+    }
+    
+    .preferences-panel .prefs-done-btn {
+        padding: 10px 28px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+======================================== */
+@media (max-width: 480px) {
+    .control-buttons-container {
+        top: 12px;
+        right: 12px;
+        gap: 4px;
+    }
+    
+    .settings-btn,
+    .holiday-toggle-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .settings-btn .settings-btn-bg,
+    .holiday-toggle-btn .holiday-btn-bg {
+        border-width: 1.5px;
+    }
+    
+    .settings-btn .settings-icon,
+    .holiday-toggle-btn .holiday-icon {
+        font-size: 18px;
+    }
+    
+    .settings-btn .settings-tooltip,
+    .holiday-toggle-btn .holiday-tooltip {
+        display: none;
+    }
+    
+    .preferences-panel {
+        width: calc(100vw - 20px);
+        max-width: none;
+        border-radius: 18px;
+    }
+    
+    .preferences-panel .prefs-close-btn {
+        width: 28px;
+        height: 28px;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .preferences-panel .prefs-header {
+        padding: 18px 16px 16px;
+    }
+    
+    .preferences-panel .prefs-icon-container {
+        width: 44px;
+        height: 44px;
+        margin-bottom: 10px;
+    }
+    
+    .preferences-panel .prefs-icon-inner {
+        width: 34px;
+        height: 34px;
+    }
+    
+    .preferences-panel .prefs-icon-inner .material-icons {
+        font-size: 18px;
+    }
+    
+    .preferences-panel .prefs-sparkle {
+        font-size: 10px;
+    }
+    
+    .preferences-panel .prefs-header h2 {
+        font-size: 17px;
+    }
+    
+    .preferences-panel .prefs-header p {
+        font-size: 11px;
+    }
+    
+    .preferences-panel .prefs-options {
+        padding: 14px;
+        gap: 6px;
+    }
+    
+    .preferences-panel .pref-option {
+        padding: 9px 11px;
+        gap: 9px;
+        border-radius: 12px;
+    }
+    
+    .preferences-panel .pref-icon-wrap {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+    }
+    
+    .preferences-panel .pref-icon-wrap .material-icons {
+        font-size: 16px;
+    }
+    
+    .preferences-panel .pref-label {
+        font-size: 12.5px;
+    }
+    
+    .preferences-panel .pref-desc {
+        font-size: 10px;
+    }
+    
+    /* CAMBIO: tamaños más compactos */
+    .preferences-panel .toggle-track {
+        width: 32px;
+        height: 18px;
+    }
+    
+    .preferences-panel .toggle-knob {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .preferences-panel .toggle-switch.active .toggle-knob {
+        transform: translateX(14px);
+    }
+    
+    .preferences-panel .toggle-icon {
+        font-size: 8.5px;
+    }
+    
+    .preferences-panel .prefs-footer {
+        padding: 12px 14px 18px;
+    }
+    
+    .preferences-panel .prefs-note {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .preferences-panel .prefs-done-btn {
+        padding: 9px 24px;
+    }
+    
+    .preferences-panel .prefs-done-btn .btn-content {
+        font-size: 13px;
+        gap: 5px;
+    }
+    
+    .preferences-panel .prefs-done-btn .btn-content .material-icons {
+        font-size: 16px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - VERY SMALL MOBILE
+======================================== */
+@media (max-width: 360px) {
+    .control-buttons-container {
+        gap: 3px;
+    }
+    
+    .settings-btn,
+    .holiday-toggle-btn {
+        width: 34px;
+        height: 34px;
+    }
+    
+    .settings-btn .settings-icon,
+    .holiday-toggle-btn .holiday-icon {
+        font-size: 16px;
+    }
+    
+    .preferences-panel {
+        width: calc(100vw - 16px);
+    }
+    
+    .preferences-panel .prefs-options {
+        padding: 12px;
+    }
+    
+    .preferences-panel .pref-option {
+        padding: 8px 10px;
+    }
+    
+    .preferences-panel .pref-label {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+@media (prefers-reduced-motion: reduce) {
+    .preferences-panel .prefs-icon-inner .material-icons,
+    .preferences-panel .prefs-icon-ring,
+    .preferences-panel .prefs-sparkle,
+    .holiday-toggle-btn.active .holiday-icon,
+    .holiday-toggle-btn.active .holiday-glow,
+    .preferences-panel .prefs-done-btn .btn-bg {
+        animation: none;
+    }
+    
+    .preferences-panel,
+    .prefs-overlay,
+    .settings-btn,
+    .holiday-toggle-btn,
+    .preferences-panel .toggle-knob {
+        transition-duration: 0.15s;
+    }
+}
+/* End of preferences.css */
