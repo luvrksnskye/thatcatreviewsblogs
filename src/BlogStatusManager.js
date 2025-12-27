@@ -222,8 +222,13 @@ export class BlogStatusManager {
     // LOAD BLOG MANIFEST
     // ========================================
     async loadBlogManifest() {
+        const basePath = this.getBasePath();
+        
+        // Intentar múltiples rutas posibles
         const sources = [
-            './src/blogs/manifest.json'
+            './src/blogs/manifest.json',
+            `${basePath}/src/blogs/manifest.json`,
+            '/src/blogs/manifest.json'
         ];
         
         for (const source of sources) {
@@ -418,25 +423,43 @@ export class BlogStatusManager {
     // ========================================
     openBlogPost(post) {
         if (post.file) {
-            let url;
+            // Detectar la base URL del sitio (para GitHub Pages con subcarpeta)
+            const basePath = this.getBasePath();
             
             // Limpiar el file de cualquier prefijo que ya tenga
             let cleanFile = post.file
-                .replace(/^\/src\/blogs\//g, '')  // Quitar /src/blogs/ si existe
-                .replace(/^src\/blogs\//g, '')     // Quitar src/blogs/ si existe
-                .replace(/\/+/g, '/');             // Quitar slashes duplicados
+                .replace(/^\/src\/blogs\//g, '')
+                .replace(/^src\/blogs\//g, '')
+                .replace(/\/+/g, '/');
             
             // Detectar si es estructura vieja (.html) o nueva (carpeta)
+            let url;
             if (cleanFile.endsWith('.html')) {
-                url = `/src/blogs/${cleanFile}`;
+                url = `${basePath}/src/blogs/${cleanFile}`;
             } else {
-                url = `/src/blogs/${cleanFile}/`;
+                url = `${basePath}/src/blogs/${cleanFile}/`;
             }
             
             console.log('Opening blog:', url); // Debug
             window.location.href = url;
         }
         this.sound?.play('click');
+    }
+    
+    // ========================================
+    // GET BASE PATH (para GitHub Pages)
+    // ========================================
+    getBasePath() {
+        // Detectar si estamos en GitHub Pages con subcarpeta
+        const path = window.location.pathname;
+        
+        // Si la ruta contiene /thatcatreviewsblogs/, usarla como base
+        if (path.includes('/thatcatreviewsblogs')) {
+            return '/thatcatreviewsblogs';
+        }
+        
+        // Si no, asumir que está en la raíz
+        return '';
     }
 
     // ========================================
