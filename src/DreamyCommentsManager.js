@@ -25,10 +25,10 @@ export class DreamyCommentsManager {
         this.fillTimeout = null;
         
         this.lumiPaths = [
-            '/thatcatreviewsblogs/src/sound/System_Lumi_01.wav',
-            '/thatcatreviewsblogs/src/sound/System_Lumi_02.wav',
-            '/thatcatreviewsblogs/src/sound/System_Lumi_03.wav',
-            '/thatcatreviewsblogs/src/sound/System_Lumi_04.wav'
+            '/src/sound/System_Lumi_01.wav',
+            '/src/sound/System_Lumi_02.wav',
+            '/src/sound/System_Lumi_03.wav',
+            '/src/sound/System_Lumi_04.wav'
         ];
     }
 
