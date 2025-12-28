@@ -520,11 +520,20 @@ export class SitePetManager {
         if (this.animationId) return;
         
         this.updateFrame();
-        this.animationId = setInterval(() => {
+        
+        // Use requestAnimationFrame for smoother animation
+        let lastFrameTime = 0;
+        const animate = (timestamp) => {
             if (!this.isPaused) {
-                this.nextFrame();
+                if (timestamp - lastFrameTime >= this.animationSpeed) {
+                    lastFrameTime = timestamp;
+                    this.nextFrame();
+                }
             }
-        }, this.animationSpeed);
+            this.animationId = requestAnimationFrame(animate);
+        };
+        
+        this.animationId = requestAnimationFrame(animate);
     }
 
     // ========================================
@@ -532,7 +541,7 @@ export class SitePetManager {
     // ========================================
     stopAnimation() {
         if (this.animationId) {
-            clearInterval(this.animationId);
+            cancelAnimationFrame(this.animationId);
             this.animationId = null;
         }
     }

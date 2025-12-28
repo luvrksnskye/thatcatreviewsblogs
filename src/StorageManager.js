@@ -1,17 +1,16 @@
 /* =====================================================
-   STORAGEMANAGER.JS - Local Storage Handler (OPTIMIZED)
-   Efficient caching, batched writes, minimal reads
+   STORAGEMANAGER.JS - Optimized Local Storage Handler
+   Manages persistent data storage with preferences system
    ===================================================== */
 
 export class StorageManager {
     constructor(prefix = 'kawaii-blog') {
         this.prefix = prefix;
-        this.isAvailable = this._checkAvailability();
+        this.isAvailable = this.checkAvailability();
         
-        // In-memory cache - single source of truth
+        // In-memory cache
         this._cache = new Map();
-        this._dirty = new Set(); // Track modified keys for batched writes
-        this._writeScheduled = false;
+        this._cacheLoaded = false;
         
         // Default preferences
         this._defaultPreferences = {
@@ -22,89 +21,39 @@ export class StorageManager {
             reducedMotion: false
         };
         
-        // Load cache once at startup
         if (this.isAvailable) {
             this._loadCache();
         }
-        
-        // Schedule periodic flush
-        this._setupAutoFlush();
     }
 
-    _checkAvailability() {
+    checkAvailability() {
         try {
             const test = '__storage_test__';
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
             return true;
         } catch (e) {
-            console.warn('LocalStorage not available');
+            console.warn('LocalStorage not available:', e);
             return false;
         }
     }
 
     _loadCache() {
+        if (this._cacheLoaded) return;
+        
         try {
-            const prefixLen = this.prefix.length + 1;
-            for (let i = 0; i < localStorage.length; i++) {
-                const fullKey = localStorage.key(i);
-                if (fullKey?.startsWith(this.prefix + '-')) {
-                    const item = localStorage.getItem(fullKey);
+            const keys = Object.keys(localStorage);
+            for (const key of keys) {
+                if (key.startsWith(this.prefix)) {
+                    const item = localStorage.getItem(key);
                     if (item) {
-                        try {
-                            this._cache.set(fullKey, JSON.parse(item));
-                        } catch {
-                            // Invalid JSON, skip
-                        }
+                        this._cache.set(key, JSON.parse(item));
                     }
                 }
             }
+            this._cacheLoaded = true;
         } catch (e) {
             console.error('Cache load error:', e);
-        }
-    }
-
-    _setupAutoFlush() {
-        // Flush dirty entries every 5 seconds
-        setInterval(() => this._flushDirty(), 5000);
-        
-        // Also flush on page hide/unload
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) this._flushDirty();
-        });
-        
-        window.addEventListener('beforeunload', () => this._flushDirty());
-    }
-
-    _flushDirty() {
-        if (this._dirty.size === 0 || !this.isAvailable) return;
-        
-        for (const fullKey of this._dirty) {
-            try {
-                const data = this._cache.get(fullKey);
-                if (data !== undefined) {
-                    localStorage.setItem(fullKey, JSON.stringify(data));
-                }
-            } catch (e) {
-                console.warn('Storage write error:', e);
-            }
-        }
-        
-        this._dirty.clear();
-    }
-
-    _scheduleWrite(fullKey) {
-        this._dirty.add(fullKey);
-        
-        // Use requestIdleCallback for non-blocking writes
-        if (!this._writeScheduled) {
-            this._writeScheduled = true;
-            
-            const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 100));
-            schedule(() => {
-                this._flushDirty();
-                this._writeScheduled = false;
-            }, { timeout: 2000 });
         }
     }
 
@@ -113,71 +62,102 @@ export class StorageManager {
     }
 
     set(key, value) {
-        const fullKey = this.getKey(key);
-        const data = {
-            value,
-            timestamp: Date.now()
-        };
+        if (!this.isAvailable) return false;
         
-        this._cache.set(fullKey, data);
-        this._scheduleWrite(fullKey);
-        
-        return true;
+        try {
+            const fullKey = this.getKey(key);
+            const data = {
+                value,
+                timestamp: Date.now()
+            };
+            
+            this._cache.set(fullKey, data);
+            
+            // Use requestIdleCallback if available, otherwise setTimeout
+            const writeToStorage = () => {
+                try {
+                    localStorage.setItem(fullKey, JSON.stringify(data));
+                } catch (e) {
+                    console.error('Storage write error:', e);
+                }
+            };
+            
+            if (typeof requestIdleCallback !== 'undefined') {
+                requestIdleCallback(writeToStorage, { timeout: 1000 });
+            } else {
+                setTimeout(writeToStorage, 0);
+            }
+            
+            return true;
+        } catch (e) {
+            console.error('Storage set error:', e);
+            return false;
+        }
     }
 
     get(key, defaultValue = null) {
-        const fullKey = this.getKey(key);
-        const cached = this._cache.get(fullKey);
+        if (!this.isAvailable) return defaultValue;
         
-        if (cached !== undefined) {
-            return cached.value !== undefined ? cached.value : defaultValue;
+        try {
+            const fullKey = this.getKey(key);
+            
+            if (this._cache.has(fullKey)) {
+                const cached = this._cache.get(fullKey);
+                return cached.value !== undefined ? cached.value : defaultValue;
+            }
+            
+            const item = localStorage.getItem(fullKey);
+            if (!item) return defaultValue;
+            
+            const parsed = JSON.parse(item);
+            this._cache.set(fullKey, parsed);
+            return parsed.value !== undefined ? parsed.value : defaultValue;
+        } catch (e) {
+            console.error('Storage get error:', e);
+            return defaultValue;
         }
-        
-        return defaultValue;
     }
 
     remove(key) {
-        const fullKey = this.getKey(key);
-        this._cache.delete(fullKey);
-        this._dirty.delete(fullKey);
+        if (!this.isAvailable) return false;
         
-        if (this.isAvailable) {
-            try {
-                localStorage.removeItem(fullKey);
-            } catch {}
+        try {
+            const fullKey = this.getKey(key);
+            this._cache.delete(fullKey);
+            localStorage.removeItem(fullKey);
+            return true;
+        } catch (e) {
+            console.error('Storage remove error:', e);
+            return false;
         }
-        
-        return true;
     }
 
     has(key) {
-        return this._cache.has(this.getKey(key));
+        if (!this.isAvailable) return false;
+        const fullKey = this.getKey(key);
+        return this._cache.has(fullKey) || localStorage.getItem(fullKey) !== null;
     }
 
     clear() {
         if (!this.isAvailable) return false;
         
         try {
-            const keysToRemove = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key?.startsWith(this.prefix + '-')) {
-                    keysToRemove.push(key);
+            const keys = Object.keys(localStorage);
+            for (const key of keys) {
+                if (key.startsWith(this.prefix)) {
+                    localStorage.removeItem(key);
                 }
             }
-            
-            keysToRemove.forEach(key => localStorage.removeItem(key));
             this._cache.clear();
-            this._dirty.clear();
-            
             return true;
         } catch (e) {
+            console.error('Storage clear error:', e);
             return false;
         }
     }
 
     // ========================================
-    // PREFERENCES SYSTEM (Cached)
+    // PREFERENCES SYSTEM
     // ========================================
     
     getPreferences() {
@@ -219,18 +199,26 @@ export class StorageManager {
     // ========================================
 
     getWithExpiry(key, maxAge = 86400000) {
-        const fullKey = this.getKey(key);
-        const cached = this._cache.get(fullKey);
+        if (!this.isAvailable) return null;
         
-        if (cached) {
-            if (Date.now() - cached.timestamp > maxAge) {
-                this.remove(key);
-                return null;
+        try {
+            const fullKey = this.getKey(key);
+            const cached = this._cache.get(fullKey);
+            
+            if (cached) {
+                const now = Date.now();
+                if (now - cached.timestamp > maxAge) {
+                    this.remove(key);
+                    return null;
+                }
+                return cached.value;
             }
-            return cached.value;
+            
+            return null;
+        } catch (e) {
+            console.error('Storage getWithExpiry error:', e);
+            return null;
         }
-        
-        return null;
     }
 
     update(key, updates) {
@@ -243,12 +231,35 @@ export class StorageManager {
         return this.set(key, updates);
     }
 
+    increment(key, amount = 1) {
+        const current = this.get(key, 0);
+        return this.set(key, current + amount);
+    }
+
+    push(key, value, maxLength = null) {
+        const arr = this.get(key, []);
+        
+        if (!Array.isArray(arr)) {
+            return this.set(key, [value]);
+        }
+        
+        arr.push(value);
+        
+        if (maxLength && arr.length > maxLength) {
+            arr.shift();
+        }
+        
+        return this.set(key, arr);
+    }
+
     getSize() {
         if (!this.isAvailable) return 0;
         
         let total = 0;
-        for (const [key, value] of this._cache) {
-            total += key.length + JSON.stringify(value).length;
+        for (const key of Object.keys(localStorage)) {
+            if (key.startsWith(this.prefix)) {
+                total += localStorage.getItem(key).length;
+            }
         }
         
         return total;

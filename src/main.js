@@ -1,14 +1,27 @@
 /* =====================================================
-   MAIN.JS - Application Entry Point (OPTIMIZED)
-   Lazy loading, deferred initialization, priority phases
+   MAIN.JS - Application Entry Point
+   Optimized initialization and coordination
    ===================================================== */
 
 // ========================================
-// LAZY MODULE IMPORTS (Dynamic imports for non-critical modules)
+// MODULE IMPORTS
 // ========================================
-import { StorageManager } from './StorageManager.js';
+import { AnimationManager } from './AnimationManager.js';
+import { StarfallManager } from './StarfallManager.js';
+import { NotificationManager } from './NotificationManager.js';
+import { MusicPlayer } from './MusicPlayer.js';
+import { TabManager } from './TabManager.js';
+import { CardInteractions } from './CardInteractions.js';
+import { GalleryManager } from './GalleryManager.js';
 import { SoundManager } from './SoundManager.js';
+import { StorageManager } from './StorageManager.js';
+import { TimeOfDayManager } from './TimeOfDayManager.js';
+import { BlogStatusManager } from './BlogStatusManager.js';
+import { SitePetManager } from './SitePetManager.js';
 import { Utils } from './Utils.js';
+import { MusicStateManager } from './MusicStateManager.js';
+import { HolidayManager } from './HolidayManager.js';
+import { WelcomeNoticeManager } from './WelcomeNoticeManager.js';
 
 // ========================================
 // APPLICATION CLASS
@@ -17,238 +30,180 @@ class KawaiiBlogApp {
     constructor() {
         this.modules = {};
         this.isInitialized = false;
-        this.version = '2.0.0-optimized';
-        this._initPromises = new Map();
+        this.version = '1.2.0';
     }
 
     async init() {
-        console.log('✧ Initializing Kawaii Blog App (Optimized) ✧');
-        const startTime = performance.now();
+        console.log('✧ Initializing Kawaii Blog App ✧');
         
         try {
-            // Phase 1: Critical - Storage & Sound (blocking, fast)
-            await this._initCriticalModules();
+            // Phase 1: Core modules (immediate)
+            this._initCoreModules();
             
-            // Phase 2: UI - Update visible elements immediately
+            // Phase 2: UI update (immediate)
             this._updateDateDisplay();
             
-            // Phase 3: Deferred - Non-blocking initialization
-            // Use requestIdleCallback for non-critical modules
-            this._scheduleNonCriticalModules();
+            // Phase 3: Background (deferred - doesn't block render)
+            requestAnimationFrame(() => {
+                this._initBackgroundModules();
+            });
+            
+            // Phase 4: Interactive modules (deferred slightly)
+            setTimeout(async () => {
+                await this._initInteractiveModules();
+                
+                // Phase 5: Welcome flow
+                await this._handleWelcomeFlow();
+                
+                // Phase 6: Holiday system
+                this._initHolidaySystem();
+            }, 50);
+            
+            // Phase 7: Global events (immediate)
+            this._setupGlobalEvents();
             
             this.isInitialized = true;
-            console.log(`✧ Core initialized in ${(performance.now() - startTime).toFixed(0)}ms ✧`);
+            console.log('✧ App initialized successfully! ✧');
             
         } catch (error) {
             console.error('Failed to initialize app:', error);
         }
     }
 
-    async _initCriticalModules() {
-        // Only the absolutely necessary modules for first paint
+    _initCoreModules() {
         this.modules.storage = new StorageManager();
         this.modules.sound = new SoundManager();
+        this.modules.notification = new NotificationManager(this.modules.sound);
+        this.modules.animation = new AnimationManager();
     }
 
-    _scheduleNonCriticalModules() {
-        // Use requestIdleCallback if available, otherwise setTimeout
-        const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
-        
-        // Priority 1: Visible UI (after first paint)
-        requestAnimationFrame(() => {
-            this._initUIModules();
-        });
-        
-        // Priority 2: Background effects (idle time)
-        schedule(() => this._initBackgroundModules(), { timeout: 500 });
-        
-        // Priority 3: Interactive features (after user interaction or idle)
-        schedule(() => this._initInteractiveModules(), { timeout: 1000 });
-        
-        // Priority 4: Welcome flow (after everything else)
-        schedule(() => this._handleWelcomeFlow(), { timeout: 1500 });
-        
-        // Priority 5: Holiday system (lowest priority)
-        schedule(() => this._initHolidaySystem(), { timeout: 2000 });
-        
-        // Setup global events immediately
-        this._setupGlobalEvents();
-    }
-
-    async _initUIModules() {
-        try {
-            // Dynamic import for TabManager
-            const { TabManager } = await import('./TabManager.js');
-            this.modules.tabs = new TabManager(this.modules.sound);
-            this.modules.tabs.init();
-            
-            // Dynamic import for Notification (might be needed for errors)
-            const { NotificationManager } = await import('./NotificationManager.js');
-            this.modules.notification = new NotificationManager(this.modules.sound);
-        } catch (e) {
-            console.error('UI modules failed:', e);
-        }
-    }
-
-    async _initBackgroundModules() {
-        try {
-            // Only init starfall if not reduced motion
-            if (!Utils.prefersReducedMotion()) {
-                const { StarfallManager } = await import('./StarfallManager.js');
-                this.modules.starfall = new StarfallManager();
-                this.modules.starfall.init();
-            }
-            
-            const { AnimationManager } = await import('./AnimationManager.js');
-            this.modules.animation = new AnimationManager();
-        } catch (e) {
-            console.error('Background modules failed:', e);
-        }
+    _initBackgroundModules() {
+        this.modules.starfall = new StarfallManager();
+        this.modules.starfall.init();
     }
 
     async _initInteractiveModules() {
-        try {
-            // Card Interactions
-            const { CardInteractions } = await import('./CardInteractions.js');
-            this.modules.cards = new CardInteractions(
-                this.modules.animation,
-                this.modules.sound
-            );
-            this.modules.cards.init();
-            
-            // Music Player (lazy, user-triggered)
-            const { MusicPlayer } = await import('./MusicPlayer.js');
-            this.modules.music = new MusicPlayer(
-                this.modules.storage,
-                this.modules.notification,
-                this.modules.sound
-            );
-            this.modules.music.init();
-            
-            // Music State Manager
-            const { MusicStateManager } = await import('./MusicStateManager.js');
-            this.modules.musicState = new MusicStateManager(
-                this.modules.storage,
-                this.modules.music
-            );
-            await this.modules.musicState.init();
-            
-            // Gallery (lazy load on tab switch)
-            const { GalleryManager } = await import('./GalleryManager.js');
-            this.modules.gallery = new GalleryManager(this.modules.sound);
-            this.modules.gallery.init();
-            
-            // Time of Day System
-            const { TimeOfDayManager } = await import('./TimeOfDayManager.js');
-            this.modules.timeOfDay = new TimeOfDayManager(
-                this.modules.storage,
-                this.modules.sound,
-                this.modules.music
-            );
-            this.modules.timeOfDay.init();
-            
-            // Blog Status Manager
-            const { BlogStatusManager } = await import('./BlogStatusManager.js');
-            this.modules.blogStatus = new BlogStatusManager(this.modules.sound);
-            await this.modules.blogStatus.init();
-            
-            // Site Pet (deferred further if not visible)
-            const { SitePetManager } = await import('./SitePetManager.js');
-            this.modules.sitePet = new SitePetManager(
-                this.modules.storage,
-                this.modules.timeOfDay,
-                this.modules.sound
-            );
-            this.modules.sitePet.init();
-            
-        } catch (e) {
-            console.error('Interactive modules failed:', e);
-        }
+        // Tab Navigation
+        this.modules.tabs = new TabManager(this.modules.sound);
+        this.modules.tabs.init();
+        
+        // Card Interactions
+        this.modules.cards = new CardInteractions(
+            this.modules.animation,
+            this.modules.sound
+        );
+        this.modules.cards.init();
+        
+        // Music Player
+        this.modules.music = new MusicPlayer(
+            this.modules.storage,
+            this.modules.notification,
+            this.modules.sound
+        );
+        this.modules.music.init();
+        
+        // Music State Manager
+        this.modules.musicState = new MusicStateManager(
+            this.modules.storage,
+            this.modules.music
+        );
+        await this.modules.musicState.init();
+        
+        // Gallery
+        this.modules.gallery = new GalleryManager(this.modules.sound);
+        this.modules.gallery.init();
+        
+        // Time of Day System
+        this.modules.timeOfDay = new TimeOfDayManager(
+            this.modules.storage,
+            this.modules.sound,
+            this.modules.music
+        );
+        this.modules.timeOfDay.init();
+        
+        // Blog Status Manager
+        this.modules.blogStatus = new BlogStatusManager(this.modules.sound);
+        await this.modules.blogStatus.init();
+        
+        // Site Pet
+        this.modules.sitePet = new SitePetManager(
+            this.modules.storage,
+            this.modules.timeOfDay,
+            this.modules.sound
+        );
+        this.modules.sitePet.init();
     }
 
     async _handleWelcomeFlow() {
-        try {
-            const { WelcomeNoticeManager } = await import('./WelcomeNoticeManager.js');
-            this.modules.welcomeNotice = new WelcomeNoticeManager(
-                this.modules.storage,
-                this.modules.sound
-            );
-            this.modules.welcomeNotice.init();
-            
-            // Connect TimeOfDay to WelcomeNotice
-            if (this.modules.timeOfDay) {
-                this.modules.timeOfDay.setWelcomeNotice(this.modules.welcomeNotice);
-            }
-            
-            // Show welcome if new user
-            if (this.modules.welcomeNotice.shouldShowNotice()) {
-                await this.modules.welcomeNotice.show();
-            }
-            
-            // Apply saved preferences
-            this._applyPreferences();
-        } catch (e) {
-            console.error('Welcome flow failed:', e);
+        // Initialize Welcome Notice Manager
+        this.modules.welcomeNotice = new WelcomeNoticeManager(
+            this.modules.storage,
+            this.modules.sound
+        );
+        this.modules.welcomeNotice.init();
+        
+        // Connect TimeOfDay to WelcomeNotice for settings button
+        this.modules.timeOfDay.setWelcomeNotice(this.modules.welcomeNotice);
+        
+        // Show welcome if new user
+        if (this.modules.welcomeNotice.shouldShowNotice()) {
+            console.log('✧ Showing welcome flow for new user ✧');
+            await this.modules.welcomeNotice.show();
         }
+        
+        // Apply saved preferences
+        this._applyPreferences();
     }
 
     _applyPreferences() {
-        const prefs = this.modules.storage?.getPreferences() || {};
+        const prefs = this.modules.storage.getPreferences();
         
         if (prefs.musicAutoplay && this.modules.music) {
-            // Delay autoplay to avoid blocking
             setTimeout(() => {
                 this.modules.music.play?.();
-            }, 2000);
+            }, 1000);
         }
         
         if (!prefs.soundEnabled && this.modules.sound) {
-            this.modules.sound.disable?.();
+            this.modules.sound.setEnabled?.(false);
         }
     }
 
-    async _initHolidaySystem() {
-        try {
-            const { HolidayManager } = await import('./HolidayManager.js');
-            this.modules.holiday = new HolidayManager(
-                this.modules.storage,
-                this.modules.sound,
-                this.modules.music,
-                this.modules.sitePet,
-                this.modules.welcomeNotice
-            );
-            this.modules.holiday.init();
-        } catch (e) {
-            console.error('Holiday system failed:', e);
-        }
+    _initHolidaySystem() {
+        this.modules.holiday = new HolidayManager(
+            this.modules.storage,
+            this.modules.sound,
+            this.modules.music,
+            this.modules.sitePet,
+            this.modules.welcomeNotice
+        );
+        this.modules.holiday.init();
     }
 
     _setupGlobalEvents() {
-        // Debounced keyboard handler
-        const handleKeyboard = Utils.throttle((e) => this._handleKeyboard(e), 100);
-        document.addEventListener('keydown', handleKeyboard);
+        document.addEventListener('keydown', (e) => this._handleKeyboard(e));
         
-        // Visibility change (pause/resume)
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.modules.animation?.pauseAll?.();
                 this.modules.sitePet?.pause?.();
-                this.modules.starfall?.pause?.();
             } else {
                 this.modules.animation?.resumeAll?.();
                 this.modules.sitePet?.resume?.();
-                this.modules.starfall?.resume?.();
             }
         });
         
-        // Debounced resize handler
-        const handleResize = Utils.debounce(() => {
-            this.modules.starfall?.recalculate?.();
-        }, 250);
-        window.addEventListener('resize', handleResize, { passive: true });
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.modules.starfall?.recalculate?.();
+            }, 200);
+        });
         
-        // Save state on unload
-        window.addEventListener('beforeunload', () => this._saveState());
+        window.addEventListener('beforeunload', () => {
+            this._saveState();
+        });
     }
 
     _handleKeyboard(e) {
@@ -264,6 +219,10 @@ class KawaiiBlogApp {
         if (e.ctrlKey) {
             if (e.code === 'ArrowRight') this.modules.music?.nextTrack?.();
             if (e.code === 'ArrowLeft') this.modules.music?.prevTrack?.();
+            
+            if (e.shiftKey && e.code === 'KeyT') {
+                this.modules.timeOfDay?.openModal?.();
+            }
         }
     }
 
@@ -295,7 +254,6 @@ class KawaiiBlogApp {
 
     _saveState() {
         this.modules.music?.saveState?.();
-        this.modules.musicState?.forcePersist?.();
     }
 
     getModule(name) {
