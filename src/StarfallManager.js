@@ -40,10 +40,10 @@ export class StarfallManager {
             soundInterval: 4545,      // Decreased 10% for more sounds (was 5000)
             soundChance: 0.33,        // Increased 10% - 33% chance (was 0.3)
             sounds: [
-                './src/sound/System_Lumi_01.wav',
-                './src/sound/System_Lumi_02.wav',
-                './src/sound/System_Lumi_03.wav',
-                './src/sound/System_Lumi_04.wav'
+                '/src/sound/System_Lumi_01.wav',
+                '/src/sound/System_Lumi_02.wav',
+                '/src/sound/System_Lumi_03.wav',
+                '/src/sound/System_Lumi_04.wav'
             ]
         };
 

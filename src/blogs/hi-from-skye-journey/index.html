@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hey there from Skye Journey! - Abby's Blog</title>
-    <link rel="icon" type="image/x-icon" href="/thatcatreviewsblogs/src/assets/icon.svg">
-    <link rel="stylesheet" href="/thatcatreviewsblogs/src/css/blog-post.css">
-    <link rel="stylesheet" href="/thatcatreviewsblogs/src/css/blog-comments.css">
+    <link rel="icon" type="image/x-icon" href="/src/blogs/images/icon.png">
+    <link rel="stylesheet" href="/src/blogs/blog-post.css">
+    <link rel="stylesheet" href="/src/blogs/blog-comments.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,10 +25,10 @@
     </div>
 
     <div class="clouds-container">
-        <img src="/thatcatreviewsblogs/src/assets/cloud_small_size.png" class="cloud cloud-small-top" alt="">
-        <img src="/thatcatreviewsblogs/src/assets/cloud_big_size.png" class="cloud cloud-big-left" alt="">
-        <img src="/thatcatreviewsblogs/src/assets/cloud_left_medium_size.png" class="cloud cloud-medium-right" alt="">
-        <img src="/thatcatreviewsblogs/src/assets/cloud_medium_size.png" class="cloud cloud-medium-right-2" alt="">
+        <img src="/src/blogs/images/cloud_small_size.png" class="cloud cloud-small-top" alt="">
+        <img src="/src/blogs/images/cloud_big_size.png" class="cloud cloud-big-left" alt="">
+        <img src="/src/blogs/images/cloud_left_medium_size.png" class="cloud cloud-medium-right" alt="">
+        <img src="/src/blogs/images/cloud_medium_size.png" class="cloud cloud-medium-right-2" alt="">
     </div>
 
     <article class="blog-wrapper">
@@ -178,14 +178,14 @@
 
     <script type="module">
         try {
-            const { StarfallManager } = await import('/thatcatreviewsblogs/src/StarfallManager.js');
+            const { StarfallManager } = await import('/src/StarfallManager.js');
             const starfall = new StarfallManager();
             starfall.init();
         } catch (e) {}
     </script>
     
     <script type="module">
-        import { DreamyCommentsManager } from '/thatcatreviewsblogs/src/DreamyCommentsManager.js';
+        import { DreamyCommentsManager } from '/src/DreamyCommentsManager.js';
         
         const comments = new DreamyCommentsManager({
             maxComments: 50,
@@ -194,8 +194,8 @@
             fillColor1: '#C4B8E0',
             fillColor2: '#E8E0F7',
             moonDark: '#1E1A2E',
-            moonImage: '/thatcatreviewsblogs/src/assets/moon.png',
-            starImage: '/thatcatreviewsblogs/src/assets/planets.gif',
+            moonImage: '/src/blogs/images/moon.png',
+            starImage: '/src/blogs/images/planets.gif',
             chimeSound: '/thatcatreviewsblogs/src/sound/mystical-chime.mp3'
         });
         

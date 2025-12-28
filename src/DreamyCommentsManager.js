@@ -9,8 +9,8 @@ export class DreamyCommentsManager {
             fillColor1: options.fillColor1 || '#C4B8E0',
             fillColor2: options.fillColor2 || '#E8E0F7',
             moonDark: options.moonDark || '#1E1A2E',
-            moonImage: options.moonImage || '/src/assets/moon.png',
-            starImage: options.starImage || '/src/assets/planets.gif',
+            moonImage: options.moonImage || '/src/blogs/images/moon.png',
+            starImage: options.starImage || '/src/blogs/images/planets.gif',
             chimeSound: options.chimeSound || '/src/sound/mystical-chime.mp3'
         };
 
@@ -25,10 +25,10 @@ export class DreamyCommentsManager {
         this.fillTimeout = null;
         
         this.lumiPaths = [
-            '/src/sound/System_Lumi_01.wav',
-            '/src/sound/System_Lumi_02.wav',
-            '/src/sound/System_Lumi_03.wav',
-            '/src/sound/System_Lumi_04.wav'
+            '/thatcatreviewsblogs/src/sound/System_Lumi_01.wav',
+            '/thatcatreviewsblogs/src/sound/System_Lumi_02.wav',
+            '/thatcatreviewsblogs/src/sound/System_Lumi_03.wav',
+            '/thatcatreviewsblogs/src/sound/System_Lumi_04.wav'
         ];
     }
 
