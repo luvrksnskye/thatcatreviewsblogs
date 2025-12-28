@@ -1,6 +1,6 @@
 /* =====================================================
-   GALLERYMANAGER.JS - Image Gallery Controller
-   Handles gallery filtering and lightbox
+   GALLERYMANAGER.JS - Gallery Controller (OPTIMIZED)
+   Lazy loading, event delegation
    ===================================================== */
 
 export class GalleryManager {
@@ -14,20 +14,25 @@ export class GalleryManager {
     }
 
     init() {
-        this.items = document.querySelectorAll('.gallery-item');
-        this.filterButtons = document.querySelectorAll('.filter-btn');
+        this.items = Array.from(document.querySelectorAll('.gallery-item'));
+        this.filterButtons = Array.from(document.querySelectorAll('.filter-btn'));
         this.lightbox = document.getElementById('lightbox');
         
-        this.setupFilters();
-        this.setupLightbox();
-        this.setupGalleryItems();
+        this._setupFilters();
+        this._setupLightbox();
+        this._setupGalleryItems();
         
         console.log('✧ Gallery Manager initialized ✧');
     }
 
-    setupFilters() {
-        this.filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
+    _setupFilters() {
+        // Event delegation for filter buttons
+        const filterContainer = document.querySelector('.gallery-filters');
+        if (filterContainer) {
+            filterContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('.filter-btn');
+                if (!btn) return;
+                
                 const filter = btn.dataset.filter;
                 this.filterBy(filter);
                 
@@ -36,54 +41,56 @@ export class GalleryManager {
                 
                 this.sound?.play('click');
             });
-        });
+        }
     }
 
     filterBy(category) {
         this.currentFilter = category;
         
         this.items.forEach(item => {
-            const itemCategory = item.dataset.category;
-            const shouldShow = category === 'all' || itemCategory === category;
-            
-            if (shouldShow) {
-                item.classList.remove('hide');
-                item.classList.add('show');
-                item.style.display = '';
-            } else {
-                item.classList.add('hide');
-                item.classList.remove('show');
-                setTimeout(() => { item.style.display = 'none'; }, 300);
-            }
+            const show = category === 'all' || item.dataset.category === category;
+            item.classList.toggle('hide', !show);
+            item.classList.toggle('show', show);
         });
     }
 
-    setupGalleryItems() {
-        this.items.forEach((item, index) => {
-            item.addEventListener('click', () => {
-                this.openLightbox(index);
-                this.sound?.play('card');
+    _setupGalleryItems() {
+        // Event delegation for gallery items
+        const gallery = document.querySelector('.gallery-grid');
+        if (gallery) {
+            gallery.addEventListener('click', (e) => {
+                const item = e.target.closest('.gallery-item');
+                if (!item) return;
+                
+                const index = this.items.indexOf(item);
+                if (index !== -1) {
+                    this.openLightbox(index);
+                    this.sound?.play('card');
+                }
             });
-        });
+        }
     }
 
-    setupLightbox() {
+    _setupLightbox() {
         if (!this.lightbox) return;
         
-        const closeBtn = document.getElementById('lightbox-close');
-        const prevBtn = document.getElementById('lightbox-prev');
-        const nextBtn = document.getElementById('lightbox-next');
-        
-        closeBtn?.addEventListener('click', () => this.closeLightbox());
-        prevBtn?.addEventListener('click', () => this.prevImage());
-        nextBtn?.addEventListener('click', () => this.nextImage());
-        
+        // Single event listener for all lightbox controls
         this.lightbox.addEventListener('click', (e) => {
-            if (e.target === this.lightbox) this.closeLightbox();
+            const target = e.target;
+            
+            if (target.id === 'lightbox-close' || target === this.lightbox) {
+                this.closeLightbox();
+            } else if (target.id === 'lightbox-prev') {
+                this.prevImage();
+            } else if (target.id === 'lightbox-next') {
+                this.nextImage();
+            }
         });
         
+        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (!this.lightbox?.classList.contains('active')) return;
+            
             if (e.key === 'Escape') this.closeLightbox();
             if (e.key === 'ArrowLeft') this.prevImage();
             if (e.key === 'ArrowRight') this.nextImage();
@@ -95,7 +102,7 @@ export class GalleryManager {
         this.currentIndex = index;
         this.lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
-        this.updateLightboxContent();
+        this._updateLightboxContent();
     }
 
     closeLightbox() {
@@ -106,35 +113,35 @@ export class GalleryManager {
     }
 
     prevImage() {
-        const visibleItems = this.getVisibleItems();
-        this.currentIndex = (this.currentIndex - 1 + visibleItems.length) % visibleItems.length;
-        this.updateLightboxContent();
+        const visible = this._getVisibleItems();
+        this.currentIndex = (this.currentIndex - 1 + visible.length) % visible.length;
+        this._updateLightboxContent();
         this.sound?.play('click');
     }
 
     nextImage() {
-        const visibleItems = this.getVisibleItems();
-        this.currentIndex = (this.currentIndex + 1) % visibleItems.length;
-        this.updateLightboxContent();
+        const visible = this._getVisibleItems();
+        this.currentIndex = (this.currentIndex + 1) % visible.length;
+        this._updateLightboxContent();
         this.sound?.play('click');
     }
 
-    getVisibleItems() {
-        return Array.from(this.items).filter(item => {
+    _getVisibleItems() {
+        return this.items.filter(item => {
             return this.currentFilter === 'all' || item.dataset.category === this.currentFilter;
         });
     }
 
-    updateLightboxContent() {
-        const imageContainer = document.getElementById('lightbox-image');
-        if (!imageContainer) return;
+    _updateLightboxContent() {
+        const container = document.getElementById('lightbox-image');
+        if (!container) return;
         
-        const visibleItems = this.getVisibleItems();
-        const currentItem = visibleItems[this.currentIndex];
+        const visible = this._getVisibleItems();
+        const item = visible[this.currentIndex];
         
-        if (currentItem) {
-            const icon = currentItem.querySelector('.material-icons')?.textContent || 'image';
-            imageContainer.innerHTML = `<span class="material-icons" style="font-size:96px;color:var(--purple-medium)">${icon}</span>`;
+        if (item) {
+            const icon = item.querySelector('.material-icons')?.textContent || 'image';
+            container.innerHTML = `<span class="material-icons" style="font-size:96px;color:var(--purple-medium)">${icon}</span>`;
         }
     }
 

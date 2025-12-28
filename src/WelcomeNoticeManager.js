@@ -1,7 +1,6 @@
 /* =====================================================
-   WELCOMENOTICEMANAGER.JS - First Visit Notice
-   Shows welcome notice + beautiful preferences panel
-   Blocks HolidayManager until dismissed
+   WELCOMENOTICEMANAGER.JS - First Visit Notice (OPTIMIZED)
+   Lazy creation, efficient animations
    ===================================================== */
 
 export class WelcomeNoticeManager {
@@ -9,37 +8,20 @@ export class WelcomeNoticeManager {
         this.storage = storage;
         this.sound = sound;
         
-        // State
         this.isShowing = false;
         this.currentStep = 'welcome';
         this.overlay = null;
         this.noticeElement = null;
         this._resolveShow = null;
-        this._escapeHandler = null;
         
-        // Config
         this.config = {
             imagePath: './src/assets/notice_system.png',
-            soundPath: './src/sound/System_Lumi_01.wav',
-            animationDuration: 350
+            animationDuration: 300
         };
-        
-        this.noticeSound = null;
     }
 
-    // ========================================
-    // INITIALIZATION
-    // ========================================
     init() {
         console.log('✧ Welcome Notice Manager initialized ✧');
-    }
-
-    _loadSound() {
-        if (!this.noticeSound) {
-            this.noticeSound = new Audio(this.config.soundPath);
-            this.noticeSound.preload = 'auto';
-            this.noticeSound.volume = 0.5;
-        }
     }
 
     shouldShowNotice() {
@@ -50,12 +32,10 @@ export class WelcomeNoticeManager {
         return !this.storage.hasSeenNotice('preferences');
     }
 
-    // ========================================
-    // SHOW WELCOME NOTICE
-    // ========================================
     show() {
-        if (this.isShowing) return Promise.resolve();
-        if (!this.shouldShowNotice()) return Promise.resolve();
+        if (this.isShowing || !this.shouldShowNotice()) {
+            return Promise.resolve();
+        }
         
         return new Promise((resolve) => {
             this._resolveShow = resolve;
@@ -68,9 +48,6 @@ export class WelcomeNoticeManager {
             document.body.appendChild(this.overlay);
             document.body.appendChild(this.noticeElement);
             
-            this.noticeElement.offsetHeight;
-            this._playSound();
-            
             requestAnimationFrame(() => {
                 this.overlay.classList.add('visible');
                 this.noticeElement.style.opacity = '1';
@@ -81,9 +58,6 @@ export class WelcomeNoticeManager {
         });
     }
 
-    // ========================================
-    // SHOW PREFERENCES PANEL (Public)
-    // ========================================
     showPreferencesPanel() {
         if (this.isShowing) return;
         
@@ -99,9 +73,6 @@ export class WelcomeNoticeManager {
         });
     }
 
-    // ========================================
-    // CREATE OVERLAY
-    // ========================================
     _createOverlay() {
         this.overlay = document.createElement('div');
         this.overlay.className = 'prefs-overlay';
@@ -113,9 +84,6 @@ export class WelcomeNoticeManager {
         });
     }
 
-    // ========================================
-    // CREATE WELCOME NOTICE
-    // ========================================
     _createWelcomeNotice() {
         this.noticeElement = document.createElement('div');
         this.noticeElement.className = 'welcome-notice';
@@ -132,7 +100,7 @@ export class WelcomeNoticeManager {
             transform: 'translate(-50%, -50%) scale(0.8)',
             zIndex: '99999',
             opacity: '0',
-            transition: `all ${this.config.animationDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1)`,
+            transition: `all ${this.config.animationDuration}ms ease-out`,
             pointerEvents: 'none',
             maxWidth: '90vw',
             maxHeight: '90vh'
@@ -143,18 +111,10 @@ export class WelcomeNoticeManager {
             maxHeight: '100vh',
             objectFit: 'contain',
             borderRadius: '16px',
-            display: 'block',
+            display: 'block'
         });
         
         this.noticeElement.appendChild(img);
-    }
-
-    _playSound() {
-        this._loadSound();
-        if (this.noticeSound) {
-            this.noticeSound.currentTime = 0;
-            this.noticeSound.play().catch(() => {});
-        }
     }
 
     _setupWelcomeDismiss() {
@@ -186,14 +146,11 @@ export class WelcomeNoticeManager {
             if (this.needsPreferencesSetup()) {
                 this._showPreferencesPanel(true);
             } else {
-                this._finishAndResolve();
+                this._finish();
             }
         }, this.config.animationDuration);
     }
 
-    // ========================================
-    // SHOW PREFERENCES PANEL
-    // ========================================
     _showPreferencesPanel(fromWelcome = true) {
         this.currentStep = 'preferences';
         
@@ -210,16 +167,10 @@ export class WelcomeNoticeManager {
                 
                 <div class="prefs-header">
                     <div class="prefs-icon-container">
-                        <div class="prefs-icon-ring"></div>
-                        <div class="prefs-icon-inner">
-                            <span class="material-icons">${fromWelcome ? 'auto_awesome' : 'settings'}</span>
-                        </div>
-                        <div class="prefs-sparkle s1">✦</div>
-                        <div class="prefs-sparkle s2">✧</div>
-                        <div class="prefs-sparkle s3">✦</div>
+                        <span class="material-icons">${fromWelcome ? 'auto_awesome' : 'settings'}</span>
                     </div>
                     <h2>${fromWelcome ? 'Welcome!' : 'Settings'}</h2>
-                    <p>${fromWelcome ? 'Set up your experience ✧' : 'Customize your preferences'}</p>
+                    <p>${fromWelcome ? 'Set up your experience' : 'Customize your preferences'}</p>
                 </div>
                 
                 <div class="prefs-options">
@@ -233,10 +184,7 @@ export class WelcomeNoticeManager {
                         </div>
                         <div class="toggle-switch ${prefs.musicAutoplay ? 'active' : ''}">
                             <div class="toggle-track"></div>
-                            <div class="toggle-knob">
-                                <span class="toggle-icon on"></span>
-                                <span class="toggle-icon off"></span>
-                            </div>
+                            <div class="toggle-knob"></div>
                         </div>
                     </div>
                     
@@ -250,10 +198,7 @@ export class WelcomeNoticeManager {
                         </div>
                         <div class="toggle-switch ${prefs.holidayEnabled ? 'active' : ''}">
                             <div class="toggle-track"></div>
-                            <div class="toggle-knob">
-                                <span class="toggle-icon on"></span>
-                                <span class="toggle-icon off"></span>
-                            </div>
+                            <div class="toggle-knob"></div>
                         </div>
                     </div>
                     
@@ -267,10 +212,7 @@ export class WelcomeNoticeManager {
                         </div>
                         <div class="toggle-switch ${prefs.soundEnabled ? 'active' : ''}">
                             <div class="toggle-track"></div>
-                            <div class="toggle-knob">
-                                <span class="toggle-icon on"></span>
-                                <span class="toggle-icon off"></span>
-                            </div>
+                            <div class="toggle-knob"></div>
                         </div>
                     </div>
                 </div>
@@ -278,11 +220,8 @@ export class WelcomeNoticeManager {
                 <div class="prefs-footer">
                     <p class="prefs-note">You can change these anytime</p>
                     <button class="prefs-done-btn" id="prefs-done">
-                        <span class="btn-bg"></span>
-                        <span class="btn-content">
-                            <span class="material-icons">${fromWelcome ? 'rocket_launch' : 'check_circle'}</span>
-                            <span>${fromWelcome ? "Let's Go!" : 'Save'}</span>
-                        </span>
+                        <span class="material-icons">${fromWelcome ? 'rocket_launch' : 'check_circle'}</span>
+                        <span>${fromWelcome ? "Let's Go!" : 'Save'}</span>
                     </button>
                 </div>
             </div>
@@ -296,9 +235,12 @@ export class WelcomeNoticeManager {
         
         this._setupPreferenceToggles();
         
-        this.noticeElement.querySelector('#prefs-done')?.addEventListener('click', () => this._dismissPreferences());
-        this.noticeElement.querySelector('#prefs-close')?.addEventListener('click', () => this._dismissPreferences());
+        this.noticeElement.querySelector('#prefs-done')
+            ?.addEventListener('click', () => this._dismissPreferences());
+        this.noticeElement.querySelector('#prefs-close')
+            ?.addEventListener('click', () => this._dismissPreferences());
         
+        // Escape key
         this._escapeHandler = (e) => {
             if (e.key === 'Escape') this._dismissPreferences();
         };
@@ -306,19 +248,14 @@ export class WelcomeNoticeManager {
     }
 
     _setupPreferenceToggles() {
-        const options = this.noticeElement.querySelectorAll('.pref-option');
-        
-        options.forEach(option => {
+        this.noticeElement.querySelectorAll('.pref-option').forEach(option => {
             option.addEventListener('click', () => {
                 const prefKey = option.dataset.pref;
                 const toggle = option.querySelector('.toggle-switch');
                 const isActive = toggle.classList.toggle('active');
                 
                 this.storage.setPreference(prefKey, isActive);
-                
-                if (this.sound?.play) {
-                    this.sound.play('click');
-                }
+                this.sound?.play('click');
                 
                 window.dispatchEvent(new CustomEvent('preferenceChanged', {
                     detail: { key: prefKey, value: isActive }
@@ -339,12 +276,10 @@ export class WelcomeNoticeManager {
         this.noticeElement?.classList.remove('visible');
         this.overlay?.classList.remove('visible');
         
-        setTimeout(() => {
-            this._finishAndResolve();
-        }, this.config.animationDuration);
+        setTimeout(() => this._finish(), this.config.animationDuration);
     }
 
-    _finishAndResolve() {
+    _finish() {
         this.overlay?.remove();
         this.noticeElement?.remove();
         this.overlay = null;
@@ -361,17 +296,10 @@ export class WelcomeNoticeManager {
         return this.isShowing;
     }
 
-    forceShow() {
-        this.storage.remove('notice-welcome');
-        this.storage.remove('notice-preferences');
-        return this.show();
-    }
-
     destroy() {
         this.overlay?.remove();
         this.noticeElement?.remove();
         this.isShowing = false;
-        this.noticeSound = null;
     }
 }
 

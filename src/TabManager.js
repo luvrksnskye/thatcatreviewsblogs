@@ -1,6 +1,6 @@
 /* =====================================================
-   TABMANAGER.JS - Navigation Tab Controller
-   Handles tab switching and content visibility
+   TABMANAGER.JS - Tab Controller (OPTIMIZED)
+   Event delegation, cached elements
    ===================================================== */
 
 export class TabManager {
@@ -13,41 +13,38 @@ export class TabManager {
     }
 
     init() {
-        this.tabs = document.querySelectorAll('.nav-tab');
-        this.contents = document.querySelectorAll('.tab-content');
-        this.setupEventListeners();
-        console.log('✧ Tab Manager initialized ✧');
-    }
-
-    setupEventListeners() {
-        this.tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.dataset.tab;
-                this.switchTo(tabName);
+        this.tabs = Array.from(document.querySelectorAll('.nav-tab'));
+        this.contents = Array.from(document.querySelectorAll('.tab-content'));
+        
+        // Use event delegation on parent
+        const tabContainer = document.querySelector('.nav-tabs');
+        if (tabContainer) {
+            tabContainer.addEventListener('click', (e) => {
+                const tab = e.target.closest('.nav-tab');
+                if (tab) {
+                    this.switchTo(tab.dataset.tab);
+                }
             });
-        });
+        }
+        
+        console.log('✧ Tab Manager initialized ✧');
     }
 
     switchTo(tabName) {
         if (this.activeTab === tabName) return;
         
-        // Update tabs
+        // Batch DOM updates
         this.tabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.tab === tabName);
         });
         
-        // Update content
         this.contents.forEach(content => {
-            const isActive = content.id === `tab-${tabName}`;
-            content.classList.toggle('active', isActive);
+            content.classList.toggle('active', content.id === `tab-${tabName}`);
         });
         
         this.activeTab = tabName;
         this.sound?.play('tab');
-        
-        if (this.onTabChange) {
-            this.onTabChange(tabName);
-        }
+        this.onTabChange?.(tabName);
         
         window.dispatchEvent(new CustomEvent('tabchange', { detail: { tab: tabName } }));
     }
