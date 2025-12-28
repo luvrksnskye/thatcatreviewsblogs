@@ -15,7 +15,9 @@ export class SoundManager {
             toggle: { url: './src/sound/UI_AppWipe_In.wav', volume: 0.7 },
             notification: { url: './src/sound/UI_Announce_New.wav', volume: 0.8 },
             success: { url: './src/sound/UI_AlbumSubmit_Finish.wav', volume: 0.8 },
-            error: { url: './src/sound/UI_Cancel.wav', volume: 0.8 }
+            error: { url: './src/sound/UI_Cancel.wav', volume: 0.8 },
+            moon: { url: './src/sound/moon.mp3', volume: 0.8 },
+            chime: { url: './src/sound/mystical-chime.mp3', volume: 0.7 }
         };
         
         this.initialized = false;
@@ -43,8 +45,8 @@ export class SoundManager {
     }
 
     async preloadAllFileSounds() {
-        // Only preload the 2 most used sounds to reduce initial load time
-        const prioritySounds = ['click', 'tab'];
+        // Only preload the most used sounds to reduce initial load time
+        const prioritySounds = ['click', 'tab', 'chime'];
         for (const name of prioritySounds) {
             const config = this.soundConfigs[name];
             if (config?.url) {

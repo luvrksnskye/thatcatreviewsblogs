@@ -1,5 +1,3 @@
-
-
 export class DreamyCommentsManager {
     constructor(options = {}) {
         this.config = {
@@ -9,27 +7,22 @@ export class DreamyCommentsManager {
             fillColor1: options.fillColor1 || '#C4B8E0',
             fillColor2: options.fillColor2 || '#E8E0F7',
             moonDark: options.moonDark || '#1E1A2E',
-            moonImage: options.moonImage || '/src/blogs/images/moon.png',
-            starImage: options.starImage || '/src/blogs/images/planets.gif',
-            chimeSound: options.chimeSound || '/src/sound/mystical-chime.mp3'
+            moonImage: options.moonImage || '/thatcatreviewsblogs/src/blogs/images/moon.png',
+            starImage: options.starImage || '/thatcatreviewsblogs/src/blogs/images/planets.gif',
+            soundBasePath: options.soundBasePath || '/thatcatreviewsblogs/src/sound'
         };
 
         this.commentCount = 0;
         this.goalPercent = 0;
-        this.tempFillPercent = 0;
         this.isInitialized = false;
+        this.isCelebrating = false;
         this.elements = {};
         this.audioContext = null;
         this.chimeBuffer = null;
-        this.lumiBuffers = [];
-        this.fillTimeout = null;
+        this.moonBuffer = null;
         
-        this.lumiPaths = [
-            '/thatcatreviewsblogs/src/sound/System_Lumi_01.wav',
-            '/thatcatreviewsblogs/src/sound/System_Lumi_02.wav',
-            '/thatcatreviewsblogs/src/sound/System_Lumi_03.wav',
-            '/thatcatreviewsblogs/src/sound/System_Lumi_04.wav'
-        ];
+        this.chimePath = `${this.config.soundBasePath}/mystical-chime.mp3`;
+        this.moonSoundPath = `${this.config.soundBasePath}/moon.mp3`;
     }
 
     async init() {
@@ -45,6 +38,7 @@ export class DreamyCommentsManager {
             await this.waitForHCB();
         }
 
+        this.createOverlay();
         this.createMoon();
         this.setupAudio();
         this.setupObserver();
@@ -55,12 +49,6 @@ export class DreamyCommentsManager {
 
         this.isInitialized = true;
         console.log('DreamyComments initialized!');
-        
-        // Test inicial - mostrar un poco de liquido para verificar que funciona
-        setTimeout(() => {
-            console.log('Testing fill...');
-            this.setFillHeight(10);
-        }, 1000);
     }
 
     async waitForHCB(maxAttempts = 20) {
@@ -69,6 +57,14 @@ export class DreamyCommentsManager {
             this.elements.hcbContainer = document.getElementById('HCB_comment_box');
             if (this.elements.hcbContainer) return;
         }
+    }
+
+    createOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'moon-celebration-overlay';
+        overlay.id = 'moonOverlay';
+        document.body.appendChild(overlay);
+        this.elements.overlay = overlay;
     }
 
     createMoon() {
@@ -83,7 +79,6 @@ export class DreamyCommentsManager {
                 <img class="front" src="${this.config.moonImage}">
                 <img class="swingobject" src="${this.config.starImage}">
                 
-                <!-- Destellos flotantes -->
                 <div class="sparkles-container">
                     <div class="sparkle"></div>
                     <div class="sparkle"></div>
@@ -150,6 +145,33 @@ export class DreamyCommentsManager {
                     <p class="text1" id="moonText">0 / ${this.config.maxComments}</p>
                 </div>
             </div>
+            
+            <div class="thank-you-text" id="thankYouText">
+                <span class="thank-you-message">Thanks for commenting!</span>
+            </div>
+            
+            <div class="light-particles" id="lightParticles">
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+                <div class="light-particle"></div>
+            </div>
         `;
 
         document.body.appendChild(moon);
@@ -159,18 +181,12 @@ export class DreamyCommentsManager {
         this.elements.fill2 = moon.querySelector('#moonFill2');
         this.elements.bottomShadow = moon.querySelector('#bottomShadow');
         this.elements.textEl = moon.querySelector('#moonText');
+        this.elements.titleEl = moon.querySelector('#moonTitle');
+        this.elements.thankYouText = moon.querySelector('#thankYouText');
 
         this.applyColors();
         
-        // Click en la luna
         moon.addEventListener('click', () => this.handleMoonClick());
-        
-        // Debug - verificar elementos
-        console.log('Moon elements:', {
-            fill: this.elements.fill,
-            fill2: this.elements.fill2,
-            bottomShadow: this.elements.bottomShadow
-        });
     }
 
     applyColors() {
@@ -184,96 +200,50 @@ export class DreamyCommentsManager {
         if (this.elements.fill2) {
             this.elements.fill2.style.background = `linear-gradient(0deg, ${this.config.fillColor1} 0%, ${this.config.fillColor2} 100%)`;
         }
-        if (this.elements.bottomShadow) {
-            this.elements.bottomShadow.style.background = `linear-gradient(90deg, ${this.config.fillColor1} 0%, ${this.config.fillColor2} 100%)`;
-        }
-
-        const hearts = document.querySelectorAll('.moon-float .heart svg');
-        hearts.forEach(svg => {
-            svg.style.fill = this.config.fillColor2;
-        });
-    }
-
-    // Metodo directo para setear altura del fill
-    setFillHeight(percent) {
-        console.log('Setting fill height to:', percent + '%');
-        
-        if (this.elements.fill) {
-            this.elements.fill.style.height = percent + '%';
-            console.log('Fill height set:', this.elements.fill.style.height);
-        }
-        if (this.elements.fill2) {
-            this.elements.fill2.style.height = Math.max(0, percent - 2) + '%';
-        }
-        if (percent > 0 && this.elements.bottomShadow) {
-            this.elements.bottomShadow.classList.add('shadowon');
-        }
     }
 
     setupAudio() {
-        const initAudio = async () => {
-            if (this.audioContext) return;
-            
-            try {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Cargar mystical-chime.mp3
-                try {
-                    const chimeResponse = await fetch(this.config.chimeSound);
-                    const chimeArrayBuffer = await chimeResponse.arrayBuffer();
-                    this.chimeBuffer = await this.audioContext.decodeAudioData(chimeArrayBuffer);
-                    console.log('Chime sound loaded!');
-                } catch (e) {
-                    console.log('Could not load chime sound:', e);
-                }
-                
-                // Cargar Lumi sounds
-                for (const path of this.lumiPaths) {
-                    try {
-                        const response = await fetch(path);
-                        const arrayBuffer = await response.arrayBuffer();
-                        const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-                        this.lumiBuffers.push(audioBuffer);
-                    } catch (e) {}
-                }
-            } catch (e) {
-                console.log('Audio not available');
-            }
-            
-            document.removeEventListener('click', initAudio);
-        };
-        
-        document.addEventListener('click', initAudio, { once: true });
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.initAudio();
+        } catch (e) {
+            console.log('Audio not available');
+        }
+    }
+
+    async initAudio() {
+        if (!this.audioContext) return;
+
+        try {
+            const chimeResponse = await fetch(this.chimePath);
+            const chimeData = await chimeResponse.arrayBuffer();
+            this.chimeBuffer = await this.audioContext.decodeAudioData(chimeData);
+            console.log('Chime sound loaded');
+        } catch (e) {
+            console.log('Could not load chime sound:', this.chimePath);
+        }
+
+        try {
+            const moonResponse = await fetch(this.moonSoundPath);
+            const moonData = await moonResponse.arrayBuffer();
+            this.moonBuffer = await this.audioContext.decodeAudioData(moonData);
+            console.log('Moon sound loaded');
+        } catch (e) {
+            console.log('Could not load moon sound:', this.moonSoundPath);
+        }
     }
 
     playChime() {
-        if (!this.audioContext || !this.chimeBuffer) {
-            console.log('Cannot play chime - no audio context or buffer');
-            return;
-        }
+        if (!this.audioContext || !this.chimeBuffer) return;
         
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+
         const source = this.audioContext.createBufferSource();
         const gainNode = this.audioContext.createGain();
         
         source.buffer = this.chimeBuffer;
-        gainNode.gain.value = 0.6;
-        
-        source.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-        source.start();
-        console.log('Playing chime!');
-    }
-
-    playRandomLumi() {
-        if (!this.audioContext || this.lumiBuffers.length === 0) return;
-        
-        const randomIndex = Math.floor(Math.random() * this.lumiBuffers.length);
-        const buffer = this.lumiBuffers[randomIndex];
-        
-        const source = this.audioContext.createBufferSource();
-        const gainNode = this.audioContext.createGain();
-        
-        source.buffer = buffer;
         gainNode.gain.value = 0.5;
         
         source.connect(gainNode);
@@ -281,42 +251,141 @@ export class DreamyCommentsManager {
         source.start();
     }
 
-    handleMoonClick() {
-        console.log('Moon clicked!');
+    playMoonSound() {
+        if (!this.audioContext || !this.moonBuffer) return;
         
-        // Sonido mystical chime
-        this.playChime();
-        
-        // Llenar casi completo (85-95%)
-        this.tempFillPercent = 85 + Math.random() * 10;
-        
-        // Efecto de brillo
-        this.elements.moon.classList.add('glowing');
-        
-        // Activar shadow y particulas
-        if (this.elements.bottomShadow) {
-            this.elements.bottomShadow.classList.add('shadowon');
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
         }
+
+        const source = this.audioContext.createBufferSource();
+        const gainNode = this.audioContext.createGain();
         
-        // Setear altura directamente
-        this.setFillHeight(this.tempFillPercent);
+        source.buffer = this.moonBuffer;
+        gainNode.gain.value = 0.6;
         
-        // Quitar brillo despues de 1.5s
-        setTimeout(() => {
-            this.elements.moon.classList.remove('glowing');
-        }, 1500);
-        
-        // El liquido baja gradualmente despues de 3s
-        if (this.fillTimeout) clearTimeout(this.fillTimeout);
-        this.fillTimeout = setTimeout(() => {
-            this.tempFillPercent = 0;
-            this.updateMoon();
-        }, 3000);
+        source.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        source.start();
     }
 
-    // Escuchar click en el boton de submit
+    setFillHeight(percent) {
+        const clampedPercent = Math.max(0, Math.min(100, percent));
+        const fillHeight = (clampedPercent / 100) * 140;
+        
+        if (this.elements.fill) {
+            this.elements.fill.style.height = `${fillHeight}px`;
+        }
+        if (this.elements.fill2) {
+            this.elements.fill2.style.height = `${fillHeight}px`;
+        }
+        
+        if (this.elements.bottomShadow) {
+            if (clampedPercent > 5) {
+                this.elements.bottomShadow.classList.add('shadowon');
+            } else {
+                this.elements.bottomShadow.classList.remove('shadowon');
+            }
+        }
+    }
+
+    async animateFillTo(targetPercent, duration = 2000) {
+        return new Promise(resolve => {
+            const startPercent = this.goalPercent;
+            const startTime = performance.now();
+            
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const currentPercent = startPercent + (targetPercent - startPercent) * easeProgress;
+                
+                this.setFillHeight(currentPercent);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    this.goalPercent = targetPercent;
+                    resolve();
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        });
+    }
+
+    handleMoonClick() {
+        if (this.isCelebrating) return;
+        
+        console.log('Moon clicked!');
+        
+        this.playChime();
+        
+        this.elements.moon.classList.add('glowing');
+        
+        this.animateFillTo(100, 2500);
+        
+        setTimeout(() => {
+            this.elements.moon.classList.remove('glowing');
+            const realPercent = (this.commentCount / this.config.maxComments) * 100;
+            this.animateFillTo(realPercent, 1500);
+        }, 3500);
+    }
+
+    async startCelebration() {
+        if (this.isCelebrating) return;
+        this.isCelebrating = true;
+        
+        console.log('Starting celebration!');
+        
+        this.elements.overlay.classList.add('active');
+        
+        this.elements.moon.classList.add('celebrating');
+        
+        await this.delay(600);
+        
+        this.playMoonSound();
+        this.elements.moon.classList.add('glowing');
+        
+        // Activar partículas de luz
+        const lightParticles = this.elements.moon.querySelector('#lightParticles');
+        if (lightParticles) {
+            lightParticles.classList.add('active');
+        }
+        
+        await this.animateFillTo(100, 3000);
+        
+        this.elements.thankYouText.classList.add('visible');
+        
+        await this.delay(2500);
+        
+        this.elements.thankYouText.classList.remove('visible');
+        
+        // Desactivar partículas
+        if (lightParticles) {
+            lightParticles.classList.remove('active');
+        }
+        
+        await this.delay(500);
+        
+        this.elements.moon.classList.remove('glowing');
+        this.elements.moon.classList.remove('celebrating');
+        this.elements.overlay.classList.remove('active');
+        
+        await this.delay(600);
+        const realPercent = (this.commentCount / this.config.maxComments) * 100;
+        await this.animateFillTo(realPercent, 1500);
+        
+        this.isCelebrating = false;
+        console.log('Celebration complete!');
+    }
+
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     setupSubmitButton() {
-        // Esperar a que HCB cargue el boton
         const checkForButton = setInterval(() => {
             const submitBtn = document.querySelector('#hcb_submit, #HCB_comment_box .btn, #HCB_comment_box button[type="submit"], #HCB_comment_box input[type="submit"]');
             
@@ -326,49 +395,12 @@ export class DreamyCommentsManager {
                 
                 submitBtn.addEventListener('click', () => {
                     console.log('Submit button clicked!');
-                    this.handleCommentSubmit();
+                    setTimeout(() => this.startCelebration(), 500);
                 });
             }
         }, 500);
         
-        // Dejar de buscar despues de 10 segundos
         setTimeout(() => clearInterval(checkForButton), 10000);
-    }
-
-    // Cuando el usuario hace click en Post Comment
-    handleCommentSubmit() {
-        console.log('Handling comment submit - filling moon to 100%!');
-        
-        // Sonido mystical chime
-        this.playChime();
-        
-        // Llenar al 100%
-        this.tempFillPercent = 100;
-        
-        // Efecto de brillo
-        this.elements.moon.classList.add('glowing');
-        
-        // Activar shadow
-        if (this.elements.bottomShadow) {
-            this.elements.bottomShadow.classList.add('shadowon');
-        }
-        
-        // Setear altura al 100%
-        this.setFillHeight(100);
-        
-        // Quitar brillo despues de 2s
-        setTimeout(() => {
-            this.elements.moon.classList.remove('glowing');
-        }, 2000);
-        
-        // Despues de 10 segundos, bajar al nivel real
-        if (this.fillTimeout) clearTimeout(this.fillTimeout);
-        this.fillTimeout = setTimeout(() => {
-            console.log('10 seconds passed, returning to real level');
-            this.tempFillPercent = 0;
-            this.countExistingComments();
-            this.updateMoon();
-        }, 10000);
     }
 
     setupHCBHooks() {
@@ -412,35 +444,24 @@ export class DreamyCommentsManager {
         const prev = this.commentCount;
         this.countExistingComments();
         
-        if (this.commentCount > prev || isUserComment) {
+        if (this.commentCount > prev && !this.isCelebrating) {
             console.log('New comment detected!');
-            
-            // Sonido mystical-chime al comentar
-            this.playChime();
-            
-            // Efecto de brillo
-            this.elements.moon.classList.add('glowing');
-            setTimeout(() => {
-                this.elements.moon.classList.remove('glowing');
-            }, 1500);
-            
             this.updateMoon();
             this.highlightNewComment();
         }
     }
 
     updateMoon() {
-        const basePercent = (this.commentCount / this.config.maxComments) * 100;
-        const totalPercent = Math.max(basePercent, this.tempFillPercent);
+        const percent = (this.commentCount / this.config.maxComments) * 100;
         
-        console.log('Updating moon - base:', basePercent, 'temp:', this.tempFillPercent, 'total:', totalPercent);
-
         if (this.elements.textEl) {
             this.elements.textEl.textContent = `${this.commentCount} / ${this.config.maxComments}`;
         }
 
-        this.setFillHeight(totalPercent);
-        this.goalPercent = totalPercent;
+        if (!this.isCelebrating) {
+            this.setFillHeight(percent);
+            this.goalPercent = percent;
+        }
     }
 
     highlightNewComment() {
@@ -456,8 +477,8 @@ export class DreamyCommentsManager {
     destroy() {
         if (this.observer) this.observer.disconnect();
         if (this.elements.moon) this.elements.moon.remove();
+        if (this.elements.overlay) this.elements.overlay.remove();
         if (this.audioContext) this.audioContext.close();
-        if (this.fillTimeout) clearTimeout(this.fillTimeout);
     }
 }
 
